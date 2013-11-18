@@ -74,8 +74,6 @@ ICodec* CodecFactory::CreateCodec(const std::string& strFileType)
     return new DVDPlayerCodec();
   else if (fileType == "aiff" || fileType == "aif")
     return new DVDPlayerCodec();
-  else if (fileType == "xwav")
-    return new DVDPlayerCodec();
 #ifdef HAS_ASAP_CODEC
   else if (ASAPCodec::IsSupportedFormat(strFileType) || fileType == "asapstream")
     return new ASAPCodec();
@@ -164,6 +162,7 @@ ICodec* CodecFactory::CreateCodecDemux(const std::string& strFile, const std::st
     {
       return dvdcodec;
     }
+    delete dvdcodec;
 
     dvdcodec = new DVDPlayerCodec();
     dvdcodec->SetContentType(content);

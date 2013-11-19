@@ -24,6 +24,7 @@
 #include <map>
 #include <string>
 #include "utils/HttpHeader.h"
+#include "utils/StdString.h"
 
 namespace XCURL
 {

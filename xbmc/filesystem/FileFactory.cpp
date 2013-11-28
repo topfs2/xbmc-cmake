@@ -56,9 +56,6 @@
 #include "APKFile.h"
 #endif
 #include "ZipFile.h"
-#ifdef HAS_FILESYSTEM_AFP
-#include "AFPFile.h"
-#endif
 #if defined(TARGET_ANDROID)
 #include "AndroidAppFile.h"
 #endif
@@ -170,9 +167,6 @@ IFile* CFileFactory::CreateLoader(const CURL& url)
 #endif
 #ifdef HAS_PVRCLIENTS
     else if (url.IsProtocol("pvr")) return new CPVRFile();
-#endif
-#ifdef HAS_FILESYSTEM_AFP
-    else if (url.IsProtocol("afp")) return new CAFPFile();
 #endif
     else if (url.IsProtocol("pipe")) return new CPipeFile();    
 #ifdef HAS_UPNP

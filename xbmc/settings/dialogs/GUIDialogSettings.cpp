@@ -27,8 +27,10 @@
 #include "guilib/GUIControlGroupList.h"
 #include "guilib/LocalizeStrings.h"
 #include "utils/log.h"
+#include "utils/MathUtils.h"
 #include "utils/StringUtils.h"
 #include "guilib/GUIKeyboardFactory.h"
+#include "cores/AudioEngine/Utils/AEUtil.h"
 
 #define CONTROL_GROUP_LIST          5
 #define CONTROL_SETTINGS_LABEL      2
@@ -698,4 +700,36 @@ void CGUIDialogSettings::OnSliderChange(void *data, CGUISliderControl *slider)
     if (setting->formatFunction.range)
       slider->SetTextValue(setting->formatFunction.range(slider->GetFloatValue(CGUISliderControl::RangeSelectorLower), slider->GetFloatValue(CGUISliderControl::RangeSelectorUpper), setting->interval));
   }
+}
+
+CStdString CGUIDialogSettings::PercentAsDecibel(float value, float interval)
+{
+  return StringUtils::Format("%2.1f dB", CAEUtil::PercentToGain(value));;
+}
+
+CStdString CGUIDialogSettings::FormatDecibel(float value, float interval)
+{
+  return StringUtils::Format("%2.1f dB", value);;
+}
+
+CStdString CGUIDialogSettings::FormatDelay(float value, float interval)
+{
+  CStdString text;
+  if (fabs(value) < 0.5f*interval)
+    text = StringUtils::Format(g_localizeStrings.Get(22003).c_str(), 0.0);
+  else if (value < 0)
+    text = StringUtils::Format(g_localizeStrings.Get(22004).c_str(), fabs(value));
+  else
+    text = StringUtils::Format(g_localizeStrings.Get(22005).c_str(), value);
+  return text;
+}
+
+CStdString CGUIDialogSettings::FormatInteger(float value, float minimum)
+{
+  return StringUtils::Format("%i", MathUtils::round_int(value));
+}
+
+CStdString CGUIDialogSettings::FormatFloat(float value, float minimum)
+{
+  return StringUtils::Format("%2.2f", value);
 }

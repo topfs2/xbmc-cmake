@@ -262,6 +262,7 @@ endif
 
 LIBADDON_DIRS=\
 	lib/addons/library.xbmc.addon \
+	lib/addons/library.xbmc.adsp \
 	lib/addons/library.xbmc.codec \
 	lib/addons/library.xbmc.pvr \
 	lib/addons/library.xbmc.gui \
@@ -396,6 +397,7 @@ screensavers: $(SS_DIRS)
 
 libaddon: exports
 	$(MAKE) -C lib/addons/library.xbmc.addon
+	$(MAKE) -C lib/addons/library.xbmc.adsp
 	$(MAKE) -C lib/addons/library.xbmc.codec
 	$(MAKE) -C lib/addons/library.xbmc.gui
 	$(MAKE) -C lib/addons/library.xbmc.pvr
@@ -534,6 +536,7 @@ BINDINGS+=xbmc/addons/include/xbmc_vis_dll.h
 BINDINGS+=xbmc/addons/include/xbmc_vis_types.h
 BINDINGS+=xbmc/addons/include/xbmc_stream_utils.hpp
 BINDINGS+=addons/library.xbmc.addon/libXBMC_addon.h
+BINDINGS+=addons/library.xbmc.adsp/libXBMC_adsp.h
 BINDINGS+=addons/library.xbmc.gui/libXBMC_gui.h
 BINDINGS+=addons/library.xbmc.pvr/libXBMC_pvr.h
 BINDINGS+=addons/library.xbmc.codec/libXBMC_codec.h

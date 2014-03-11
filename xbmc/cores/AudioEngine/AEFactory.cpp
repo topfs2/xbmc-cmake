@@ -269,10 +269,10 @@ void CAEFactory::Shutdown()
 }
 
 IAEStream *CAEFactory::MakeStream(enum AEDataFormat dataFormat, unsigned int sampleRate, 
-  unsigned int encodedSampleRate, CAEChannelInfo channelLayout, unsigned int options)
+  unsigned int encodedSampleRate, CAEChannelInfo channelLayout, unsigned int profile, unsigned int options)
 {
   if(AE)
-    return AE->MakeStream(dataFormat, sampleRate, encodedSampleRate, channelLayout, options);
+    return AE->MakeStream(dataFormat, sampleRate, encodedSampleRate, channelLayout, profile, options);
 
   return NULL;
 }

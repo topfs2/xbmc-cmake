@@ -479,6 +479,7 @@ inline bool PAPlayer::PrepareStream(StreamInfo *si)
     si->m_sampleRate,
     si->m_encodedSampleRate,
     si->m_channelInfo,
+    0,
     AESTREAM_PAUSED
   );
 

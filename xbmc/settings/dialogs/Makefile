@@ -1,4 +1,5 @@
-SRCS=GUIDialogContentSettings.cpp \
+SRCS=GUIDialogAudioSettings.cpp \
+     GUIDialogContentSettings.cpp \
      GUIDialogSettings.cpp \
 
 LIB=settings_dialogs.a

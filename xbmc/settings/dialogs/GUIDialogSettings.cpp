@@ -120,7 +120,7 @@ void CGUIDialogSettings::SetupPage()
   {
     SET_CONTROL_LABEL(CONTROL_SETTINGS_LABEL, g_localizeStrings.Get(19057));
   }
-  else
+  else if (GetID() != WINDOW_DIALOG_AUDIO_DSP_OSD_SETTINGS)
   {
   SET_CONTROL_LABEL(CONTROL_SETTINGS_LABEL, g_localizeStrings.Get(13395 + GetID() - WINDOW_DIALOG_VIDEO_OSD_SETTINGS));
   }
@@ -346,7 +346,7 @@ void CGUIDialogSettings::OnClick(int iID)
       *((float **)setting.data)[1] = pControl->GetFloatValue(CGUISliderControl::RangeSelectorUpper);
     }
     if (setting.formatFunction.range)
-      pControl->SetTextValue(setting.formatFunction.range(pControl->GetFloatValue(CGUISliderControl::RangeSelectorLower), 
+      pControl->SetTextValue(setting.formatFunction.range(pControl->GetFloatValue(CGUISliderControl::RangeSelectorLower),
                                                           pControl->GetFloatValue(CGUISliderControl::RangeSelectorUpper),
                                                           setting.interval));
   }

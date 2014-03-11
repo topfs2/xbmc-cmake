@@ -110,6 +110,7 @@ typedef struct AC3HeaderInfo {
     int surround_mix_level;                 ///< Surround mix level index
     uint16_t channel_map;
     int num_blocks;                         ///< number of audio blocks
+    int profile;
     /** @} */
 
     /** @name Derived values

@@ -3114,6 +3114,23 @@ typedef struct AVCodecContext {
 #define FF_PROFILE_MPEG4_SIMPLE_STUDIO             14
 #define FF_PROFILE_MPEG4_ADVANCED_SIMPLE           15
 
+#define FF_PROFILE_AC3                              0
+#define FF_PROFILE_AC3_CHANNELMODE                  7
+#define FF_PROFILE_AC3_CHANNELMODE_CH1_CH2          0
+#define FF_PROFILE_AC3_CHANNELMODE_C                1
+#define FF_PROFILE_AC3_CHANNELMODE_L_R              2
+#define FF_PROFILE_AC3_CHANNELMODE_L_C_R            3
+#define FF_PROFILE_AC3_CHANNELMODE_L_R_S            4
+#define FF_PROFILE_AC3_CHANNELMODE_L_C_R_S          5
+#define FF_PROFILE_AC3_CHANNELMODE_L_R_SL_SR        6
+#define FF_PROFILE_AC3_CHANNELMODE_L_C_R_SL_SR      7
+#define FF_PROFILE_AC3_WITH_LFE                     8
+#define FF_PROFILE_AC3_WITH_SURROUND                16
+#define FF_PROFILE_AC3_WITH_LARGE_ROOM              32
+#define FF_PROFILE_AC3_WITH_SMALL_ROOM              64
+#define FF_PROFILE_AC3_WITH_DD_EX                   128
+#define FF_PROFILE_AC3_WITH_DOLBY_HP                256
+
     /**
      * level
      * - encoding: Set by user.

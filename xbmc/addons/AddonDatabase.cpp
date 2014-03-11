@@ -26,6 +26,7 @@
 #include "XBDateTime.h"
 #include "addons/Service.h"
 #include "dbwrappers/dataset.h"
+#include "cores/AudioEngine/DSPAddons/ActiveAEDSP.h"
 #include "pvr/PVRManager.h"
 
 using namespace ADDON;
@@ -109,7 +110,8 @@ int CAddonDatabase::AddAddon(const AddonPtr& addon,
     if (NULL == m_pDB.get()) return -1;
     if (NULL == m_pDS.get()) return -1;
 
-    bool bDisablePVRAddon = addon->Type() == ADDON_PVRDLL && !HasAddon(addon->ID());
+    bool bDisablePVRAddon  = addon->Type() == ADDON_PVRDLL  && !HasAddon(addon->ID());
+    bool bDisableADSPAddon = addon->Type() == ADDON_ADSPDLL && !HasAddon(addon->ID());
 
     CStdString sql = PrepareSQL("insert into addon (id, type, name, summary,"
                                "description, stars, path, icon, changelog, "
@@ -143,7 +145,7 @@ int CAddonDatabase::AddAddon(const AddonPtr& addon,
       m_pDS->exec(sql.c_str());
     }
     // these need to be configured
-    if (bDisablePVRAddon)
+    if (bDisablePVRAddon || bDisableADSPAddon)
       DisableAddon(addon->ID(), true);
     return idAddon;
   }
@@ -606,7 +608,10 @@ bool CAddonDatabase::DisableAddon(const CStdString &addonID, bool disable /* = t
         else if (CAddonMgr::Get().GetAddon(addonID, addon, ADDON_PVRDLL, false) && addon &&
             PVR::CPVRManager::Get().IsStarted())
           PVR::CPVRManager::Get().Start(true);
-
+        // restart the audio dsp manager when disabling a dsp add-on with the audio dsp enabled
+        else if (CAddonMgr::Get().GetAddon(addonID, addon, ADDON_ADSPDLL, false) && addon &&
+            ActiveAE::CActiveAEDSP::Get().IsActivated())
+          ActiveAE::CActiveAEDSP::Get().Activate(true);
         return true;
       }
       return false; // already disabled or failed query
@@ -628,6 +633,9 @@ bool CAddonDatabase::DisableAddon(const CStdString &addonID, bool disable /* = t
       // (re)start the pvr manager when enabling a pvr add-on
       else if (CAddonMgr::Get().GetAddon(addonID, addon, ADDON_PVRDLL, false) && addon)
         PVR::CPVRManager::Get().Start(true);
+      // (re)start the audio dsp manager when enabling a audio dsp add-on
+      else if (CAddonMgr::Get().GetAddon(addonID, addon, ADDON_ADSPDLL, false) && addon)
+        ActiveAE::CActiveAEDSP::Get().Activate(true);
     }
     return true;
   }

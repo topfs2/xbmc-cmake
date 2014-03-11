@@ -6727,7 +6727,23 @@ msgctxt "#15019"
 msgid "Add"
 msgstr ""
 
-#empty strings from id 15020 to 15051
+#empty strings from id 15020 to 15047
+
+msgctxt "#15048"
+msgid "No audio DSP Add-on enabled"
+msgstr ""
+
+msgctxt "#15049"
+msgid "The audio DSP has been enabled without any"
+msgstr ""
+
+msgctxt "#15050"
+msgid "enabled DSP Add-on. Enable at least one Add-on"
+msgstr ""
+
+msgctxt "#15051"
+msgid "in order to use the audio DSP functionality."
+msgstr ""
 
 msgctxt "#15052"
 msgid "Password"
@@ -11860,7 +11876,12 @@ msgctxt "#24024"
 msgid "Add-on disabled"
 msgstr ""
 
-#empty strings from id 24025 to 24026
+#: xbmc/addons/addon.cpp
+msgctxt "#24025"
+msgid "Audio DSP"
+msgstr ""
+
+#empty string id 24026
 
 #: xbmc/addons/addon.cpp
 msgctxt "#24027"
@@ -15170,7 +15191,36 @@ msgctxt "#36431"
 msgid "Defines whether video decoding should be performed in software (requires more CPU) or with hardware acceleration where possible."
 msgstr ""
 
-#empty strings from id 36432 to 36499
+#: system/settings/settings.xml
+msgctxt "#36432"
+msgid "Select to enable Add-ons audio signal processing of audio channels specified by the speaker configuration."
+msgstr ""
+
+#: system/settings/settings.xml
+msgctxt "#36433"
+msgid "Clear your library about all audio dsp settings (files and addons) to initial condition"
+msgstr ""
+
+msgctxt "#36434"
+msgid "All data in the audio DSP database is being erased"
+msgstr ""
+
+#: system/settings/settings.xml
+msgctxt "#36435"
+msgid "Audio DSP Processing"
+msgstr ""
+
+#: system/settings/settings.xml
+msgctxt "#36436"
+msgid "Audio DSP client specific actions"
+msgstr ""
+
+#: system/settings/settings.xml
+msgctxt "#36437"
+msgid "No info available yet."
+msgstr ""
+
+#empty strings from id 36436 to 36499
 #end reservation
 
 #: system/settings/settings.xml

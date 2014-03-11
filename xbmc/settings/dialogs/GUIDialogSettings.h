@@ -30,6 +30,7 @@ class CGUISettingsSliderControl;
 class CGUIEditControl;
 class CGUIImage;
 class CGUIEditControl;
+class CGUILabelControl;
 
 typedef std::vector<CStdString> SETTINGSTRINGS;
 typedef CStdString (*FORMATFUNCTION) (float value, float min);
@@ -38,7 +39,7 @@ typedef CStdString (*RANGEFORMATFUNCTION) (float valueLower, float valueUpper, f
 class SettingInfo
 {
 public:
-  enum SETTING_TYPE { NONE=0, EDIT, EDIT_NUM, BUTTON, BUTTON_DIALOG, CHECK, CHECK_UCHAR, SPIN, SLIDER, SEPARATOR, STRING, RANGE };
+  enum SETTING_TYPE { NONE=0, EDIT, EDIT_NUM, BUTTON, BUTTON_DIALOG, CHECK, CHECK_UCHAR, SPIN, SLIDER, SEPARATOR, STRING, LABEL, RANGE };
   SettingInfo()
   {
     id = 0;
@@ -101,9 +102,12 @@ protected:
   void AddNumEdit(unsigned int id, int label, int *current, bool enabled = true);
   void AddButton(unsigned int id, int label, float *current = NULL, float min = 0, float interval = 0, float max = 0, FORMATFUNCTION function = NULL);
   void AddButton(unsigned int it, int label, CStdString *str, bool bOn=true);
+  void AddButton(unsigned int id, CStdString label, float *current = NULL, float min = 0, float interval = 0, float max = 0, FORMATFUNCTION function = NULL);
+  void AddButton(unsigned int it, CStdString label, CStdString *str, bool bOn=true);
   void AddBool(unsigned int id, int label, bool *on, bool enabled = true);
   void AddSpin(unsigned int id, int label, int *current, unsigned int max, const SETTINGSTRINGS &entries);
   void AddString(unsigned int id, int label, CStdString *current);
+  void AddLabel(unsigned int id, int label);
   void AddSpin(unsigned int id, int label, int *current, unsigned int max, const int *entries);
   void AddSpin(unsigned int id, int label, int *current, unsigned int min, unsigned int max, const char* minLabel = NULL);
   void AddSpin(unsigned int id, int label, int *current, std::vector<std::pair<int, CStdString> > &values);
@@ -119,6 +123,7 @@ protected:
   CGUIButtonControl *m_pOriginalSettingsButton;
   CGUISettingsSliderControl *m_pOriginalSlider;
   CGUIImage *m_pOriginalSeparator;
+  CGUILabelControl *m_pOriginalLabel;
 
   std::vector<SettingInfo> m_settings;
 

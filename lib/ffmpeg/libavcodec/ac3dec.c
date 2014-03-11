@@ -203,27 +203,6 @@ static int ac3_parse_header(AC3DecodeContext *s)
     GetBitContext *gbc = &s->gbc;
     int i;
 
-    /* read the rest of the bsi. read twice for dual mono mode. */
-    i = !s->channel_mode;
-    do {
-        skip_bits(gbc, 5); // skip dialog normalization
-        if (get_bits1(gbc))
-            skip_bits(gbc, 8); //skip compression
-        if (get_bits1(gbc))
-            skip_bits(gbc, 8); //skip language code
-        if (get_bits1(gbc))
-            skip_bits(gbc, 7); //skip audio production information
-    } while (i--);
-
-    skip_bits(gbc, 2); //skip copyright bit and original bitstream bit
-
-    /* skip the timecodes (or extra bitstream information for Alternate Syntax)
-       TODO: read & use the xbsi1 downmix levels */
-    if (get_bits1(gbc))
-        skip_bits(gbc, 14); //skip timecode1 / xbsi1
-    if (get_bits1(gbc))
-        skip_bits(gbc, 14); //skip timecode2 / xbsi2
-
     /* skip additional bitstream info */
     if (get_bits1(gbc)) {
         i = get_bits(gbc, 6);
@@ -265,6 +244,7 @@ static int parse_frame_header(AC3DecodeContext *s)
     s->num_blocks                   = hdr.num_blocks;
     s->frame_type                   = hdr.frame_type;
     s->substreamid                  = hdr.substreamid;
+    s->profile                      = hdr.profile;
 
     if (s->lfe_on) {
         s->start_freq[s->lfe_ch]     = 0;
@@ -1284,6 +1264,8 @@ static int ac3_decode_frame(AVCodecContext * avctx, void *data,
     /* initialize the GetBitContext with the start of valid AC-3 Frame */
     init_get_bits(&s->gbc, buf, buf_size * 8);
 
+    s->profile = FF_PROFILE_AC3;
+
     /* parse the syncinfo */
     err = parse_frame_header(s);
 
@@ -1336,6 +1318,7 @@ static int ac3_decode_frame(AVCodecContext * avctx, void *data,
     if (!err) {
         avctx->sample_rate = s->sample_rate;
         avctx->bit_rate    = s->bit_rate;
+        avctx->profile     = s->profile;
     }
 
     /* channel config */
@@ -1443,6 +1426,18 @@ static const AVOption options[] = {
     { NULL},
 };
 
+static const AVProfile profiles[] = {
+    { FF_PROFILE_AC3,                 "AC3"        },
+    { FF_PROFILE_AC3_WITH_LFE,        "AC3 with LFE"     },
+    { FF_PROFILE_AC3_WITH_SURROUND,   "AC3 Surround"  },
+    { FF_PROFILE_AC3_WITH_LARGE_ROOM, "AC3 Large Room" },
+    { FF_PROFILE_AC3_WITH_SMALL_ROOM, "AC3 Small Room"  },
+    { FF_PROFILE_AC3_CHANNELMODE,     "AC3 Channel Mode"  },
+    { FF_PROFILE_AC3_WITH_DD_EX,      "AC3 EX"  },
+    { FF_PROFILE_AC3_WITH_DOLBY_HP,   "AC3 HP"  },
+    { FF_PROFILE_UNKNOWN },
+};
+
 static const AVClass ac3_decoder_class = {
     .class_name = "AC3 decoder",
     .item_name  = av_default_item_name,
@@ -1458,11 +1453,12 @@ AVCodec ff_ac3_decoder = {
     .init           = ac3_decode_init,
     .close          = ac3_decode_end,
     .decode         = ac3_decode_frame,
-    .capabilities   = CODEC_CAP_DR1,
+    .capabilities   = CODEC_CAP_CHANNEL_CONF | CODEC_CAP_DR1,
     .long_name      = NULL_IF_CONFIG_SMALL("ATSC A/52A (AC-3)"),
     .sample_fmts    = (const enum AVSampleFormat[]) { AV_SAMPLE_FMT_FLTP,
                                                       AV_SAMPLE_FMT_NONE },
     .priv_class     = &ac3_decoder_class,
+    .profiles       = profiles,
 };
 
 #if CONFIG_EAC3_DECODER

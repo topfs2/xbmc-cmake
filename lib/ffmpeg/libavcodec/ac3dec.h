@@ -87,6 +87,7 @@ typedef struct AC3DecodeContext {
     int center_mix_level;                   ///< Center mix level index
     int surround_mix_level;                 ///< Surround mix level index
     int eac3;                               ///< indicates if current frame is E-AC-3
+    int profile;
 ///@}
 
     int preferred_stereo_downmix;

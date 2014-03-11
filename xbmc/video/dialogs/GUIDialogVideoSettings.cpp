@@ -22,7 +22,6 @@
 #include "GUIDialogVideoSettings.h"
 #include "guilib/GUIWindowManager.h"
 #include "GUIPassword.h"
-#include "utils/MathUtils.h"
 #include "utils/StringUtils.h"
 #ifdef HAS_VIDEO_PLAYBACK
 #include "cores/VideoRenderers/RenderManager.h"
@@ -267,14 +266,3 @@ void CGUIDialogVideoSettings::OnSettingChanged(SettingInfo &setting)
   if (g_PVRManager.IsPlayingRadio() || g_PVRManager.IsPlayingTV())
     g_PVRManager.TriggerSaveChannelSettings();
 }
-
-CStdString CGUIDialogVideoSettings::FormatInteger(float value, float minimum)
-{
-  return StringUtils::Format("%i", MathUtils::round_int(value));
-}
-
-CStdString CGUIDialogVideoSettings::FormatFloat(float value, float minimum)
-{
-  return StringUtils::Format("%2.2f", value);
-}
-

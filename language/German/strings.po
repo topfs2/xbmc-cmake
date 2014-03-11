@@ -5545,6 +5545,34 @@ msgctxt "#14101"
 msgid "Acceleration"
 msgstr "Beschleunigung"
 
+msgctxt "#15001"
+msgid "Basic"
+msgstr "Basis"
+
+msgctxt "#15002"
+msgid "Music"
+msgstr "Musik"
+
+msgctxt "#15003"
+msgid "Video"
+msgstr "Video"
+
+msgctxt "#15004"
+msgid "Games"
+msgstr "Spiele"
+
+msgctxt "#15005"
+msgid "Application"
+msgstr "Anwendungen"
+
+msgctxt "#15006"
+msgid "Phone"
+msgstr "Telefon"
+
+msgctxt "#15007"
+msgid "Message"
+msgstr "Nachrichten"
+
 msgctxt "#15012"
 msgid "Unavailable source"
 msgstr "Quelle nicht verfügbar"
@@ -5568,6 +5596,78 @@ msgstr "Spiele"
 msgctxt "#15019"
 msgid "Add"
 msgstr "Hinzufügen"
+
+msgctxt "#15021"
+msgid "Content type"
+msgstr "Inhaltstyp"
+
+msgctxt "#15022"
+msgid "Listening Mode"
+msgstr "Hörmodus"
+
+msgctxt "#15023"
+msgid "Master Mode"
+msgstr "Hauptverarbeitungsmodus"
+
+msgctxt "#15024"
+msgid "Pre process setup ..."
+msgstr "Vorbearbeitungseinstellungen ..."
+
+msgctxt "#15025"
+msgid "Listening mode setup ..."
+msgstr "Hörmoduseinstellungen ..."
+
+msgctxt "#15026"
+msgid "Speaker/Output setup ..."
+msgstr "Lautsprecher/Ausgangskonfiguration ..."
+
+msgctxt "#15027"
+msgid "Audio information ..."
+msgstr "Audioinformationen ..."
+
+msgctxt "#15028"
+msgid "Audio DSP settings - Main"
+msgstr "Audioeinstellungen - Übersicht"
+
+msgctxt "#15029"
+msgid "Audio DSP settings - Listening mode"
+msgstr "Audioeinstellungen - Hörmodus"
+
+msgctxt "#15030"
+msgid "Audio DSP settings - Speaker/Output"
+msgstr "Audioeinstellungen - Lautsprecher/Ausgangskonfiguration"
+
+msgctxt "#15031"
+msgid "Audio DSP settings - Audio information"
+msgstr "Audioeinstellungen - Audioinformationen"
+
+msgctxt "#15032"
+msgid "Set as default"
+msgstr "Als Standard festlegen"
+
+msgctxt "#15033"
+msgid "Resampler setup ..."
+msgstr "Umwandlungseinstellungen ..."
+
+msgctxt "#15034"
+msgid "Miscellaneous ..."
+msgstr "Verschiedenes"
+
+msgctxt "#15035"
+msgid "Audio DSP settings - Resampler"
+msgstr "Audioeinstellungen - "
+
+msgctxt "#15037"
+msgid "Audio DSP settings - Pre process"
+msgstr "Audioeinstellungen - "
+
+msgctxt "#15038"
+msgid "Audio DSP settings - Miscellaneous"
+msgstr "Audioeinstellungen - Verschiedenes"
+
+msgctxt "#15039"
+msgid "Content:"
+msgstr "Inhalt:"
 
 msgctxt "#15048"
 msgid "No audio DSP Add-on enabled"

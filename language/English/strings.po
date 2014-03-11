@@ -6694,7 +6694,37 @@ msgctxt "#14101"
 msgid "Acceleration"
 msgstr ""
 
-#empty strings from id 14102 to 15011
+#empty strings from id 14101 to 15000
+
+msgctxt "#15001"
+msgid "Basic"
+msgstr ""
+
+msgctxt "#15002"
+msgid "Music"
+msgstr ""
+
+msgctxt "#15003"
+msgid "Video"
+msgstr ""
+
+msgctxt "#15004"
+msgid "Games"
+msgstr ""
+
+msgctxt "#15005"
+msgid "Application"
+msgstr ""
+
+msgctxt "#15006"
+msgid "Phone"
+msgstr ""
+
+msgctxt "#15007"
+msgid "Message"
+msgstr ""
+
+#empty strings from id 15008 to 15011
 
 #: xbmc/video/VideoDatabase.cpp
 msgctxt "#15012"
@@ -6727,7 +6757,85 @@ msgctxt "#15019"
 msgid "Add"
 msgstr ""
 
-#empty strings from id 15020 to 15047
+#empty string id 15020
+
+msgctxt "#15021"
+msgid "Content type"
+msgstr ""
+
+msgctxt "#15022"
+msgid "Listening Mode"
+msgstr ""
+
+msgctxt "#15023"
+msgid "Master Mode"
+msgstr ""
+
+msgctxt "#15024"
+msgid "Pre process setup ..."
+msgstr ""
+
+msgctxt "#15025"
+msgid "Listening mode setup ..."
+msgstr ""
+
+msgctxt "#15026"
+msgid "Speaker/Output setup ..."
+msgstr ""
+
+msgctxt "#15027"
+msgid "Audio information ..."
+msgstr ""
+
+msgctxt "#15028"
+msgid "Audio DSP settings - Main"
+msgstr ""
+
+msgctxt "#15029"
+msgid "Audio DSP settings - Listening mode"
+msgstr ""
+
+msgctxt "#15030"
+msgid "Audio DSP settings - Speaker/Output"
+msgstr ""
+
+msgctxt "#15031"
+msgid "Audio DSP settings - Audio information"
+msgstr ""
+
+msgctxt "#15032"
+msgid "Set as default"
+msgstr ""
+
+msgctxt "#15033"
+msgid "Resampler setup ..."
+msgstr ""
+
+msgctxt "#15034"
+msgid "Miscellaneous ..."
+msgstr ""
+
+msgctxt "#15035"
+msgid "Audio DSP settings - Resampler"
+msgstr ""
+
+msgctxt "#15037"
+msgid "Audio DSP settings - Pre process"
+msgstr ""
+
+msgctxt "#15038"
+msgid "Audio DSP settings - Miscellaneous"
+msgstr ""
+
+msgctxt "#15039"
+msgid "Content:"
+msgstr ""
+
+#empty strings from id 15040 to 15046
+
+msgctxt "#15047"
+msgid "Audio DSP settings"
+msgstr "Audiosignalverarbeitungs-Einstellungen"
 
 msgctxt "#15048"
 msgid "No audio DSP Add-on enabled"

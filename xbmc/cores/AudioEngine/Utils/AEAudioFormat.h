@@ -19,6 +19,7 @@
  *
  */
 
+#include "addons/DllAudioDSP.h"
 #include "AEChannelInfo.h"
 
 /**
@@ -115,7 +116,12 @@ typedef struct AEAudioFormat{
    * The size of one frame in bytes
    */
   unsigned int m_frameSize;
- 
+
+  /**
+   * The stream profile data flags
+   */
+  unsigned int m_profile;
+
   AEAudioFormat()
   {
     m_dataFormat = AE_FMT_INVALID;
@@ -124,6 +130,7 @@ typedef struct AEAudioFormat{
     m_frames = 0;
     m_frameSamples = 0;
     m_frameSize = 0;
+    m_profile = 0;
   }
 
   bool operator==(const AEAudioFormat& fmt) const
@@ -134,7 +141,8 @@ typedef struct AEAudioFormat{
             m_channelLayout ==  fmt.m_channelLayout &&
             m_frames        ==  fmt.m_frames        &&
             m_frameSamples  ==  fmt.m_frameSamples  &&
-            m_frameSize     ==  fmt.m_frameSize;
+            m_frameSize     ==  fmt.m_frameSize     &&
+            m_profile       ==  fmt.m_profile;
   }
  
 } AEAudioFormat;

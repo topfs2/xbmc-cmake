@@ -2633,7 +2633,7 @@ bool CActiveAE::ResampleSound(CActiveAESound *sound)
 // Streams
 //-----------------------------------------------------------------------------
 
-IAEStream *CActiveAE::MakeStream(enum AEDataFormat dataFormat, unsigned int sampleRate, unsigned int encodedSampleRate, CAEChannelInfo channelLayout, unsigned int options)
+IAEStream *CActiveAE::MakeStream(enum AEDataFormat dataFormat, unsigned int sampleRate, unsigned int encodedSampleRate, CAEChannelInfo channelLayout, unsigned int profile, unsigned int options)
 {
   //TODO: pass number of samples in audio packet
 
@@ -2642,6 +2642,7 @@ IAEStream *CActiveAE::MakeStream(enum AEDataFormat dataFormat, unsigned int samp
   format.m_sampleRate = sampleRate;
   format.m_encodedRate = encodedSampleRate;
   format.m_channelLayout = channelLayout;
+  format.m_profile = profile;
   format.m_frames = format.m_sampleRate / 10;
   format.m_frameSize = format.m_channelLayout.Count() *
                        (CAEUtil::DataFormatToBits(format.m_dataFormat) >> 3);

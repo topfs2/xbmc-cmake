@@ -122,6 +122,7 @@ CDVDAudio::CDVDAudio(volatile bool &bStop)
   m_iBitsPerSample = 0;
   m_iBitrate = 0;
   m_SecondsPerByte = 0.0;
+  m_iProfile = 0;
   m_bPaused = true;
 }
 
@@ -154,6 +155,7 @@ bool CDVDAudio::Create(const DVDAudioFrame &audioframe, AVCodecID codec, bool ne
     audioframe.sample_rate,
     audioframe.encoded_sample_rate,
     audioframe.channel_layout,
+    audioframe.profile,
     options
   );
   if (!m_pAudioStream) return false;
@@ -162,6 +164,7 @@ bool CDVDAudio::Create(const DVDAudioFrame &audioframe, AVCodecID codec, bool ne
   m_iBitsPerSample = audioframe.bits_per_sample;
   m_bPassthrough   = audioframe.passthrough;
   m_channelLayout  = audioframe.channel_layout;
+  m_iProfile       = audioframe.profile;
   m_dwPacketSize   = m_pAudioStream->GetFrameSize();
 
   if(m_channelLayout.Count() && m_iBitrate && m_iBitsPerSample)
@@ -192,6 +195,7 @@ void CDVDAudio::Destroy()
   m_iBufferSize = 0;
   m_iBitrate = 0;
   m_iBitsPerSample = 0;
+  m_iProfile = 0;
   m_bPassthrough = false;
   m_bPaused = true;
   m_time.Flush();
@@ -404,7 +408,8 @@ bool CDVDAudio::IsValidFormat(const DVDAudioFrame &audioframe)
 
   if(m_iBitrate       != audioframe.sample_rate
   || m_iBitsPerSample != audioframe.bits_per_sample
-  || m_channelLayout  != audioframe.channel_layout)
+  || m_channelLayout  != audioframe.channel_layout
+  || m_iProfile       != audioframe.profile)
     return false;
 
   return true;

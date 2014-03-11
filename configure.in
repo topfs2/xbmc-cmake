@@ -2503,6 +2503,16 @@ else
   final_message="$final_message\n  PVR add-ons:\t\tNo"
 fi
 
+USE_ADSP_ADDONS=0
+DISABLE_ADSP_ADDON_CONFIG=1
+if [[ -f "adsp-addons/Makefile.am" ]]; then
+  final_message="$final_message\n  ADSP add-ons:\t\tYes"
+  USE_ADSP_ADDONS=1
+  DISABLE_ADSP_ADDON_CONFIG=0
+else
+  final_message="$final_message\n  ADSP add-ons:\t\tNo"
+fi
+
 OUTPUT_FILES="Makefile \
     Makefile.include \
     addons/skin.confluence/media/Makefile \
@@ -2561,6 +2571,7 @@ OUTPUT_FILES="Makefile \
     xbmc/windowing/Makefile \
     xbmc/windowing/egl/Makefile \
     lib/addons/library.xbmc.addon/Makefile \
+    lib/addons/library.xbmc.adsp/Makefile \
     lib/addons/library.xbmc.codec/Makefile \
     lib/addons/library.xbmc.gui/Makefile \
     lib/addons/library.xbmc.pvr/Makefile \
@@ -2666,6 +2677,7 @@ AC_SUBST(USE_ANDROID)
 AC_SUBST(GTEST_CONFIGURED)
 AC_SUBST(USE_DOXYGEN)
 AC_SUBST(USE_PVR_ADDONS)
+AC_SUBST(USE_ADSP_ADDONS)
 AC_SUBST(GNUTLS_ALL_LIBS)
 AC_SUBST(VORBISENC_ALL_LIBS)
 
@@ -2997,6 +3009,18 @@ XB_CONFIG_MODULE([pvr-addons], [
     CFLAGS="$CFLAGS" \
     CXXFLAGS="$CXXFLAGS"
 ], [$DISABLE_PVR_ADDON_CONFIG])
+
+XB_CONFIG_MODULE([adsp-addons], [
+  ./configure \
+    --prefix="${prefix}" \
+    --host=$host_alias \
+    --build=$build_alias \
+    --target=$target_alias \
+    CC="$CC" \
+    CXX="$CXX" \
+    CFLAGS="$CFLAGS" \
+    CXXFLAGS="$CXXFLAGS"
+], [$DISABLE_ADSP_ADDON_CONFIG])
 
 AC_OUTPUT
 

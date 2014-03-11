@@ -25,6 +25,7 @@
 #include "guilib/GUISettingsSliderControl.h"
 #include "guilib/GUIImage.h"
 #include "guilib/GUIControlGroupList.h"
+#include "guilib/GUILabelControl.h"
 #include "guilib/LocalizeStrings.h"
 #include "utils/log.h"
 #include "utils/MathUtils.h"
@@ -42,6 +43,7 @@
 #define CONTROL_DEFAULT_SEPARATOR  11
 #define CONTROL_DEFAULT_EDIT       12
 #define CONTROL_DEFAULT_EDIT_NUM   13
+#define CONTROL_DEFAULT_LABEL      14
 #define CONTROL_OKAY_BUTTON        28
 #define CONTROL_CANCEL_BUTTON      29
 #define CONTROL_START              30
@@ -59,6 +61,7 @@ CGUIDialogSettings::CGUIDialogSettings(int id, const char *xmlFile)
   m_pOriginalSettingsButton = NULL;
   m_pOriginalSlider = NULL;
   m_pOriginalSeparator = NULL;
+  m_pOriginalLabel = NULL;
   m_usePopupSliders = false;
   m_loadType = KEEP_IN_MEMORY;
 }
@@ -102,6 +105,7 @@ void CGUIDialogSettings::SetupPage()
   m_pOriginalSettingsButton = (CGUIButtonControl *)GetControl(CONTROL_DEFAULT_BUTTON);
   m_pOriginalSlider = (CGUISettingsSliderControl *)GetControl(CONTROL_DEFAULT_SLIDER);
   m_pOriginalSeparator = (CGUIImage *)GetControl(CONTROL_DEFAULT_SEPARATOR);
+  m_pOriginalLabel = (CGUILabelControl *)GetControl(CONTROL_DEFAULT_LABEL);
   if (m_pOriginalEdit) m_pOriginalEdit->SetVisible(false);
   if (m_pOriginalEditNum) m_pOriginalEditNum->SetVisible(false);
   if (m_pOriginalSpin) m_pOriginalSpin->SetVisible(false);
@@ -109,6 +113,7 @@ void CGUIDialogSettings::SetupPage()
   if (m_pOriginalSettingsButton) m_pOriginalSettingsButton->SetVisible(false);
   if (m_pOriginalSlider) m_pOriginalSlider->SetVisible(false);
   if (m_pOriginalSeparator) m_pOriginalSeparator->SetVisible(false);
+  if (m_pOriginalLabel) m_pOriginalLabel->SetVisible(false);
 
   // update our settings label
   if (GetID() == WINDOW_DIALOG_PVR_TIMER_SETTING)
@@ -229,6 +234,10 @@ void CGUIDialogSettings::UpdateSetting(unsigned int id)
     if (strNewValue.empty())
       strNewValue = "-";
     SET_CONTROL_LABEL2(controlID, strNewValue);
+  }
+  else if (setting.type == SettingInfo::LABEL)
+  {
+    SET_CONTROL_LABEL(controlID, setting.name);
   }
   else if (setting.type == SettingInfo::RANGE)
   {
@@ -446,6 +455,13 @@ void CGUIDialogSettings::AddSetting(SettingInfo &setting, float width, int iCont
     ((CGUIButtonControl *)pControl)->SetLabel2(strValue);
     pControl->SetWidth(width);
   }
+  else if (setting.type == SettingInfo::LABEL && m_pOriginalLabel)
+  {
+    pControl = new CGUILabelControl(*m_pOriginalLabel);
+    if (!pControl) return ;
+    ((CGUILabelControl *)pControl)->SetLabel(setting.name);
+    pControl->SetWidth(width);
+  }
   else if (setting.type == SettingInfo::RANGE)
   {
     if (!m_pOriginalSlider) return;
@@ -516,11 +532,36 @@ void CGUIDialogSettings::AddButton(unsigned int id, int label, float *current, f
   m_settings.push_back(setting);
 }
 
+void CGUIDialogSettings::AddButton(unsigned int id, CStdString label, float *current, float min, float interval, float max, FORMATFUNCTION function)
+{
+  SettingInfo setting;
+  setting.id = id;
+  setting.name = label;
+  setting.type = SettingInfo::BUTTON;
+  setting.data = current;
+  setting.min = min;
+  setting.max = max;
+  setting.interval = interval;
+  setting.formatFunction.standard = function;
+  m_settings.push_back(setting);
+}
+
 void CGUIDialogSettings::AddButton(unsigned int id, int label, CStdString *str, bool bOn)
 {
   SettingInfo setting;
   setting.id = id;
   setting.name = g_localizeStrings.Get(label);
+  setting.type = SettingInfo::BUTTON_DIALOG;
+  setting.enabled  = bOn;
+  setting.data = str;
+  m_settings.push_back(setting);
+}
+
+void CGUIDialogSettings::AddButton(unsigned int id, CStdString label, CStdString *str, bool bOn)
+{
+  SettingInfo setting;
+  setting.id = id;
+  setting.name = label;
   setting.type = SettingInfo::BUTTON_DIALOG;
   setting.enabled  = bOn;
   setting.data = str;
@@ -535,6 +576,17 @@ void CGUIDialogSettings::AddString(unsigned int id, int label, CStdString *curre
   setting.type = SettingInfo::STRING;
   setting.data = current;
   setting.enabled = true;
+  m_settings.push_back(setting);
+}
+
+void CGUIDialogSettings::AddLabel(unsigned int id, int label)
+{
+  SettingInfo setting;
+  setting.id = id;
+  setting.name = g_localizeStrings.Get(label);
+  setting.type = SettingInfo::LABEL;
+  setting.data = NULL;
+  setting.enabled = false;
   m_settings.push_back(setting);
 }
 

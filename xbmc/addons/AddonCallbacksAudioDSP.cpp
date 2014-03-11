@@ -1,0 +1,137 @@
+/*
+ *      Copyright (C) 2014 Team XBMC
+ *      http://xbmc.org
+ *
+ *  This Program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2, or (at your option)
+ *  any later version.
+ *
+ *  This Program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with XBMC; see the file COPYING.  If not, see
+ *  <http://www.gnu.org/licenses/>.
+ *
+ */
+
+#include "Application.h"
+#include "AddonCallbacksAudioDSP.h"
+#include "settings/AdvancedSettings.h"
+#include "utils/log.h"
+#include "cores/AudioEngine/DSPAddons/ActiveAEDSP.h"
+#include "cores/AudioEngine/DSPAddons/ActiveAEDSPMode.h"
+#include "dialogs/GUIDialogKaiToast.h"
+
+using namespace ActiveAE;
+
+namespace ADDON
+{
+
+CAddonCallbacksADSP::CAddonCallbacksADSP(CAddon* addon)
+{
+  m_addon     = addon;
+  m_callbacks = new CB_ADSPLib;
+
+  /* write XBMC audio DSP specific add-on function addresses to callback table */
+  m_callbacks->AddMenuHook                = ADSPAddMenuHook;
+  m_callbacks->RemoveMenuHook             = ADSPRemoveMenuHook;
+  m_callbacks->RegisterMasterMode         = ADSPRegisterMasterMode;
+  m_callbacks->UnregisterMasterMode       = ADSPUnregisterMasterMode;
+}
+
+CAddonCallbacksADSP::~CAddonCallbacksADSP()
+{
+  /* delete the callback table */
+  delete m_callbacks;
+}
+
+CActiveAEDSPAddon *CAddonCallbacksADSP::GetAudioDSPAddon(void *addonData)
+{
+  CAddonCallbacks *addon = static_cast<CAddonCallbacks *>(addonData);
+  if (!addon || !addon->GetHelperADSP())
+  {
+    CLog::Log(LOGERROR, "Audio DSP - %s - called with a null pointer", __FUNCTION__);
+    return NULL;
+  }
+
+  return dynamic_cast<CActiveAEDSPAddon *>(addon->GetHelperADSP()->m_addon);
+}
+
+void CAddonCallbacksADSP::ADSPAddMenuHook(void *addonData, AE_DSP_MENUHOOK *hook)
+{
+  CActiveAEDSPAddon *client = GetAudioDSPAddon(addonData);
+  if (!hook || !client)
+  {
+    CLog::Log(LOGERROR, "Audio DSP - %s - invalid handler data", __FUNCTION__);
+    return;
+  }
+
+  AE_DSP_MENUHOOKS *hooks = client->GetMenuHooks();
+  if (hooks)
+  {
+    AE_DSP_MENUHOOK hookInt;
+    hookInt.iHookId            = hook->iHookId;
+    hookInt.iLocalizedStringId = hook->iLocalizedStringId;
+    hookInt.category           = hook->category;
+
+    /* add this new hook */
+    hooks->push_back(hookInt);
+  }
+}
+
+void CAddonCallbacksADSP::ADSPRemoveMenuHook(void *addonData, AE_DSP_MENUHOOK *hook)
+{
+  CActiveAEDSPAddon *client = GetAudioDSPAddon(addonData);
+  if (!hook || !client)
+  {
+    CLog::Log(LOGERROR, "Audio DSP - %s - invalid handler data", __FUNCTION__);
+    return;
+  }
+
+  AE_DSP_MENUHOOKS *hooks = client->GetMenuHooks();
+  if (hooks)
+  {
+    for (unsigned int i = 0; i < hooks->size(); i++)
+    {
+      if (hooks->at(i).iHookId == hook->iHookId)
+      {
+        /* remove this hook */
+        hooks->erase(hooks->begin()+i);
+        break;
+      }
+    }
+  }
+}
+
+void CAddonCallbacksADSP::ADSPRegisterMasterMode(void* addonData, AE_DSP_MASTER_MODES::AE_DSP_MASTER_MODE* mode)
+{
+  CActiveAEDSPAddon *addon = GetAudioDSPAddon(addonData);
+  if (!mode || !addon)
+  {
+    CLog::Log(LOGERROR, "Audio DSP - %s - invalid mode data", __FUNCTION__);
+    return;
+  }
+
+  CActiveAEDSPMode transferMode(*mode, addon->GetID());
+  int idMode = transferMode.AddUpdate();
+  mode->iUniqueDBModeId = idMode;
+}
+
+void CAddonCallbacksADSP::ADSPUnregisterMasterMode(void* addonData, AE_DSP_MASTER_MODES::AE_DSP_MASTER_MODE* mode)
+{
+  CActiveAEDSPAddon *addon = GetAudioDSPAddon(addonData);
+  if (!mode || !addon)
+  {
+    CLog::Log(LOGERROR, "Audio DSP - %s - invalid mode data", __FUNCTION__);
+    return;
+  }
+
+  CActiveAEDSPMode transferMode(*mode, addon->GetID());
+  transferMode.Delete();
+}
+
+}; /* namespace ADDON */

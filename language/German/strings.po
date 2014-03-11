@@ -5569,6 +5569,22 @@ msgctxt "#15019"
 msgid "Add"
 msgstr "Hinzufügen"
 
+msgctxt "#15048"
+msgid "No audio DSP Add-on enabled"
+msgstr "Kein Audiosignalverarbeitungs Add-On aktiviert"
+
+msgctxt "#15049"
+msgid "The audio DSP has been enabled without any"
+msgstr "Das Audioverarbeitungssystem ist aktiviert"
+
+msgctxt "#15050"
+msgid "enabled DSP Add-on. Enable at least one Add-on"
+msgstr "ohne ein Add-on. Aktiviere mindestens eines"
+
+msgctxt "#15051"
+msgid "in order to use the audio DSP functionality."
+msgstr "um die Verabeitung nutzen zu können."
+
 msgctxt "#15052"
 msgid "Password"
 msgstr "Passwort"
@@ -10013,6 +10029,10 @@ msgctxt "#24024"
 msgid "Add-on disabled"
 msgstr "Addon deaktiviert"
 
+msgctxt "#24025"
+msgid "Audio DSP"
+msgstr "Audio-DSP"
+
 msgctxt "#24027"
 msgid "Weather"
 msgstr "Wetter"
@@ -12404,6 +12424,30 @@ msgstr "Legt fest wie die Videoverarbeitung beschleunigt werden soll. Dies schli
 msgctxt "#36431"
 msgid "Defines whether video decoding should be performed in software (requires more CPU) or with hardware acceleration where possible."
 msgstr "Legt fest ob die Videodekodierung mittels Software (benötigt mehr CPU-Leistung) oder mittels Harwarebeschleunigung ausgeführt werden soll, wenn die Möglichkeit besteht."
+
+msgctxt "#36432"
+msgid "Select to enable Add-ons audio signal processing of audio channels specified by the speaker configuration."
+msgstr "Auswählen zum aktivieren der Audiosignalverarbeitung über Add-On's zur angegebenen Lautsprechenkonfiguration"
+
+msgctxt "#36433"
+msgid "Clear your library about all audio dsp settings (files and addons) to initial condition"
+msgstr "Setzte deine Audiosignal-Verarbeitungsbibliothek (für Dateien und Add-On's) zu seiner Startkonfiguration"
+
+msgctxt "#36434"
+msgid "All data in the audio DSP database is being erased"
+msgstr "Alles in der Audiosignaldatenbank wird zurückgesetzt"
+
+msgctxt "#36435"
+msgid "Audio DSP Processing"
+msgstr "Audiosignalverarbeitung"
+
+msgctxt "#36436"
+msgid "Audio DSP client specific actions"
+msgstr "Audiosignalverarbeitung-Add-On spezifizierte Aktionen"
+
+msgctxt "#36437"
+msgid "No info available yet."
+msgstr "Noch keine Informationen vorhanden."
 
 msgctxt "#36500"
 msgid "Stereoscopic mode (current)"

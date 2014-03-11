@@ -40,6 +40,7 @@
 #include "dialogs/GUIDialogKaiToast.h"
 #include "dialogs/GUIDialogProgress.h"
 #include "URL.h"
+#include "cores/AudioEngine/DSPAddons/ActiveAEDSP.h"
 #include "pvr/PVRManager.h"
 
 using namespace std;
@@ -628,6 +629,11 @@ bool CAddonInstallJob::OnPreInstall()
     // stop the pvr manager, so running pvr add-ons are stopped and closed
     PVR::CPVRManager::Get().Stop();
   }
+  else if (m_addon->Type() == ADDON_ADSPDLL)
+  {
+    // stop the audio dsp processor, so running dsp add-ons are stopped and closed
+    ActiveAE::CActiveAEDSP::Get().Deactivate();
+  }
   return false;
 }
 
@@ -766,6 +772,12 @@ void CAddonInstallJob::OnPostInstall(bool reloadAddon)
     // (re)start the pvr manager
     PVR::CPVRManager::Get().Start(true);
   }
+
+  if (m_addon->Type() == ADDON_ADSPDLL)
+  {
+    // (re)start the audio dsp processor
+    ActiveAE::CActiveAEDSP::Get().Activate(true);
+  }
 }
 
 void CAddonInstallJob::ReportInstallError(const CStdString& addonID,
@@ -810,7 +822,12 @@ bool CAddonUnInstallJob::DoWork()
     // stop the pvr manager, so running pvr add-ons are stopped and closed
     PVR::CPVRManager::Get().Stop();
   }
-  if (m_addon->Type() == ADDON_SERVICE)
+  else if (m_addon->Type() == ADDON_ADSPDLL)
+  {
+    // stop the audio dsp processor, so running audio DSP add-ons are stopped and closed
+    ActiveAE::CActiveAEDSP::Get().Deactivate();
+  }
+  else if (m_addon->Type() == ADDON_SERVICE)
   {
     boost::shared_ptr<CService> service = boost::dynamic_pointer_cast<CService>(m_addon);
     if (service)
@@ -866,5 +883,10 @@ void CAddonUnInstallJob::OnPostUnInstall()
   {
     if (CSettings::Get().GetBool("pvrmanager.enabled"))
       PVR::CPVRManager::Get().Start(true);
+  }
+  else if (m_addon->Type() == ADDON_ADSPDLL)
+  {
+    if (CSettings::Get().GetBool("audiooutput.audiodsp"))
+      ActiveAE::CActiveAEDSP::Get().Activate(true);
   }
 }

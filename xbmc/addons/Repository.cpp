@@ -22,6 +22,7 @@
 #include "addons/AddonDatabase.h"
 #include "addons/AddonInstaller.h"
 #include "addons/AddonManager.h"
+#include "cores/AudioEngine/DSPAddons/ActiveAEDSP.h"
 #include "dialogs/GUIDialogYesNo.h"
 #include "dialogs/GUIDialogKaiToast.h"
 #include "filesystem/File.h"
@@ -285,6 +286,9 @@ bool CRepositoryUpdateJob::DoWork()
         if (newAddon->Type() == ADDON_PVRDLL &&
             !PVR::CPVRManager::Get().InstallAddonAllowed(newAddon->ID()))
           PVR::CPVRManager::Get().MarkAsOutdated(addon->ID(), referer);
+        else if (newAddon->Type() == ADDON_ADSPDLL &&
+            ActiveAE::CActiveAEDSP::Get().InstallAddonAllowed(newAddon->ID()))
+          CAddonInstaller::Get().Install(addon->ID(), true, referer);
         else
           CAddonInstaller::Get().Install(addon->ID(), true, referer);
       }

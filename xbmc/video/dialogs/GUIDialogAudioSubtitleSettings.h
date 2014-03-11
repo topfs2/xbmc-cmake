@@ -31,10 +31,6 @@ public:
   virtual ~CGUIDialogAudioSubtitleSettings(void);
   virtual void FrameMove();
 
-  static CStdString PercentAsDecibel(float value, float minimum);
-  static CStdString FormatDelay(float value, float minimum);
-  static CStdString FormatDecibel(float value, float minimum);
-
 protected:
   virtual void CreateSettings();
   virtual void OnSettingChanged(SettingInfo &setting);

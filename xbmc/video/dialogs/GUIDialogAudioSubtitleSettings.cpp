@@ -381,28 +381,6 @@ void CGUIDialogAudioSubtitleSettings::FrameMove()
   CGUIDialogSettings::FrameMove();
 }
 
-CStdString CGUIDialogAudioSubtitleSettings::PercentAsDecibel(float value, float interval)
-{
-  return StringUtils::Format("%2.1f dB", CAEUtil::PercentToGain(value));;
-}
-
-CStdString CGUIDialogAudioSubtitleSettings::FormatDecibel(float value, float interval)
-{
-  return StringUtils::Format("%2.1f dB", value);;
-}
-
-CStdString CGUIDialogAudioSubtitleSettings::FormatDelay(float value, float interval)
-{
-  CStdString text;
-  if (fabs(value) < 0.5f*interval)
-    text = StringUtils::Format(g_localizeStrings.Get(22003).c_str(), 0.0);
-  else if (value < 0)
-    text = StringUtils::Format(g_localizeStrings.Get(22004).c_str(), fabs(value));
-  else
-    text = StringUtils::Format(g_localizeStrings.Get(22005).c_str(), value);
-  return text;
-}
-
 bool CGUIDialogAudioSubtitleSettings::SupportsAudioFeature(int feature)
 {
   for (Features::iterator itr = m_audioCaps.begin(); itr != m_audioCaps.end(); itr++)

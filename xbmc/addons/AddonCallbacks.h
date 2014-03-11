@@ -20,6 +20,7 @@
  */
 
 #include "cores/dvdplayer/DVDDemuxers/DVDDemuxUtils.h"
+#include "addons/include/xbmc_adsp_types.h"
 #include "addons/include/xbmc_pvr_types.h"
 #include "addons/include/xbmc_codec_types.h"
 #include "../../addons/library.xbmc.addon/libXBMC_addon.h"
@@ -29,6 +30,7 @@ typedef void (*AddOnLogCallback)(void *addonData, const ADDON::addon_log_t logle
 typedef void (*AddOnQueueNotification)(void *addonData, const ADDON::queue_msg_t type, const char *msg);
 typedef bool (*AddOnWakeOnLan)(const char* mac);
 typedef bool (*AddOnGetSetting)(void *addonData, const char *settingName, void *settingValue);
+typedef bool (*AddOnSetSetting)(void *addonData, const char *settingName, void *settingValue);
 typedef char* (*AddOnUnknownToUTF8)(const char *sourceDest);
 typedef char* (*AddOnGetLocalizedString)(const void* addonData, long dwCode);
 typedef char* (*AddOnGetDVDMenuLanguage)(const void* addonData);
@@ -60,6 +62,7 @@ typedef struct CB_AddOn
   AddOnQueueNotification  QueueNotification;
   AddOnWakeOnLan          WakeOnLan;
   AddOnGetSetting         GetSetting;
+  AddOnSetSetting         SetSetting;
   AddOnUnknownToUTF8      UnknownToUTF8;
   AddOnGetLocalizedString GetLocalizedString;
   AddOnGetDVDMenuLanguage GetDVDMenuLanguage;
@@ -147,6 +150,7 @@ typedef float       (*GUIControl_Progress_GetPercentage)(void *addonData, GUIHAN
 typedef void        (*GUIControl_Progress_SetInfo)(void *addonData, GUIHANDLE handle, int iInfo);
 typedef int         (*GUIControl_Progress_GetInfo)(void *addonData, GUIHANDLE handle);
 typedef const char* (*GUIControl_Progress_GetDescription)(void *addonData, GUIHANDLE handle);
+
 typedef GUIHANDLE   (*GUIListItem_Create)(void *addonData, const char *label, const char *label2, const char *iconImage, const char *thumbnailImage, const char *path);
 typedef const char* (*GUIListItem_GetLabel)(void *addonData, GUIHANDLE handle);
 typedef void        (*GUIListItem_SetLabel)(void *addonData, GUIHANDLE handle, const char *label);
@@ -234,6 +238,20 @@ typedef struct CB_GUILib
 
 } CB_GUILib;
 
+typedef void (*ADSPAddMenuHook)(void *addonData, AE_DSP_MENUHOOK *hook);
+typedef void (*ADSPRemoveMenuHook)(void *addonData, AE_DSP_MENUHOOK *hook);
+typedef void (*ADSPRegisterMasterMode)(void *addonData, AE_DSP_MASTER_MODES::AE_DSP_MASTER_MODE *mode);
+typedef void (*ADSPUnregisterMasterMode)(void *addonData, AE_DSP_MASTER_MODES::AE_DSP_MASTER_MODE *mode);
+
+typedef struct CB_ADSPLib
+{
+  ADSPAddMenuHook               AddMenuHook;
+  ADSPRemoveMenuHook            RemoveMenuHook;
+  ADSPRegisterMasterMode        RegisterMasterMode;
+  ADSPUnregisterMasterMode      UnregisterMasterMode;
+
+} CB_ADSPLib;
+
 typedef void (*PVRTransferEpgEntry)(void *userData, const ADDON_HANDLE handle, const EPG_TAG *epgentry);
 typedef void (*PVRTransferChannelEntry)(void *userData, const ADDON_HANDLE handle, const PVR_CHANNEL *chan);
 typedef void (*PVRTransferTimerEntry)(void *userData, const ADDON_HANDLE handle, const PVR_TIMER *timer);
@@ -275,6 +293,8 @@ typedef struct CB_PVRLib
 
 typedef CB_AddOnLib* (*XBMCAddOnLib_RegisterMe)(void *addonData);
 typedef void (*XBMCAddOnLib_UnRegisterMe)(void *addonData, CB_AddOnLib *cbTable);
+typedef CB_ADSPLib* (*XBMCADSPLib_RegisterMe)(void *addonData);
+typedef void (*XBMCADSPLib_UnRegisterMe)(void *addonData, CB_ADSPLib *cbTable);
 typedef CB_CODECLib* (*XBMCCODECLib_RegisterMe)(void *addonData);
 typedef void (*XBMCCODECLib_UnRegisterMe)(void *addonData, CB_CODECLib *cbTable);
 typedef CB_GUILib* (*XBMCGUILib_RegisterMe)(void *addonData);
@@ -294,6 +314,8 @@ typedef struct AddonCB
   XBMCGUILib_UnRegisterMe    GUILib_UnRegisterMe;
   XBMCPVRLib_RegisterMe      PVRLib_RegisterMe;
   XBMCPVRLib_UnRegisterMe    PVRLib_UnRegisterMe;
+  XBMCADSPLib_RegisterMe     ADSPLib_RegisterMe;
+  XBMCADSPLib_UnRegisterMe   ADSPLib_UnRegisterMe;
 } AddonCB;
 
 
@@ -302,6 +324,7 @@ namespace ADDON
 
 class CAddon;
 class CAddonCallbacksAddon;
+class CAddonCallbacksADSP;
 class CAddonCallbacksCodec;
 class CAddonCallbacksGUI;
 class CAddonCallbacksPVR;
@@ -315,6 +338,8 @@ public:
 
   static CB_AddOnLib* AddOnLib_RegisterMe(void *addonData);
   static void AddOnLib_UnRegisterMe(void *addonData, CB_AddOnLib *cbTable);
+  static CB_ADSPLib* ADSPLib_RegisterMe(void *addonData);
+  static void ADSPLib_UnRegisterMe(void *addonData, CB_ADSPLib *cbTable);
   static CB_CODECLib* CODECLib_RegisterMe(void *addonData);
   static void CODECLib_UnRegisterMe(void *addonData, CB_CODECLib *cbTable);
   static CB_GUILib* GUILib_RegisterMe(void *addonData);
@@ -323,6 +348,7 @@ public:
   static void PVRLib_UnRegisterMe(void *addonData, CB_PVRLib *cbTable);
 
   CAddonCallbacksAddon *GetHelperAddon() { return m_helperAddon; }
+  CAddonCallbacksADSP *GetHelperADSP() { return m_helperADSP; }
   CAddonCallbacksCodec *GetHelperCodec() { return m_helperCODEC; }
   CAddonCallbacksGUI *GetHelperGUI() { return m_helperGUI; }
   CAddonCallbacksPVR *GetHelperPVR() { return m_helperPVR; }
@@ -331,6 +357,7 @@ private:
   AddonCB             *m_callbacks;
   CAddon              *m_addon;
   CAddonCallbacksAddon *m_helperAddon;
+  CAddonCallbacksADSP  *m_helperADSP;
   CAddonCallbacksCodec *m_helperCODEC;
   CAddonCallbacksGUI   *m_helperGUI;
   CAddonCallbacksPVR   *m_helperPVR;

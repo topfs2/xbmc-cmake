@@ -270,6 +270,7 @@
     <ClCompile Include="..\..\lib\SlingboxLib\SlingboxLib.cpp" />
     <ClCompile Include="..\..\xbmc\addons\AddonCallbacks.cpp" />
     <ClCompile Include="..\..\xbmc\addons\AddonCallbacksAddon.cpp" />
+    <ClCompile Include="..\..\xbmc\addons\AddonCallbacksAudioDSP.cpp" />
     <ClCompile Include="..\..\xbmc\addons\AddonCallbacksCodec.cpp" />
     <ClCompile Include="..\..\xbmc\addons\AddonCallbacksGUI.cpp" />
     <ClCompile Include="..\..\xbmc\addons\AddonCallbacksPVR.cpp" />
@@ -293,6 +294,11 @@
     <ClCompile Include="..\..\xbmc\BackgroundInfoLoader.cpp" />
     <ClCompile Include="..\..\xbmc\cores\AudioEngine\AEFactory.cpp" />
     <ClCompile Include="..\..\xbmc\cores\AudioEngine\AESinkFactory.cpp" />
+    <ClCompile Include="..\..\xbmc\cores\AudioEngine\DSPAddons\ActiveAEDSP.cpp" />
+    <ClCompile Include="..\..\xbmc\cores\AudioEngine\DSPAddons\ActiveAEDSPAddon.cpp" />
+    <ClCompile Include="..\..\xbmc\cores\AudioEngine\DSPAddons\ActiveAEDSPDatabase.cpp" />
+    <ClCompile Include="..\..\xbmc\cores\AudioEngine\DSPAddons\ActiveAEDSPMode.cpp" />
+    <ClCompile Include="..\..\xbmc\cores\AudioEngine\DSPAddons\ActiveAEDSPProcess.cpp" />
     <ClCompile Include="..\..\xbmc\cores\AudioEngine\Encoders\AEEncoderFFmpeg.cpp" />
     <ClCompile Include="..\..\xbmc\cores\AudioEngine\Engines\ActiveAE\ActiveAE.cpp" />
     <ClCompile Include="..\..\xbmc\cores\AudioEngine\Engines\ActiveAE\ActiveAEBuffer.cpp" />
@@ -890,6 +896,8 @@
     <ClCompile Include="..\..\xbmc\rendering\RenderSystem.cpp" />
     <ClCompile Include="..\..\xbmc\SectionLoader.cpp" />
     <ClCompile Include="..\..\xbmc\settings\AdvancedSettings.cpp" />
+    <ClCompile Include="..\..\xbmc\settings\AudioDSPSettings.cpp" />
+    <ClCompile Include="..\..\xbmc\settings\dialogs\GUIDialogAudioSettings.cpp" />
     <ClCompile Include="..\..\xbmc\settings\dialogs\GUIDialogContentSettings.cpp" />
     <ClCompile Include="..\..\xbmc\settings\dialogs\GUIDialogSettings.cpp" />
     <ClCompile Include="..\..\xbmc\settings\DisplaySettings.cpp" />
@@ -957,12 +965,18 @@
     <ClCompile Include="..\..\xbmc\TextureCacheJob.cpp" />
     <ClCompile Include="..\..\xbmc\TextureDatabase.cpp" />
     <ClCompile Include="..\..\xbmc\DatabaseManager.cpp" />
+    <ClInclude Include="..\..\xbmc\addons\AddonCallbacksAudioDSP.h" />
     <ClInclude Include="..\..\xbmc\addons\AddonCallbacksCodec.h" />
     <ClInclude Include="..\..\xbmc\ApplicationPlayer.h" />
     <ClInclude Include="..\..\xbmc\AppParamParser.h" />
     <ClInclude Include="..\..\xbmc\cores\AudioEngine\AEAudioFormat.h" />
     <ClInclude Include="..\..\xbmc\cores\AudioEngine\AEFactory.h" />
     <ClInclude Include="..\..\xbmc\cores\AudioEngine\AESinkFactory.h" />
+    <ClInclude Include="..\..\xbmc\cores\AudioEngine\DSPAddons\ActiveAEDSP.h" />
+    <ClInclude Include="..\..\xbmc\cores\AudioEngine\DSPAddons\ActiveAEDSPAddon.h" />
+    <ClInclude Include="..\..\xbmc\cores\AudioEngine\DSPAddons\ActiveAEDSPDatabase.h" />
+    <ClInclude Include="..\..\xbmc\cores\AudioEngine\DSPAddons\ActiveAEDSPMode.h" />
+    <ClInclude Include="..\..\xbmc\cores\AudioEngine\DSPAddons\ActiveAEDSPProcess.h" />
     <ClInclude Include="..\..\xbmc\cores\AudioEngine\Encoders\AEEncoderFFmpeg.h" />
     <ClInclude Include="..\..\xbmc\cores\AudioEngine\Engines\ActiveAE\ActiveAE.h" />
     <ClInclude Include="..\..\xbmc\cores\AudioEngine\Engines\ActiveAE\ActiveAEBuffer.h" />
@@ -1093,6 +1107,8 @@
     <ClInclude Include="..\..\xbmc\profiles\Profile.h" />
     <ClInclude Include="..\..\xbmc\profiles\ProfilesManager.h" />
     <ClInclude Include="..\..\xbmc\profiles\windows\GUIWindowSettingsProfile.h" />
+    <ClInclude Include="..\..\xbmc\settings\AudioDSPSettings.h" />
+    <ClInclude Include="..\..\xbmc\settings\dialogs\GUIDialogAudioSettings.h" />
     <ClInclude Include="..\..\xbmc\settings\dialogs\GUIDialogContentSettings.h" />
     <ClInclude Include="..\..\xbmc\settings\dialogs\GUIDialogSettings.h" />
     <ClInclude Include="..\..\xbmc\settings\DisplaySettings.h" />

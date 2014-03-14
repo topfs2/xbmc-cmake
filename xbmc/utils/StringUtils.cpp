@@ -30,8 +30,10 @@
 
 
 #include "StringUtils.h"
+#include "guilib/LocalizeStrings.h"
 #include "utils/RegExp.h"
 #include "utils/fstrcmp.h"
+#include "utils/MathUtils.h"
 #include <locale>
 
 #include <math.h>
@@ -979,6 +981,39 @@ bool StringUtils::ContainsKeyword(const CStdString &str, const CStdStringArray &
       return true;
   }
   return false;
+}
+
+CStdString StringUtils::FormatPercentAsDecibel(float value, float interval)
+{
+  static const float db_range = 60.0f;
+  return StringUtils::Format("%2.1f dB", (value - 1)*db_range);
+}
+
+CStdString StringUtils::FormatDecibel(float value, float interval)
+{
+  return StringUtils::Format("%2.1f dB", value);;
+}
+
+CStdString StringUtils::FormatDelay(float value, float interval)
+{
+  CStdString text;
+  if (fabs(value) < 0.5f*interval)
+    text = StringUtils::Format(g_localizeStrings.Get(22003).c_str(), 0.0);
+  else if (value < 0)
+    text = StringUtils::Format(g_localizeStrings.Get(22004).c_str(), fabs(value));
+  else
+    text = StringUtils::Format(g_localizeStrings.Get(22005).c_str(), value);
+  return text;
+}
+
+CStdString StringUtils::FormatInteger(float value, float minimum)
+{
+  return StringUtils::Format("%i", MathUtils::round_int(value));
+}
+
+CStdString StringUtils::FormatFloat(float value, float minimum)
+{
+  return StringUtils::Format("%2.2f", value);
 }
 
 size_t StringUtils::utf8_strlen(const char *s)

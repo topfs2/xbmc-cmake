@@ -77,12 +77,6 @@ public:
 
   virtual void OnSliderChange(void *data, CGUISliderControl *slider);
 
-  static CStdString PercentAsDecibel(float value, float minimum);
-  static CStdString FormatDelay(float value, float minimum);
-  static CStdString FormatDecibel(float value, float minimum);
-  static CStdString FormatInteger(float value, float minimum);
-  static CStdString FormatFloat(float value, float minimum);
-
 protected:
   virtual void OnOkay() {};
   virtual void OnCancel() {};

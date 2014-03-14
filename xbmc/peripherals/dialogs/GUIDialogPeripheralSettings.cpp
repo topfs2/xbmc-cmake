@@ -23,7 +23,6 @@
 #include "peripherals/Peripherals.h"
 #include "settings/lib/Setting.h"
 #include "utils/log.h"
-#include "video/dialogs/GUIDialogVideoSettings.h"
 
 using namespace std;
 using namespace PERIPHERALS;
@@ -100,7 +99,7 @@ void CGUIDialogPeripheralSettings::CreateSettings()
               if (intSetting->GetOptions().empty())
               {
                 m_intSettings.insert(make_pair(CStdString(intSetting->GetId()), (float) intSetting->GetValue()));
-                AddSlider(m_settingId++, intSetting->GetLabel(), &m_intSettings[intSetting->GetId()], (float)intSetting->GetMinimum(), (float)intSetting->GetStep(), (float)intSetting->GetMaximum(), CGUIDialogVideoSettings::FormatInteger, false);
+                AddSlider(m_settingId++, intSetting->GetLabel(), &m_intSettings[intSetting->GetId()], (float)intSetting->GetMinimum(), (float)intSetting->GetStep(), (float)intSetting->GetMaximum(), StringUtils::FormatInteger, false);
               }
               else
               {
@@ -123,7 +122,7 @@ void CGUIDialogPeripheralSettings::CreateSettings()
             if (floatSetting)
             {
               m_floatSettings.insert(make_pair(CStdString(floatSetting->GetId()), (float)floatSetting->GetValue()));
-              AddSlider(m_settingId++, floatSetting->GetLabel(), &m_floatSettings[floatSetting->GetId()], (float)floatSetting->GetMinimum(), (float)floatSetting->GetStep(), (float)floatSetting->GetMaximum(), CGUIDialogVideoSettings::FormatFloat, false);
+              AddSlider(m_settingId++, floatSetting->GetLabel(), &m_floatSettings[floatSetting->GetId()], (float)floatSetting->GetMinimum(), (float)floatSetting->GetStep(), (float)floatSetting->GetMaximum(), StringUtils::FormatFloat, false);
             }
           }
           break;

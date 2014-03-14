@@ -229,14 +229,14 @@ void CGUIDialogAudioDSPSettings::CreateSettings()
     AddSeparator(AUDIO_SEPERATOR_1);
 
     m_volume = g_application.GetVolume(false);
-    AddSlider(AUDIO_SETTINGS_VOLUME, 13376, &m_volume, VOLUME_MINIMUM, VOLUME_MAXIMUM / 100.0f, VOLUME_MAXIMUM, PercentAsDecibel, false);
+    AddSlider(AUDIO_SETTINGS_VOLUME, 13376, &m_volume, VOLUME_MINIMUM, VOLUME_MAXIMUM / 100.0f, VOLUME_MAXIMUM, StringUtils::FormatPercentAsDecibel, false);
     if (SupportsAudioFeature(IPC_AUD_AMP))
     {
       AddSlider(AUDIO_SETTINGS_VOLUME_AMPLIFICATION,
                 660,
                 &CMediaSettings::Get().GetCurrentVideoSettings().m_VolumeAmplification,
                 VOLUME_DRC_MINIMUM * 0.01f, (VOLUME_DRC_MAXIMUM - VOLUME_DRC_MINIMUM) / 6000.0f, VOLUME_DRC_MAXIMUM * 0.01f,
-                FormatDecibel,
+                StringUtils::FormatDecibel,
                 false);
       AddSeparator(AUDIO_SEPERATOR_2);
     }
@@ -274,7 +274,7 @@ void CGUIDialogAudioDSPSettings::CreateSettings()
     SET_CONTROL_LABEL(CONTROL_SETTINGS_LABEL, g_localizeStrings.Get(15030));
 
     if (SupportsAudioFeature(IPC_AUD_OFFSET))
-      AddSlider(AUDIO_SETTINGS_DELAY, 297, &CMediaSettings::Get().GetCurrentVideoSettings().m_AudioDelay, -g_advancedSettings.m_videoAudioDelayRange, .025f, g_advancedSettings.m_videoAudioDelayRange, FormatDelay);
+      AddSlider(AUDIO_SETTINGS_DELAY, 297, &CMediaSettings::Get().GetCurrentVideoSettings().m_AudioDelay, -g_advancedSettings.m_videoAudioDelayRange, .025f, g_advancedSettings.m_videoAudioDelayRange, StringUtils::FormatDelay);
 
     AddSeparator(AUDIO_SEPERATOR_1);
 

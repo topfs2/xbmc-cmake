@@ -170,25 +170,25 @@ void CGUIDialogVideoSettings::CreateSettings()
     AddSpin(VIDEO_SETTINGS_VIEW_MODE, 629, &CMediaSettings::Get().GetCurrentVideoSettings().m_ViewMode, 7, entries);
   }
   if (g_renderManager.Supports(RENDERFEATURE_ZOOM))
-    AddSlider(VIDEO_SETTINGS_ZOOM, 216, &CMediaSettings::Get().GetCurrentVideoSettings().m_CustomZoomAmount, 0.5f, 0.01f, 2.0f, FormatFloat);
+    AddSlider(VIDEO_SETTINGS_ZOOM, 216, &CMediaSettings::Get().GetCurrentVideoSettings().m_CustomZoomAmount, 0.5f, 0.01f, 2.0f, StringUtils::FormatFloat);
   if (g_renderManager.Supports(RENDERFEATURE_VERTICAL_SHIFT))
-    AddSlider(VIDEO_SETTINGS_VERTICAL_SHIFT, 225, &CMediaSettings::Get().GetCurrentVideoSettings().m_CustomVerticalShift, -2.0f, 0.01f, 2.0f, FormatFloat);
+    AddSlider(VIDEO_SETTINGS_VERTICAL_SHIFT, 225, &CMediaSettings::Get().GetCurrentVideoSettings().m_CustomVerticalShift, -2.0f, 0.01f, 2.0f, StringUtils::FormatFloat);
   if (g_renderManager.Supports(RENDERFEATURE_PIXEL_RATIO))
-    AddSlider(VIDEO_SETTINGS_PIXEL_RATIO, 217, &CMediaSettings::Get().GetCurrentVideoSettings().m_CustomPixelRatio, 0.5f, 0.01f, 2.0f, FormatFloat);
+    AddSlider(VIDEO_SETTINGS_PIXEL_RATIO, 217, &CMediaSettings::Get().GetCurrentVideoSettings().m_CustomPixelRatio, 0.5f, 0.01f, 2.0f, StringUtils::FormatFloat);
   if (g_renderManager.Supports(RENDERFEATURE_POSTPROCESS))
     AddBool(VIDEO_SETTINGS_POSTPROCESS, 16400, &CMediaSettings::Get().GetCurrentVideoSettings().m_PostProcess);
 
 #ifdef HAS_VIDEO_PLAYBACK
   if (g_renderManager.Supports(RENDERFEATURE_BRIGHTNESS))
-    AddSlider(VIDEO_SETTINGS_BRIGHTNESS, 464, &CMediaSettings::Get().GetCurrentVideoSettings().m_Brightness, 0, 1, 100, FormatInteger);
+    AddSlider(VIDEO_SETTINGS_BRIGHTNESS, 464, &CMediaSettings::Get().GetCurrentVideoSettings().m_Brightness, 0, 1, 100, StringUtils::FormatInteger);
   if (g_renderManager.Supports(RENDERFEATURE_CONTRAST))
-    AddSlider(VIDEO_SETTINGS_CONTRAST, 465, &CMediaSettings::Get().GetCurrentVideoSettings().m_Contrast, 0, 1, 100, FormatInteger);
+    AddSlider(VIDEO_SETTINGS_CONTRAST, 465, &CMediaSettings::Get().GetCurrentVideoSettings().m_Contrast, 0, 1, 100, StringUtils::FormatInteger);
   if (g_renderManager.Supports(RENDERFEATURE_GAMMA))
-    AddSlider(VIDEO_SETTINGS_GAMMA, 466, &CMediaSettings::Get().GetCurrentVideoSettings().m_Gamma, 0, 1, 100, FormatInteger);
+    AddSlider(VIDEO_SETTINGS_GAMMA, 466, &CMediaSettings::Get().GetCurrentVideoSettings().m_Gamma, 0, 1, 100, StringUtils::FormatInteger);
   if (g_renderManager.Supports(RENDERFEATURE_NOISE))
-    AddSlider(VIDEO_SETTING_VDPAU_NOISE, 16312, &CMediaSettings::Get().GetCurrentVideoSettings().m_NoiseReduction, 0.0f, 0.01f, 1.0f, FormatFloat);
+    AddSlider(VIDEO_SETTING_VDPAU_NOISE, 16312, &CMediaSettings::Get().GetCurrentVideoSettings().m_NoiseReduction, 0.0f, 0.01f, 1.0f, StringUtils::FormatFloat);
   if (g_renderManager.Supports(RENDERFEATURE_SHARPNESS))
-    AddSlider(VIDEO_SETTING_VDPAU_SHARPNESS, 16313, &CMediaSettings::Get().GetCurrentVideoSettings().m_Sharpness, -1.0f, 0.02f, 1.0f, FormatFloat);
+    AddSlider(VIDEO_SETTING_VDPAU_SHARPNESS, 16313, &CMediaSettings::Get().GetCurrentVideoSettings().m_Sharpness, -1.0f, 0.02f, 1.0f, StringUtils::FormatFloat);
   if (g_renderManager.Supports(RENDERFEATURE_NONLINSTRETCH))
     AddBool(VIDEO_SETTINGS_NONLIN_STRETCH, 659, &CMediaSettings::Get().GetCurrentVideoSettings().m_CustomNonLinStretch);
 #endif

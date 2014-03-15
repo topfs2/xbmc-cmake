@@ -47,6 +47,7 @@
 #include "utils/URIUtils.h"
 #include "GUIUserMessages.h"
 #include "cores/IPlayer.h"
+#include "cores/AudioEngine/Engines/ActiveAE/ActiveAE.h"
 
 using namespace std;
 using namespace PVR;
@@ -213,7 +214,8 @@ bool CGUIWindowPVRCommon::OnContextButton(int itemNumber, CONTEXT_BUTTON button)
       OnContextButtonSortByName(pItem.get(), button) ||
       OnContextButtonSortByDate(pItem.get(), button) ||
       OnContextButtonFind(pItem.get(), button) ||
-      OnContextButtonMenuHooks(pItem.get(), button));
+      OnContextButtonMenuHooks(pItem.get(), button) ||
+      OnContextButtonActiveADSPSettings(pItem.get(), button));
 }
 
 bool CGUIWindowPVRCommon::OnContextButtonSortByDate(CFileItem *item, CONTEXT_BUTTON button)
@@ -343,6 +345,21 @@ bool CGUIWindowPVRCommon::OnContextButtonMenuHooks(CFileItem *item, CONTEXT_BUTT
       g_PVRClients->ProcessMenuHooks(item->GetPVRRecordingInfoTag()->m_iClientId, PVR_MENUHOOK_RECORDING, item);
     else if (item->IsPVRTimer())
       g_PVRClients->ProcessMenuHooks(item->GetPVRTimerInfoTag()->m_iClientId, PVR_MENUHOOK_TIMER, item);
+  }
+
+  return bReturn;
+}
+
+bool CGUIWindowPVRCommon::OnContextButtonActiveADSPSettings(CFileItem *item, CONTEXT_BUTTON button)
+{
+  bool bReturn = false;
+
+  if (button == CONTEXT_BUTTON_ACTIVE_ADSP_SETTINGS)
+  {
+    bReturn = true;
+
+    if (ActiveAE::CActiveAEDSP::Get().IsProcessing())
+      g_windowManager.ActivateWindow(WINDOW_DIALOG_AUDIO_DSP_OSD_SETTINGS);
   }
 
   return bReturn;

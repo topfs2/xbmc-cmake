@@ -5669,6 +5669,10 @@ msgctxt "#15039"
 msgid "Content:"
 msgstr "Inhalt:"
 
+msgctxt "#15047"
+msgid "Audio DSP settings"
+msgstr "Audio DSP Einstellungen"
+
 msgctxt "#15048"
 msgid "No audio DSP Add-on enabled"
 msgstr "Kein Audiosignalverarbeitungs Add-On aktiviert"

@@ -6835,7 +6835,7 @@ msgstr ""
 
 msgctxt "#15047"
 msgid "Audio DSP settings"
-msgstr "Audiosignalverarbeitungs-Einstellungen"
+msgstr ""
 
 msgctxt "#15048"
 msgid "No audio DSP Add-on enabled"

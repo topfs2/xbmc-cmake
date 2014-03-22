@@ -299,15 +299,15 @@ typedef struct CB_GUILib
 
 typedef void (*ADSPAddMenuHook)(void *addonData, AE_DSP_MENUHOOK *hook);
 typedef void (*ADSPRemoveMenuHook)(void *addonData, AE_DSP_MENUHOOK *hook);
-typedef void (*ADSPRegisterMasterMode)(void *addonData, AE_DSP_MASTER_MODES::AE_DSP_MASTER_MODE *mode);
-typedef void (*ADSPUnregisterMasterMode)(void *addonData, AE_DSP_MASTER_MODES::AE_DSP_MASTER_MODE *mode);
+typedef void (*ADSPRegisterMode)(void *addonData, AE_DSP_MODES::AE_DSP_MODE *mode);
+typedef void (*ADSPUnregisterMode)(void *addonData, AE_DSP_MODES::AE_DSP_MODE *mode);
 
 typedef struct CB_ADSPLib
 {
   ADSPAddMenuHook               AddMenuHook;
   ADSPRemoveMenuHook            RemoveMenuHook;
-  ADSPRegisterMasterMode        RegisterMasterMode;
-  ADSPUnregisterMasterMode      UnregisterMasterMode;
+  ADSPRegisterMode              RegisterMode;
+  ADSPUnregisterMode            UnregisterMode;
 
 } CB_ADSPLib;
 

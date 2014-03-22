@@ -65,13 +65,13 @@ public:
    * Becomes identifier written inside mode to iModeID if it was 0 (undefined)
    * @param mode The master mode to add or update inside database
    */
-  static void ADSPRegisterMasterMode(void* addonData, AE_DSP_MASTER_MODES::AE_DSP_MASTER_MODE* mode);
+  static void ADSPRegisterMode(void* addonData, AE_DSP_MODES::AE_DSP_MODE* mode);
 
   /*!
    * @brief Remove a master mode from audio dsp database
    * @param mode The Mode to remove
    */
-  static void ADSPUnregisterMasterMode(void* addonData, AE_DSP_MASTER_MODES::AE_DSP_MASTER_MODE* mode);
+  static void ADSPUnregisterMode(void* addonData, AE_DSP_MODES::AE_DSP_MODE* mode);
 
 private:
   static ActiveAE::CActiveAEDSPAddon* GetAudioDSPAddon(void* addonData);

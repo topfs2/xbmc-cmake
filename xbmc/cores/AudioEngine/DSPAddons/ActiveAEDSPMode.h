@@ -45,7 +45,7 @@ namespace ActiveAE
     /*! @brief Create a new mode */
     CActiveAEDSPMode();
     CActiveAEDSPMode(const AE_DSP_BASETYPE baseType);
-    CActiveAEDSPMode(const AE_DSP_MASTER_MODES::AE_DSP_MASTER_MODE &mode, int iAddonId);
+    CActiveAEDSPMode(const AE_DSP_MODES::AE_DSP_MODE &mode, int iAddonId);
     CActiveAEDSPMode(const CActiveAEDSPMode &mode);
 
     bool operator ==(const CActiveAEDSPMode &right) const;

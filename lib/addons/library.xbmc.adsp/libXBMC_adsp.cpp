@@ -73,20 +73,20 @@ DLLEXPORT void ADSP_remove_menu_hook(void *hdl, void* cb, AE_DSP_MENUHOOK *hook)
   ((CB_ADSPLib*)cb)->RemoveMenuHook(((AddonCB*)hdl)->addonData, hook);
 }
 
-DLLEXPORT void ADSP_register_master_mode(void *hdl, void* cb, AE_DSP_MASTER_MODES::AE_DSP_MASTER_MODE *mode)
+DLLEXPORT void ADSP_register_mode(void *hdl, void* cb, AE_DSP_MODES::AE_DSP_MODE *mode)
 {
   if (cb == NULL)
     return;
 
-  ((CB_ADSPLib*)cb)->RegisterMasterMode(((AddonCB*)hdl)->addonData, mode);
+  ((CB_ADSPLib*)cb)->RegisterMode(((AddonCB*)hdl)->addonData, mode);
 }
 
-DLLEXPORT void ADSP_unregister_master_mode(void *hdl, void* cb, AE_DSP_MASTER_MODES::AE_DSP_MASTER_MODE *mode)
+DLLEXPORT void ADSP_unregister_mode(void *hdl, void* cb, AE_DSP_MODES::AE_DSP_MODE *mode)
 {
   if (cb == NULL)
     return;
 
-  ((CB_ADSPLib*)cb)->UnregisterMasterMode(((AddonCB*)hdl)->addonData, mode);
+  ((CB_ADSPLib*)cb)->UnregisterMode(((AddonCB*)hdl)->addonData, mode);
 }
 
 };

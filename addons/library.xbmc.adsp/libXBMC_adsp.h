@@ -100,13 +100,13 @@ public:
       dlsym(m_libXBMC_adsp, "ADSP_remove_menu_hook");
     if (ADSP_remove_menu_hook == NULL) { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ADSP_register_master_mode = (void (*)(void *HANDLE, void* CB, AE_DSP_MASTER_MODES::AE_DSP_MASTER_MODE *modes))
-      dlsym(m_libXBMC_adsp, "ADSP_register_master_mode");
-    if (ADSP_register_master_mode == NULL) { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+    ADSP_register_mode = (void (*)(void *HANDLE, void* CB, AE_DSP_MODES::AE_DSP_MODE *modes))
+      dlsym(m_libXBMC_adsp, "ADSP_register_mode");
+    if (ADSP_register_mode == NULL) { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ADSP_unregister_master_mode = (void (*)(void* HANDLE, void* CB, AE_DSP_MASTER_MODES::AE_DSP_MASTER_MODE *modes))
-      dlsym(m_libXBMC_adsp, "ADSP_unregister_master_mode");
-    if (ADSP_unregister_master_mode == NULL) { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+    ADSP_unregister_mode = (void (*)(void* HANDLE, void* CB, AE_DSP_MODES::AE_DSP_MODE *modes))
+      dlsym(m_libXBMC_adsp, "ADSP_unregister_mode");
+    if (ADSP_unregister_mode == NULL) { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
     m_Callbacks = ADSP_register_me(m_Handle);
     return m_Callbacks != NULL;
@@ -135,18 +135,18 @@ public:
    * Becomes identifier written inside mode to iModeID if it was 0 (undefined)
    * @param mode The master mode to add or update inside database
    */
-  void RegisterMasterMode(AE_DSP_MASTER_MODES::AE_DSP_MASTER_MODE* mode)
+  void RegisterMode(AE_DSP_MODES::AE_DSP_MODE* mode)
   {
-    return ADSP_register_master_mode(m_Handle, m_Callbacks, mode);
+    return ADSP_register_mode(m_Handle, m_Callbacks, mode);
   }
 
   /*!
    * @brief Remove a master mode from audio dsp database
    * @param mode The Mode to remove
    */
-  void UnregisterMasterMode(AE_DSP_MASTER_MODES::AE_DSP_MASTER_MODE* mode)
+  void UnregisterMode(AE_DSP_MODES::AE_DSP_MODE* mode)
   {
-    return ADSP_unregister_master_mode(m_Handle, m_Callbacks, mode);
+    return ADSP_unregister_mode(m_Handle, m_Callbacks, mode);
   }
 
 protected:
@@ -155,8 +155,8 @@ protected:
   void (*ADSP_unregister_me)(void*, void*);
   void (*ADSP_add_menu_hook)(void*, void*, AE_DSP_MENUHOOK*);
   void (*ADSP_remove_menu_hook)(void*, void*, AE_DSP_MENUHOOK*);
-  void (*ADSP_register_master_mode)(void*, void*, AE_DSP_MASTER_MODES::AE_DSP_MASTER_MODE*);
-  void (*ADSP_unregister_master_mode)(void*, void*, AE_DSP_MASTER_MODES::AE_DSP_MASTER_MODE*);
+  void (*ADSP_register_mode)(void*, void*, AE_DSP_MODES::AE_DSP_MODE*);
+  void (*ADSP_unregister_mode)(void*, void*, AE_DSP_MODES::AE_DSP_MODE*);
 
 private:
   void* m_libXBMC_adsp;

@@ -348,7 +348,7 @@ bool CActiveAEDSPProcess::Create(AEAudioFormat inputFormat, AEAudioFormat output
     AE_DSP_ADDON addon = itr->second;
     if (addon->SupportsMasterProcess())
     {
-      AE_DSP_MASTER_MODES modes;
+      AE_DSP_MODES modes;
       AE_DSP_ERROR err = addon->MasterProcessGetModes(m_StreamId, modes);
       if (err == AE_DSP_ERROR_NO_ERROR)
       {

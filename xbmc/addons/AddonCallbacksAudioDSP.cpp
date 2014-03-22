@@ -39,8 +39,8 @@ CAddonCallbacksADSP::CAddonCallbacksADSP(CAddon* addon)
   /* write XBMC audio DSP specific add-on function addresses to callback table */
   m_callbacks->AddMenuHook                = ADSPAddMenuHook;
   m_callbacks->RemoveMenuHook             = ADSPRemoveMenuHook;
-  m_callbacks->RegisterMasterMode         = ADSPRegisterMasterMode;
-  m_callbacks->UnregisterMasterMode       = ADSPUnregisterMasterMode;
+  m_callbacks->RegisterMode               = ADSPRegisterMode;
+  m_callbacks->UnregisterMode             = ADSPUnregisterMode;
 }
 
 CAddonCallbacksADSP::~CAddonCallbacksADSP()
@@ -107,7 +107,7 @@ void CAddonCallbacksADSP::ADSPRemoveMenuHook(void *addonData, AE_DSP_MENUHOOK *h
   }
 }
 
-void CAddonCallbacksADSP::ADSPRegisterMasterMode(void* addonData, AE_DSP_MASTER_MODES::AE_DSP_MASTER_MODE* mode)
+void CAddonCallbacksADSP::ADSPRegisterMode(void* addonData, AE_DSP_MODES::AE_DSP_MODE* mode)
 {
   CActiveAEDSPAddon *addon = GetAudioDSPAddon(addonData);
   if (!mode || !addon)
@@ -121,7 +121,7 @@ void CAddonCallbacksADSP::ADSPRegisterMasterMode(void* addonData, AE_DSP_MASTER_
   mode->iUniqueDBModeId = idMode;
 }
 
-void CAddonCallbacksADSP::ADSPUnregisterMasterMode(void* addonData, AE_DSP_MASTER_MODES::AE_DSP_MASTER_MODE* mode)
+void CAddonCallbacksADSP::ADSPUnregisterMode(void* addonData, AE_DSP_MODES::AE_DSP_MODE* mode)
 {
   CActiveAEDSPAddon *addon = GetAudioDSPAddon(addonData);
   if (!mode || !addon)

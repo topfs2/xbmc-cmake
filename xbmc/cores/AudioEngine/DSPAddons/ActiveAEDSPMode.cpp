@@ -91,7 +91,7 @@ CActiveAEDSPMode::CActiveAEDSPMode(const AE_DSP_BASETYPE baseType)
   m_strAddonModeName        = StringUtils::EmptyString;
 }
 
-CActiveAEDSPMode::CActiveAEDSPMode(const AE_DSP_MASTER_MODES::AE_DSP_MASTER_MODE &mode, int iAddonId)
+CActiveAEDSPMode::CActiveAEDSPMode(const AE_DSP_MODES::AE_DSP_MODE &mode, int iAddonId)
 {
   m_iModeId                 = mode.iUniqueDBModeId;;
   m_iAddonId                = iAddonId;

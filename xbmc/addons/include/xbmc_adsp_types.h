@@ -169,7 +169,7 @@ extern "C" {
 
   /*!
    * @brief Addons supported audio stream type flags
-   * used on master mode information on AE_DSP_MASTER_MODES to know
+   * used on master mode information on AE_DSP_MODES to know
    * on which audio stream the master mode is supported
    */
   typedef enum
@@ -348,15 +348,30 @@ extern "C" {
   } ATTRIBUTE_PACKED AE_DSP_STREAM_PROPERTIES;
 
   /*!
+   * @brief Audio DSP mode categories
+   */
+  typedef enum
+  {
+    AE_DSP_MODE_TYPE_UNDEFINED       = -1,       /*!< @brief undefined type, never be used from addon! */
+    AE_DSP_MODE_TYPE_INPUT_RESAMPLE  = 0,        /*!< @brief for input resample */
+    AE_DSP_MODE_TYPE_PRE_PROCESS     = 1,        /*!< @brief for pre processing */
+    AE_DSP_MODE_TYPE_MASTER_PROCESS  = 2,        /*!< @brief for master processing */
+    AE_DSP_MODE_TYPE_POST_PROCESS    = 3,        /*!< @brief for post processing */
+    AE_DSP_MODE_TYPE_OUTPUT_RESAMPLE = 4,        /*!< @brief for output resample */
+    AE_DSP_MODE_TYPE_MAX             = 5
+  } AE_DSP_MODE_TYPE;
+
+  /*!
    * @brief Audio DSP master mode information
    * Used to get all available modes for current input stream
    */
-  typedef struct AE_DSP_MASTER_MODES
+  typedef struct AE_DSP_MODES
   {
     unsigned int iModesCount;
-    struct AE_DSP_MASTER_MODE
+    struct AE_DSP_MODE
     {
       int           iUniqueDBModeId;                                   /*!< @brief (required) the inside addon used identfier for the mode, set by audio dsp database */
+      int           iModeType;                                         /*!< @brief (required) the processong mode type, see AE_DSP_MODE_TYPE */
       bool          bIsPrimary;                                        /*!< @brief (required) if set to true this mode is the first used one (if nothing other becomes selected by hand) */
       int           iModeNumber;                                       /*!< @brief (required) mode number of this mode on the backend */
       unsigned int  iModeName;                                         /*!< @brief (required) the name id of the mode for this hook in g_localizeStrings */
@@ -370,7 +385,7 @@ extern "C" {
       char          strOverrideModeImage[AE_DSP_ADDON_STRING_LENGTH];  /*!< @brief (optional) image to override XBMC Image for the mode, eg. Dolby Digital with Dolby Digital Ex */
       bool          bIsHidden;                                         /*!< @brief (optional) true if this mode is marked as hidden and not usable */
     } mode[AE_DSP_STREAM_MAX_MODES];
-  } ATTRIBUTE_PACKED AE_DSP_MASTER_MODES;
+  } ATTRIBUTE_PACKED AE_DSP_MODES;
 
   /*!
    * @brief Audio DSP menu hook data
@@ -405,7 +420,7 @@ extern "C" {
     unsigned int (__cdecl* InputResampleProcess)                 (unsigned int, float**, float**, unsigned int);
     float        (__cdecl* InputResampleGetDelay)                (unsigned int);
     int          (__cdecl* InputResampleSampleRate)              (unsigned int);
-    AE_DSP_ERROR (__cdecl* MasterProcessGetModes)                (unsigned int, AE_DSP_MASTER_MODES&);
+    AE_DSP_ERROR (__cdecl* MasterProcessGetModes)                (unsigned int, AE_DSP_MODES&);
     AE_DSP_ERROR (__cdecl* MasterProcessSetMode)                 (unsigned int, unsigned int, int, int);
     unsigned int (__cdecl* MasterProcessNeededSamplesize)        (unsigned int);
     float        (__cdecl* MasterProcessGetDelay)                (unsigned int);

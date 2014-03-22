@@ -15839,3 +15839,8 @@ msgstr ""
 msgctxt "#37030"
 msgid "Unlimited"
 msgstr ""
+
+#: xbmc/music/windows/GUIWindowMusicBase.cpp
+msgctxt "#37031"
+msgid "Resume audiobook"
+msgstr ""

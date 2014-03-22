@@ -56,8 +56,7 @@ protected:
   AE_DSP_STREAMTYPE                           m_streamTypeUsed;
   float                                       m_volume;
   AE_DSP_BASETYPE                             m_baseTypeUsed;
-  std::vector<ActiveAE::CActiveAEDSPModePtr>  m_Modes[AE_DSP_ASTREAM_MAX];
-  bool                                        m_ModesPresent;
+  std::vector<ActiveAE::CActiveAEDSPModePtr>  m_MasterModes[AE_DSP_ASTREAM_MAX];
   int                                         m_CurrentMenu;
   std::vector<MenuHookMember>                 m_Menus;
   Features                                    m_audioCaps;

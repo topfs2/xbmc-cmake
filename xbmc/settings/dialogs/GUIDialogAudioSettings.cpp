@@ -169,30 +169,30 @@ void CGUIDialogAudioDSPSettings::CreateSettings()
     int modesAvailable = 0;
     for (int i = 0; i < AE_DSP_ASTREAM_AUTO; i++)
     {
-      m_Modes[i].clear();
-      CActiveAEDSP::Get().GetAvailableMasterModes(m_ActiveStreamId, (AE_DSP_STREAMTYPE)i, m_Modes[i]);
-      if (!m_Modes[i].empty()) modesAvailable++;
+      m_MasterModes[i].clear();
+      CActiveAEDSP::Get().GetAvailableMasterModes(m_ActiveStreamId, (AE_DSP_STREAMTYPE)i, m_MasterModes[i]);
+      if (!m_MasterModes[i].empty()) modesAvailable++;
     }
 
     if (modesAvailable > 0)
     {
       /* about size() > 1, it is always the fallback (ignore of master processing) present. */
       vector<pair<int, int> > modeEntries;
-      if (m_Modes[AE_DSP_ASTREAM_BASIC].size() > 1)
+      if (m_MasterModes[AE_DSP_ASTREAM_BASIC].size() > 1)
         modeEntries.push_back(pair<int, int>(AE_DSP_ASTREAM_BASIC,   INPUT_TYPE_LABEL_START+AE_DSP_ASTREAM_BASIC));
-      if (m_Modes[AE_DSP_ASTREAM_MUSIC].size() > 1)
+      if (m_MasterModes[AE_DSP_ASTREAM_MUSIC].size() > 1)
         modeEntries.push_back(pair<int, int>(AE_DSP_ASTREAM_MUSIC,   INPUT_TYPE_LABEL_START+AE_DSP_ASTREAM_MUSIC));
-      if (m_Modes[AE_DSP_ASTREAM_MOVIE].size() > 1)
+      if (m_MasterModes[AE_DSP_ASTREAM_MOVIE].size() > 1)
         modeEntries.push_back(pair<int, int>(AE_DSP_ASTREAM_MOVIE,   INPUT_TYPE_LABEL_START+AE_DSP_ASTREAM_MOVIE));
-      if (m_Modes[AE_DSP_ASTREAM_GAME].size() > 1)
+      if (m_MasterModes[AE_DSP_ASTREAM_GAME].size() > 1)
         modeEntries.push_back(pair<int, int>(AE_DSP_ASTREAM_GAME,    INPUT_TYPE_LABEL_START+AE_DSP_ASTREAM_GAME));
-      if (m_Modes[AE_DSP_ASTREAM_APP].size() > 1)
+      if (m_MasterModes[AE_DSP_ASTREAM_APP].size() > 1)
         modeEntries.push_back(pair<int, int>(AE_DSP_ASTREAM_APP,     INPUT_TYPE_LABEL_START+AE_DSP_ASTREAM_APP));
-      if (m_Modes[AE_DSP_ASTREAM_MESSAGE].size() > 1)
+      if (m_MasterModes[AE_DSP_ASTREAM_MESSAGE].size() > 1)
         modeEntries.push_back(pair<int, int>(AE_DSP_ASTREAM_MESSAGE, INPUT_TYPE_LABEL_START+AE_DSP_ASTREAM_MESSAGE));
-      if (m_Modes[AE_DSP_ASTREAM_PHONE].size() > 1)
+      if (m_MasterModes[AE_DSP_ASTREAM_PHONE].size() > 1)
         modeEntries.push_back(pair<int, int>(AE_DSP_ASTREAM_PHONE,   INPUT_TYPE_LABEL_START+AE_DSP_ASTREAM_PHONE));
-      if (modesAvailable > 1 && m_Modes[m_streamTypeUsed].size() > 1)
+      if (modesAvailable > 1 && m_MasterModes[m_streamTypeUsed].size() > 1)
         modeEntries.insert(modeEntries.begin(), pair<int, int>(AE_DSP_ASTREAM_AUTO, 14061));
 
       AddSpin(AUDIO_SETTING_CONTENT_TYPE, 15021, (int*)&CMediaSettings::Get().GetCurrentAudioSettings().m_MasterStreamTypeSel, modeEntries);
@@ -204,20 +204,20 @@ void CGUIDialogAudioDSPSettings::CreateSettings()
     m_AddonMasterModeSetupPresent = false;
 
     vector<pair<int, CStdString> > entries;
-    for (unsigned int i = 0; i < m_Modes[m_streamTypeUsed].size(); i++)
+    for (unsigned int i = 0; i < m_MasterModes[m_streamTypeUsed].size(); i++)
     {
-      if (m_Modes[m_streamTypeUsed][i])
+      if (m_MasterModes[m_streamTypeUsed][i])
       {
         AE_DSP_ADDON client;
-        if (m_Modes[m_streamTypeUsed][i]->ModeID() == AE_DSP_MASTER_MODE_ID_PASSOVER)
+        if (m_MasterModes[m_streamTypeUsed][i]->ModeID() == AE_DSP_MASTER_MODE_ID_PASSOVER)
         {
-          entries.push_back(pair<int, CStdString>(AE_DSP_MASTER_MODE_ID_PASSOVER, g_localizeStrings.Get(m_Modes[m_streamTypeUsed][i]->ModeName())));
+          entries.push_back(pair<int, CStdString>(AE_DSP_MASTER_MODE_ID_PASSOVER, g_localizeStrings.Get(m_MasterModes[m_streamTypeUsed][i]->ModeName())));
         }
-        else if (CActiveAEDSP::Get().GetAudioDSPAddon(m_Modes[m_streamTypeUsed][i]->AddonID(), client))
+        else if (CActiveAEDSP::Get().GetAudioDSPAddon(m_MasterModes[m_streamTypeUsed][i]->AddonID(), client))
         {
-          entries.push_back(pair<int, CStdString>(m_Modes[m_streamTypeUsed][i]->ModeID(), client->GetString(m_Modes[m_streamTypeUsed][i]->ModeName())));
+          entries.push_back(pair<int, CStdString>(m_MasterModes[m_streamTypeUsed][i]->ModeID(), client->GetString(m_MasterModes[m_streamTypeUsed][i]->ModeName())));
           if (!m_AddonMasterModeSetupPresent)
-            m_AddonMasterModeSetupPresent = m_Modes[m_streamTypeUsed][i]->HasSettingsDialog();
+            m_AddonMasterModeSetupPresent = m_MasterModes[m_streamTypeUsed][i]->HasSettingsDialog();
         }
       }
     }
@@ -259,13 +259,13 @@ void CGUIDialogAudioDSPSettings::CreateSettings()
   {
     SET_CONTROL_LABEL(CONTROL_SETTINGS_LABEL, g_localizeStrings.Get(15029));
 
-    for (unsigned int i = 0; i < m_Modes[m_streamTypeUsed].size(); i++)
+    for (unsigned int i = 0; i < m_MasterModes[m_streamTypeUsed].size(); i++)
     {
       AE_DSP_ADDON client;
-      if (CActiveAEDSP::Get().GetAudioDSPAddon(m_Modes[m_streamTypeUsed][i]->AddonID(), client))
+      if (CActiveAEDSP::Get().GetAudioDSPAddon(m_MasterModes[m_streamTypeUsed][i]->AddonID(), client))
       {
-        if (m_Modes[m_streamTypeUsed][i]->HasSettingsDialog())
-          AddButton(AUDIO_SETTINGS_MENUS+i, client->GetString(m_Modes[m_streamTypeUsed][i]->ModeSetupName()));
+        if (m_MasterModes[m_streamTypeUsed][i]->HasSettingsDialog())
+          AddButton(AUDIO_SETTINGS_MENUS+i, client->GetString(m_MasterModes[m_streamTypeUsed][i]->ModeSetupName()));
       }
     }
   }
@@ -354,19 +354,19 @@ void CGUIDialogAudioDSPSettings::OnSettingChanged(SettingInfo &setting)
       CMediaSettings::Get().GetCurrentAudioSettings().m_MasterStreamType = type;
 
       /* Set the input stream type if any modes are available for this type */
-      if (type >= AE_DSP_ASTREAM_BASIC && type < AE_DSP_ASTREAM_AUTO && !m_Modes[type].empty())
+      if (type >= AE_DSP_ASTREAM_BASIC && type < AE_DSP_ASTREAM_AUTO && !m_MasterModes[type].empty())
       {
         /* Find the master mode id for the selected stream type if it was not known before */
         if (CMediaSettings::Get().GetCurrentAudioSettings().m_MasterModes[type][m_baseTypeUsed] <= 0)
         {
           /* Set default to first one */
-          CMediaSettings::Get().GetCurrentAudioSettings().m_MasterModes[type][m_baseTypeUsed] = m_Modes[type][0]->ModeID();
-          for (unsigned int i = 0; i < m_Modes[type].size(); i++)
+          CMediaSettings::Get().GetCurrentAudioSettings().m_MasterModes[type][m_baseTypeUsed] = m_MasterModes[type][0]->ModeID();
+          for (unsigned int i = 0; i < m_MasterModes[type].size(); i++)
           {
             /* Check here if a primary is present for this type */
-            if (m_Modes[type][i]->IsPrimary())
+            if (m_MasterModes[type][i]->IsPrimary())
             {
-              CMediaSettings::Get().GetCurrentAudioSettings().m_MasterModes[type][m_baseTypeUsed] = m_Modes[type][i]->ModeID();
+              CMediaSettings::Get().GetCurrentAudioSettings().m_MasterModes[type][m_baseTypeUsed] = m_MasterModes[type][i]->ModeID();
               break;
             }
           }
@@ -415,11 +415,11 @@ void CGUIDialogAudioDSPSettings::OnSettingChanged(SettingInfo &setting)
   else if (m_CurrentMenu == AUDIO_BUTTON_MASTER_MODE_SETUP)
   {
     unsigned int setupEntry = setting.id-AUDIO_SETTINGS_MENUS;
-    if (setting.id >= AUDIO_SETTINGS_MENUS && setting.id <= AUDIO_SETTINGS_MENUS_END && setupEntry < m_Modes[m_streamTypeUsed].size())
+    if (setting.id >= AUDIO_SETTINGS_MENUS && setting.id <= AUDIO_SETTINGS_MENUS_END && setupEntry < m_MasterModes[m_streamTypeUsed].size())
     {
       AE_DSP_ADDON client;
-      if (m_Modes[m_streamTypeUsed][setupEntry]->HasSettingsDialog() && CActiveAEDSP::Get().GetAudioDSPAddon(m_Modes[m_streamTypeUsed][setupEntry]->AddonID(), client))
-        OpenAudioDSPMenu(AE_DSP_MENUHOOK_MASTER_PROCESS, client, m_Modes[m_streamTypeUsed][setupEntry]->AddonModeNumber(), m_Modes[m_streamTypeUsed][setupEntry]->ModeName());
+      if (m_MasterModes[m_streamTypeUsed][setupEntry]->HasSettingsDialog() && CActiveAEDSP::Get().GetAudioDSPAddon(m_MasterModes[m_streamTypeUsed][setupEntry]->AddonID(), client))
+        OpenAudioDSPMenu(AE_DSP_MENUHOOK_MASTER_PROCESS, client, m_MasterModes[m_streamTypeUsed][setupEntry]->AddonModeNumber(), m_MasterModes[m_streamTypeUsed][setupEntry]->ModeName());
     }
   }
   else if (m_CurrentMenu == AUDIO_BUTTON_SPEAKER_OUTPUT_SETUP)
@@ -628,28 +628,28 @@ void CGUIDialogAudioDSPSettings::OpenAudioDSPMenu(AE_DSP_MENUHOOK_CAT category, 
 
 void CGUIDialogAudioDSPSettings::UpdateModeIcons()
 {
-  for (unsigned int i = 0; i < m_Modes[m_streamTypeUsed].size(); i++)
+  for (unsigned int i = 0; i < m_MasterModes[m_streamTypeUsed].size(); i++)
   {
-    if (CMediaSettings::Get().GetCurrentAudioSettings().m_MasterModes[m_streamTypeUsed][m_baseTypeUsed] == m_Modes[m_streamTypeUsed][i]->ModeID())
+    if (CMediaSettings::Get().GetCurrentAudioSettings().m_MasterModes[m_streamTypeUsed][m_baseTypeUsed] == m_MasterModes[m_streamTypeUsed][i]->ModeID())
     {
-      if (m_Modes[m_streamTypeUsed][i]->IconOwnModePath() != "")
+      if (m_MasterModes[m_streamTypeUsed][i]->IconOwnModePath() != "")
       {
         CGUIImage *pImage = (CGUIImage *)GetControl(CONTROL_ADDON_MODE_IMAGE);
         if (pImage)
         {
-          pImage->SetFileName(m_Modes[m_streamTypeUsed][i]->IconOwnModePath());
+          pImage->SetFileName(m_MasterModes[m_streamTypeUsed][i]->IconOwnModePath());
           SET_CONTROL_VISIBLE(CONTROL_ADDON_MODE_IMAGE);
         }
       }
       else
         SET_CONTROL_HIDDEN(CONTROL_ADDON_MODE_IMAGE);
 
-      if (m_Modes[m_streamTypeUsed][i]->IconOverrideModePath() != "")
+      if (m_MasterModes[m_streamTypeUsed][i]->IconOverrideModePath() != "")
       {
         CGUIImage *pImage = (CGUIImage *)GetControl(CONTROL_OVERRIDE_IMAGE);
         if (pImage)
         {
-          pImage->SetFileName(m_Modes[m_streamTypeUsed][i]->IconOverrideModePath());
+          pImage->SetFileName(m_MasterModes[m_streamTypeUsed][i]->IconOverrideModePath());
           SET_CONTROL_VISIBLE(CONTROL_OVERRIDE_IMAGE);
         }
       }

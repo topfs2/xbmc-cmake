@@ -45,6 +45,7 @@
 #include "addons/AddonManager.h"
 #include "addons/AudioDecoder.h"
 #include "addons/VFSEntry.h"
+#include "M4BFileDirectory.h"
 
 using namespace ADDON;
 using namespace XFILE;
@@ -185,6 +186,18 @@ IFileDirectory* CFileDirectoryFactory::Create(const CURL& url, CFileItem* pItem,
         return pDir;
     }
     delete pDir;
+    return NULL;
+  }
+
+  if (pItem->IsAudioBook())
+  {
+    if (!pItem->HasMusicInfoTag() || pItem->m_lEndOffset <= 0)
+    {
+      CM4BFileDirectory* pDir = new CM4BFileDirectory;
+      if (pDir->ContainsFiles(url))
+        return pDir;
+      delete pDir;
+    }
     return NULL;
   }
   return NULL;

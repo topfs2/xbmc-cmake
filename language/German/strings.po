@@ -5597,6 +5597,10 @@ msgctxt "#15019"
 msgid "Add"
 msgstr "Hinzufügen"
 
+msgctxt "#15020"
+msgid "Audio DSP Manager"
+msgstr "Audioverarbeitungsverwaltung"
+
 msgctxt "#15021"
 msgid "Content type"
 msgstr "Inhaltstyp"
@@ -5692,6 +5696,118 @@ msgstr "um die Verabeitung nutzen zu können."
 msgctxt "#15052"
 msgid "Password"
 msgstr "Passwort"
+
+msgctxt "#15053"
+msgid "Available"
+msgstr "Verfügbare"
+
+msgctxt "#15054"
+msgid "Active"
+msgstr "Aktivierte"
+
+msgctxt "#15055"
+msgid "Modes"
+msgstr "Verarbeitungen"
+
+msgctxt "#15056"
+msgid "Process type"
+msgstr "Verarbeitungsart"
+
+msgctxt "#15057"
+msgid "Input resampling"
+msgstr "Eingangssignalumwandlung (Resampling)"
+
+msgctxt "#15058"
+msgid "Preprocessing"
+msgstr "Eingangsverarbeitung"
+
+msgctxt "#15059"
+msgid "User selectable master processing"
+msgstr "Benutzerauswählbare Hauptverarbeitung"
+
+msgctxt "#15060"
+msgid "Postprocessing"
+msgstr "Nachbearbeitung"
+
+msgctxt "#15061"
+msgid "Output resampling"
+msgstr "Ausgangssignalumwandlung (Resampling)"
+
+msgctxt "#15062"
+msgid "Deactivate"
+msgstr "Deaktivieren"
+
+msgctxt "#15063"
+msgid "Activate"
+msgstr "Aktivieren"
+
+msgctxt "#15064"
+msgid "Help description"
+msgstr "Hilfsbeschreibung"
+
+msgctxt "#15065"
+msgid "No description available"
+msgstr "Keine Beschreibung vorhanden"
+
+msgctxt "#15066"
+msgid "Stereo"
+msgstr "Stereo"
+
+msgctxt "#15067"
+msgid "Multichannel"
+msgstr "Mehrkanal"
+
+msgctxt "#15068"
+msgid "Dolby Digital (AC3)"
+msgstr "Dolby Digital (AC3)"
+
+msgctxt "#15069"
+msgid "Dolby Digital+ (EAC3)"
+msgstr "Dolby Digital+ (EAC3)"
+
+msgctxt "#15070"
+msgid "DTS"
+msgstr "DTS"
+
+msgctxt "#15071"
+msgid "DTS HD (MA)"
+msgstr "DTS HD (MA)"
+
+msgctxt "#15072"
+msgid "DTS HD (HRA)"
+msgstr "DTS HD (HRA)"
+
+msgctxt "#15073"
+msgid "Dolby TrueHD"
+msgstr "Dolby TrueHD"
+
+msgctxt "#15074"
+msgid "MLP"
+msgstr "MLP"
+
+msgctxt "#15075"
+msgid "FLAC"
+msgstr "FLAC"
+
+msgctxt "#15076"
+msgid "Mono"
+msgstr "Mono"
+
+msgctxt "#15077"
+msgid "Mode settings"
+msgstr "Moduseinstellungen"
+
+msgctxt "#15078"
+msgid "Mode contains changes"
+msgstr "Modus enthält Änderungen"
+
+msgctxt "#15079"
+msgid "You want to save?"
+msgstr "Möchtest du diese speichern?"
+
+msgctxt "#15080"
+msgid "Change resampler"
+msgstr "Umwandler austauschen"
 
 msgctxt "#15100"
 msgid "Library"
@@ -12550,6 +12666,14 @@ msgid "Audio DSP client specific actions"
 msgstr "Audiosignalverarbeitung-Add-On spezifizierte Aktionen"
 
 msgctxt "#36437"
+msgid "No info available yet."
+msgstr "Noch keine Informationen vorhanden."
+
+msgctxt "#36438"
+msgid "Audio DSP settings"
+msgstr "Verarbeitungseinstellungen
+
+msgctxt "#36439"
 msgid "No info available yet."
 msgstr "Noch keine Informationen vorhanden."
 

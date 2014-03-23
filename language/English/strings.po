@@ -6757,7 +6757,9 @@ msgctxt "#15019"
 msgid "Add"
 msgstr ""
 
-#empty string id 15020
+msgctxt "#15020"
+msgid "Audio DSP Manager"
+msgstr ""
 
 msgctxt "#15021"
 msgid "Content type"
@@ -6857,7 +6859,119 @@ msgctxt "#15052"
 msgid "Password"
 msgstr ""
 
-#empty strings from id 15053 to 15099
+msgctxt "#15053"
+msgid "Available"
+msgstr ""
+
+msgctxt "#15054"
+msgid "Active"
+msgstr ""
+
+msgctxt "#15055"
+msgid "Modes"
+msgstr ""
+
+msgctxt "#15056"
+msgid "Process type"
+msgstr ""
+
+msgctxt "#15057"
+msgid "Input resampling"
+msgstr ""
+
+msgctxt "#15058"
+msgid "Preprocessing"
+msgstr ""
+
+msgctxt "#15059"
+msgid "User selectable master processing"
+msgstr ""
+
+msgctxt "#15060"
+msgid "Postprocessing"
+msgstr ""
+
+msgctxt "#15061"
+msgid "Output resampling"
+msgstr ""
+
+msgctxt "#15062"
+msgid "Activate"
+msgstr ""
+
+msgctxt "#15063"
+msgid "Deactivate"
+msgstr ""
+
+msgctxt "#15064"
+msgid "Help description"
+msgstr ""
+
+msgctxt "#15065"
+msgid "No description available"
+msgstr ""
+
+msgctxt "#15066"
+msgid "Stereo"
+msgstr ""
+
+msgctxt "#15067"
+msgid "Multichannel"
+msgstr ""
+
+msgctxt "#15068"
+msgid "Dolby Digital (AC3)"
+msgstr ""
+
+msgctxt "#15069"
+msgid "Dolby Digital+ (EAC3)"
+msgstr ""
+
+msgctxt "#15070"
+msgid "DTS"
+msgstr ""
+
+msgctxt "#15071"
+msgid "DTS HD (MA)"
+msgstr ""
+
+msgctxt "#15072"
+msgid "DTS HD (HRA)"
+msgstr ""
+
+msgctxt "#15073"
+msgid "Dolby TrueHD"
+msgstr ""
+
+msgctxt "#15074"
+msgid "MLP"
+msgstr ""
+
+msgctxt "#15075"
+msgid "FLAC"
+msgstr ""
+
+msgctxt "#15076"
+msgid "Mono"
+msgstr ""
+
+msgctxt "#15077"
+msgid "Mode settings"
+msgstr ""
+
+msgctxt "#15078"
+msgid "Mode contains changes"
+msgstr ""
+
+msgctxt "#15079"
+msgid "You want to save?"
+msgstr ""
+
+msgctxt "#15080"
+msgid "Change resampler"
+msgstr ""
+
+#empty strings from id 15081 to 15099
 
 msgctxt "#15100"
 msgid "Library"
@@ -15325,6 +15439,16 @@ msgstr ""
 
 #: system/settings/settings.xml
 msgctxt "#36437"
+msgid "No info available yet."
+msgstr ""
+
+#: system/settings/settings.xml
+msgctxt "#36438"
+msgid "Audio DSP settings"
+msgstr ""
+
+#: system/settings/settings.xml
+msgctxt "#36439"
 msgid "No info available yet."
 msgstr ""
 

@@ -338,6 +338,7 @@ static const ActionMapping windows[] =
         {"osdvideosettings"         , WINDOW_DIALOG_VIDEO_OSD_SETTINGS},
         {"osdaudiosettings"         , WINDOW_DIALOG_AUDIO_OSD_SETTINGS},
         {"osdaudiodspsettings"      , WINDOW_DIALOG_AUDIO_DSP_OSD_SETTINGS},
+        {"osdaudiodspmanager"       , WINDOW_DIALOG_AUDIO_DSP_MANAGER},
         {"videobookmarks"           , WINDOW_DIALOG_VIDEO_BOOKMARKS},
         {"filebrowser"              , WINDOW_DIALOG_FILE_BROWSER},
         {"networksetup"             , WINDOW_DIALOG_NETWORK_SETUP},

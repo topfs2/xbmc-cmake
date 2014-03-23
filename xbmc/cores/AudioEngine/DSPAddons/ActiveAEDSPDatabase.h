@@ -22,7 +22,7 @@
 #include "addons/Addon.h"
 #include "addons/AddonDll.h"
 #include "addons/DllAudioDSP.h"
-#include "ActiveAEDSP.h"
+#include "ActiveAEDSPMode.h"
 #include "dbwrappers/Database.h"
 #include "XBDateTime.h"
 #include "utils/log.h"
@@ -32,7 +32,6 @@ class CAudioSettings;
 namespace ActiveAE
 {
   class CActiveAEDSPAddon;
-  class CActiveAEDSPMode;
   class CActiveAEDSPProcess;
 
   /** The audio DSP database */
@@ -70,43 +69,77 @@ namespace ActiveAE
      * @brief Remove all modes from the database.
      * @return True if all modes were removed, false otherwise.
      */
-    bool DeleteMasterModes(void);
+    bool DeleteModes(void);
+
+    /*!
+     * @brief Remove all modes from the database of a type.
+     * @param modeType The mode type identfier of functions to delete.
+     * @return True if the modes were deleted, false otherwise.
+     */
+    bool DeleteModes(int modeType);
 
     /*!
      * @brief Remove all modes from a add-on from the database.
      * @param addon The add-on to delete the modes for.
      * @return True if the modes were deleted, false otherwise.
      */
-    bool DeleteMasterModes(const CActiveAEDSPAddon &addon);
+    bool DeleteModes(const CActiveAEDSPAddon &addon);
 
     /*!
      * @brief Remove a mode entry from the database
      * @param mode The mode to remove.
      * @return True if the mode was removed, false otherwise.
      */
-    bool DeleteMasterMode(const CActiveAEDSPMode &mode);
+    bool DeleteMode(const CActiveAEDSPMode &mode);
 
     /*!
-     * @brief Add or if present update master mode inside database
+     * @brief Add or update mode entries in the database
+     * @param modes The modes to persist.
+     * @param modeType If true, don't write immediately
+     * @return True when persisted or queued, false otherwise.
+     */
+    bool PersistModes(std::vector<CActiveAEDSPModePtr> &modes, int modeType);
+
+    /*!
+     * @brief Update user selectable mode settings inside database
+     * @param modeType the mode type to get
+     * @param active true if the mode is enabled
+     * @param addonId  the addon id of this mode
+     * @param addonModeNumber the from addon set mode number
+     * @param listNumber the list number on processing chain
+     * @return True if the modes were updated, false otherwise.
+     */
+    bool UpdateMode(int modeType, bool active, int addonId, int addonModeNumber, int listNumber);
+
+    /*!
+     * @brief Add or if present update mode inside database
      * @param addon The add-on to check the modes for.
      * @return True if the modes were updated or added, false otherwise.
      */
-    bool AddUpdateMasterMode(const CActiveAEDSPMode &mode);
+    bool AddUpdateMode(CActiveAEDSPMode &mode);
 
     /*!
-     * @brief Get id of master mode inside database
-     * @param mode The Master mode to check for inside the database
+     * @brief Get id of mode inside database
+     * @param mode The mode to check for inside the database
      * @return The id or -1 if not found
      */
-    int GetMasterModeId(const CActiveAEDSPMode &mode);
+    int GetModeId(const CActiveAEDSPMode &mode);
 
     /*!
-     * @brief Get the list of modes from the database
+     * @brief Get the list of modes from type on database
      * @param results The mode group to store the results in.
-     * @param all if true write all available modes to results
+     * @param modeType the mode type to get
      * @return The amount of modes that were added.
      */
-    int Get(CActiveAEDSPProcess &results, bool all = false);
+    int GetModes(AE_DSP_MODELIST &results, int modeType);
+
+    /*!
+     * @brief Check inside database that the mode is not hidden
+     * @param mode The mode to check inside the database
+     * @retval position the processing position where the mode is, if enabled
+     * @return true if enabled
+     */
+    bool IsModeEnabled(const CActiveAEDSPMode &mode, int &position);
     //@}
 
     /*! @name Add-on methods */

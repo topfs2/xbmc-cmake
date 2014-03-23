@@ -64,7 +64,10 @@ void CActiveAEDSPDatabase::CreateTables()
   m_pDS->exec(
       "CREATE TABLE modes ("
         "idMode               integer primary key, "
+        "iType                integer, "
+        "iPosition            integer, "
         "iStreamTypeFlags     integer, "
+        "iBaseType            integer, "
         "bIsHidden            bool, "
         "sOwnIconPath         varchar(255), "
         "sOverrideIconPath    varchar(255), "
@@ -121,13 +124,30 @@ void CActiveAEDSPDatabase::UpdateTables(int iVersion)
 
 /********** Mode methods **********/
 
-bool CActiveAEDSPDatabase::DeleteMasterModes(void)
+bool CActiveAEDSPDatabase::DeleteModes(void)
 {
   CLog::Log(LOGDEBUG, "Audio DSP - %s - deleting all modes from the database", __FUNCTION__);
   return DeleteValues("modes");
 }
 
-bool CActiveAEDSPDatabase::DeleteMasterModes(const CActiveAEDSPAddon &addon)
+bool CActiveAEDSPDatabase::DeleteModes(int modeType)
+{
+  /* invalid addon Id */
+  if (modeType <= 0)
+  {
+    CLog::Log(LOGERROR, "Audio DSP - %s - invalid mode type id: %i", __FUNCTION__, modeType);
+    return false;
+  }
+
+  CLog::Log(LOGDEBUG, "Audio DSP - %s - deleting all modes from type '%i' from the database", __FUNCTION__, modeType);
+
+  Filter filter;
+  filter.AppendWhere(PrepareSQL("iType = %u", modeType));
+
+  return DeleteValues("modes", filter);
+}
+
+bool CActiveAEDSPDatabase::DeleteModes(const CActiveAEDSPAddon &addon)
 {
   /* invalid addon Id */
   if (addon.GetID() <= 0)
@@ -144,7 +164,39 @@ bool CActiveAEDSPDatabase::DeleteMasterModes(const CActiveAEDSPAddon &addon)
   return DeleteValues("modes", filter);
 }
 
-bool CActiveAEDSPDatabase::AddUpdateMasterMode(const CActiveAEDSPMode &mode)
+bool CActiveAEDSPDatabase::DeleteMode(const CActiveAEDSPMode &mode)
+{
+  /* invalid mode */
+  if (mode.ModeID() <= 0)
+    return false;
+
+  CLog::Log(LOGDEBUG, "Audio DSP - %s - deleting mode '%s' from the database", __FUNCTION__, mode.AddonModeName().c_str());
+
+  Filter filter;
+  filter.AppendWhere(PrepareSQL("idMode = %u", mode.ModeID()));
+
+  return DeleteValues("modes", filter);
+}
+
+bool CActiveAEDSPDatabase::PersistModes(vector<CActiveAEDSPModePtr> &modes, int modeType)
+{
+  bool bReturn(true);
+
+  for (unsigned int iModePtr = 0; iModePtr < modes.size(); iModePtr++)
+  {
+    CActiveAEDSPModePtr member = modes.at(iModePtr);
+    if (member->IsChanged() || member->IsNew())
+    {
+      bReturn &= AddUpdateMode(*member);
+    }
+  }
+
+  bReturn &= CommitInsertQueries();
+
+  return bReturn;
+}
+
+bool CActiveAEDSPDatabase::UpdateMode(int modeType, bool active, int addonId, int addonModeNumber, int listNumber)
 {
   bool bReturn(true);
 
@@ -152,49 +204,66 @@ bool CActiveAEDSPDatabase::AddUpdateMasterMode(const CActiveAEDSPMode &mode)
   {
     if (NULL == m_pDB.get()) return false;
     if (NULL == m_pDS.get()) return false;
-    CStdString strSQL = PrepareSQL("select * from modes WHERE modes.iAddonId='%i' and modes.iAddonModeNumber='%i'", mode.AddonID(), mode.AddonModeNumber());
+
+    CStdString strSQL = PrepareSQL("update modes set iPosition=%i,bIsHidden='%i' WHERE modes.iAddonId='%i' AND modes.iAddonModeNumber='%i' AND modes.iType='%i'", listNumber, (active ? 0 : 1), addonId, addonModeNumber, modeType);
+    bReturn = m_pDS->exec(strSQL.c_str());
+  }
+  catch (...)
+  {
+    CLog::Log(LOGERROR, "Audio DSP - %s - (Addon='%i', Mode='%i') failed", __FUNCTION__, addonId, addonModeNumber);
+  }
+  return bReturn;
+}
+
+bool CActiveAEDSPDatabase::AddUpdateMode(CActiveAEDSPMode &mode)
+{
+  bool bReturn(true);
+
+  try
+  {
+    if (NULL == m_pDB.get()) return false;
+    if (NULL == m_pDS.get()) return false;
+    CStdString strSQL = PrepareSQL("SELECT * FROM modes WHERE modes.iAddonId='%i' AND modes.iAddonModeNumber='%i' AND modes.iType='%i'", mode.AddonID(), mode.AddonModeNumber(), mode.ModeType());
 
     m_pDS->query( strSQL.c_str() );
     if (m_pDS->num_rows() > 0)
     {
+      /* get user selected settings */
+      mode.m_iModeId        = m_pDS->fv("idMode").get_asInt();
+      mode.m_iModePosition  = m_pDS->fv("iPosition").get_asInt();
+      mode.m_iBaseType      = (AE_DSP_BASETYPE)m_pDS->fv("iBaseType").get_asInt();
+      mode.m_bIsHidden      = m_pDS->fv("bIsHidden").get_asBool();
       m_pDS->close();
-    /* update mode */
+
+      /* update addon related settings */
       strSQL = PrepareSQL(
       "UPDATE modes set "
         "iStreamTypeFlags=%i, "
-        "bIsHidden=%i, "
         "sOwnIconPath='%s', "
-        "sOverrideIconPath='%s', ",
-        mode.StreamTypeFlags(),
-        (mode.IsHidden() ? 1 : 0),
-        mode.IconOwnModePath().c_str(),
-        mode.IconOverrideModePath().c_str());
-      CStdString strSQL2;
-      strSQL2=PrepareSQL(
+        "sOverrideIconPath='%s', "
         "iModeName=%i, "
         "iModeHelp=%i, "
         "iModeDescription=%i, "
         "sAddonModeName='%s', "
-        "iAddonId=%i, "
-        "iAddonModeNumber=%i, "
         "bHasSettings=%i "
-      "WHERE modes.iAddonId='%i' and modes.iAddonModeNumber='%i'",
+        "WHERE modes.iAddonId='%i' AND modes.iAddonModeNumber='%i' AND modes.iType='%i'",
+        mode.StreamTypeFlags(),
+        mode.IconOwnModePath().c_str(),
+        mode.IconOverrideModePath().c_str(),
         mode.ModeName(),
         mode.ModeHelp(),
         mode.ModeDescription(),
         mode.AddonModeName().c_str(),
-        mode.AddonID(),
-        mode.AddonModeNumber(),
         (mode.HasSettingsDialog() ? 1 : 0),
-        mode.AddonID(), mode.AddonModeNumber());
-      strSQL += strSQL2;
-      bReturn = m_pDS->exec(strSQL.c_str());
+        mode.AddonID(), mode.AddonModeNumber(), mode.ModeType());
     }
     else
     { // add the items
       m_pDS->close();
       strSQL = PrepareSQL(
       "INSERT INTO modes ("
+        "iType, "
+        "iPosition, "
         "iStreamTypeFlags, "
         "bIsHidden, "
         "sOwnIconPath, "
@@ -206,7 +275,9 @@ bool CActiveAEDSPDatabase::AddUpdateMasterMode(const CActiveAEDSPMode &mode)
         "iAddonId, "
         "iAddonModeNumber, "
         "bHasSettings) "
-        "VALUES (%i, %i, '%s', '%s', %i, %i, %i, '%s', %i, %i, %i)",
+        "VALUES (%i, %i, %i, %i, '%s', '%s', %i, %i, %i, '%s', %i, %i, %i)",
+        mode.ModeType(),
+        mode.ModePosition(),
         mode.StreamTypeFlags(),
         (mode.IsHidden() ? 1 : 0),
         mode.IconOwnModePath().c_str(),
@@ -223,12 +294,12 @@ bool CActiveAEDSPDatabase::AddUpdateMasterMode(const CActiveAEDSPMode &mode)
   }
   catch (...)
   {
-    CLog::Log(LOGERROR, "%s (Addon='%i', Mode='%i', Name: %s) failed", __FUNCTION__, mode.AddonID(), mode.AddonModeNumber(), mode.AddonModeName().c_str());
+    CLog::Log(LOGERROR, "Audio DSP - %s - (Addon='%i', Mode='%i', Name: %s) failed", __FUNCTION__, mode.AddonID(), mode.AddonModeNumber(), mode.AddonModeName().c_str());
   }
   return bReturn;
 }
 
-int CActiveAEDSPDatabase::GetMasterModeId(const CActiveAEDSPMode &mode)
+int CActiveAEDSPDatabase::GetModeId(const CActiveAEDSPMode &mode)
 {
   try
   {
@@ -236,7 +307,7 @@ int CActiveAEDSPDatabase::GetMasterModeId(const CActiveAEDSPMode &mode)
     if (NULL == m_pDS.get()) return false;
     int idMode = -1;
 
-    CStdString strSQL = PrepareSQL("SELECT * from modes WHERE modes.iAddonId='%i' and modes.iAddonModeNumber='%i'", mode.AddonID(), mode.AddonModeNumber());
+    CStdString strSQL = PrepareSQL("SELECT * from modes WHERE modes.iAddonId='%i' and modes.iAddonModeNumber='%i' and modes.iType='%i'", mode.AddonID(), mode.AddonModeNumber(), mode.ModeType());
 
     m_pDS->query(strSQL.c_str());
     if (m_pDS->num_rows() > 0)
@@ -251,67 +322,14 @@ int CActiveAEDSPDatabase::GetMasterModeId(const CActiveAEDSPMode &mode)
   return -1;
 }
 
-bool CActiveAEDSPDatabase::DeleteMasterMode(const CActiveAEDSPMode &mode)
-{
-  /* invalid mode */
-  if (mode.ModeID() <= 0)
-    return false;
-
-  CLog::Log(LOGDEBUG, "Audio DSP - %s - deleting mode '%s' from the database", __FUNCTION__, mode.AddonModeName().c_str());
-
-  Filter filter;
-  filter.AppendWhere(PrepareSQL("idMode = %u", mode.ModeID()));
-
-  return DeleteValues("modes", filter);
-}
-
-int CActiveAEDSPDatabase::Get(CActiveAEDSPProcess &results, bool all)
+int CActiveAEDSPDatabase::GetModes(AE_DSP_MODELIST &results, int modeType)
 {
   int iReturn(0);
 
-  CStdString strQuery;
-  if (all)
-  {
-    strQuery = PrepareSQL(
-      "SELECT "
-          "modes.idMode, "
-          "modes.iStreamTypeFlags, "
-          "modes.iBaseType, "
-          "modes.bIsHidden, "
-          "modes.sOwnIconPath, "
-          "modes.sOverrideIconPath, "
-          "modes.iModeName, "
-          "modes.iModeHelp, "
-          "modes.iModeDescription, "
-          "modes.sAddonModeName, "
-          "modes.iAddonId, "
-          "modes.iAddonChannelNumber, "
-          "modes.bHasSettings "
-        "FROM modes");
-  }
-  else
-  {
-    strQuery = PrepareSQL(
-      "SELECT "
-          "modes.idMode, "
-          "modes.iStreamTypeFlags, "
-          "modes.iBaseType, "
-          "modes.bIsHidden, "
-          "modes.sOwnIconPath, "
-          "modes.sOverrideIconPath, "
-          "modes.iModeName, "
-          "modes.iModeHelp, "
-          "modes.iModeDescription, "
-          "modes.sAddonModeName, "
-          "modes.iAddonId, "
-          "modes.iAddonChannelNumber, "
-          "modes.bHasSettings "
-        "FROM modes "
-        "WHERE modes.iBaseType = %i",
-        results.GetUsedAddonStreamType(),
-        results.GetUsedAddonBaseType());
-  }
-  if (ResultQuery(strQuery))
+  CStdString strQuery=PrepareSQL("SELECT * FROM modes WHERE modes.iType='%i' ORDER BY iPosition", modeType);
+
+  m_pDS->query( strQuery.c_str() );
+  if (m_pDS->num_rows() > 0)
   {
     try
     {
@@ -320,23 +338,27 @@ int CActiveAEDSPDatabase::Get(CActiveAEDSPProcess &results, bool all)
         CActiveAEDSPModePtr mode = CActiveAEDSPModePtr(new CActiveAEDSPMode());
 
         mode->m_iModeId                 = m_pDS->fv("idMode").get_asInt();
+        mode->m_iModeType               = m_pDS->fv("iType").get_asInt();
+        mode->m_iModePosition           = m_pDS->fv("iPosition").get_asInt();
         mode->m_iStreamTypeFlags        = m_pDS->fv("iStreamTypeFlags").get_asInt();
         mode->m_iBaseType               = (AE_DSP_BASETYPE)m_pDS->fv("iBaseType").get_asInt();
         mode->m_bIsHidden               = m_pDS->fv("bIsHidden").get_asBool();
         mode->m_strOwnIconPath          = m_pDS->fv("sOwnIconPath").get_asString();
         mode->m_strOverrideIconPath     = m_pDS->fv("sOverrideIconPath").get_asString();
         mode->m_iModeName               = m_pDS->fv("iModeName").get_asInt();
-        mode->m_iModeDescription        = m_pDS->fv("iModeHelp").get_asInt();
-        mode->m_iModeHelp               = m_pDS->fv("iModeDescription").get_asInt();
+        mode->m_iModeHelp               = m_pDS->fv("iModeHelp").get_asInt();
+        mode->m_iModeDescription        = m_pDS->fv("iModeDescription").get_asInt();
         mode->m_strAddonModeName        = m_pDS->fv("sAddonModeName").get_asString();
         mode->m_iAddonId                = m_pDS->fv("iAddonId").get_asInt();
-        mode->m_iAddonModeNumber        = m_pDS->fv("iAddonChannelNumber").get_asInt();
+        mode->m_iAddonModeNumber        = m_pDS->fv("iAddonModeNumber").get_asInt();
         mode->m_bHasSettingsDialog      = m_pDS->fv("bHasSettings").get_asBool();
 
 #ifdef ADSPDB_DEBUGGING
         CLog::Log(LOGDEBUG, "Audio DSP - %s - mode '%s' loaded from the database", __FUNCTION__, mode->m_strAddonModeName.c_str());
 #endif
-        results.m_MasterModes.push_back(mode);
+        AE_DSP_ADDON addon;
+        if (CActiveAEDSP::Get().GetAudioDSPAddon(mode->m_iAddonId, addon))
+          results.push_back(AE_DSP_MODEPAIR(mode, addon));
 
         m_pDS->next();
         ++iReturn;
@@ -345,7 +367,7 @@ int CActiveAEDSPDatabase::Get(CActiveAEDSPProcess &results, bool all)
     }
     catch (...)
     {
-      CLog::Log(LOGERROR, "Audio DSP - %s - couldn't load channels from the database", __FUNCTION__);
+      CLog::Log(LOGERROR, "Audio DSP - %s - couldn't load modes from the database", __FUNCTION__);
     }
   }
   else
@@ -355,6 +377,33 @@ int CActiveAEDSPDatabase::Get(CActiveAEDSPProcess &results, bool all)
 
   m_pDS->close();
   return iReturn;
+}
+
+bool CActiveAEDSPDatabase::IsModeEnabled(const CActiveAEDSPMode &mode, int &position)
+{
+  try
+  {
+    if (NULL == m_pDB.get()) return false;
+    if (NULL == m_pDS.get()) return false;
+
+    CStdString strSQL = PrepareSQL("SELECT * from modes WHERE modes.iAddonId='%i' and modes.iAddonModeNumber='%i' and modes.iType='%i'", mode.AddonID(), mode.AddonModeNumber(), mode.ModeType());
+
+    m_pDS->query(strSQL.c_str());
+    if (m_pDS->num_rows() > 0)
+    {
+      if (!m_pDS->fv("bIsHidden").get_asBool())
+        return false;
+      position = m_pDS->fv("iPosition").get_asInt();
+    }
+
+    m_pDS->close();
+    return true;
+  }
+  catch (...)
+  {
+    CLog::Log(LOGERROR, "%s (Addon='%i', Mode='%i', Name: %s) failed", __FUNCTION__, mode.AddonID(), mode.AddonModeNumber(), mode.AddonModeName().c_str());
+  }
+  return false;
 }
 
 /********** Settings methods **********/

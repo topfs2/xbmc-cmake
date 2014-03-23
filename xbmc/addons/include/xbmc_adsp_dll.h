@@ -131,23 +131,21 @@ extern "C"
   AE_DSP_ERROR StreamInitialize(const AE_DSP_SETTINGS *addonSettings);
   //@}
 
-  /** @name DSP pre processing
-   *  @remarks Only used by XBMC if bSupportsPreProcess is set to true.
+  /** @name DSP nput processing
+   *  @remarks Only used by XBMC if bSupportsInputProcess is set to true.
    */
   //@{
   /*!
-   * @brief DSP pre processing
-   * Can be used to rework input stream to remove maybe stream faults.
-   * Channels (upmix/downmix) or sample rate is not to change! Only the
-   * input stream data can be changed, no access to other data point!
+   * @brief DSP input processing
+   * Can be used to have unchanged stream..
    * All DSP addons allowed todo this.
    * @param id The stream id
-   * @param array_in_out Pointer to data memory
+   * @param array_in Pointer to data memory
    * @param samples Amount of samples inside array_in
    * @return true if work was ok
    * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
    */
-  bool PreProcess(unsigned int id, float **array_in_out, unsigned int samples);
+  bool InputProcess(unsigned int id, float **array_in, unsigned int samples);
   //@}
 
   /** @name DSP pre resampling
@@ -190,6 +188,46 @@ extern "C"
    * @return the delay in seconds
    */
   float InputResampleGetDelay(unsigned int id);
+  //@}
+
+  /** @name DSP Pre processing
+   *  @remarks Only used by XBMC if bSupportsPreProcess is set to true.
+   */
+  //@{
+  /*!
+   * If the addon operate with buffered arrays and the output size can be higher as the input
+   * it becomes asked about needed size before any PreProcess call.
+   * @param id The stream id
+   * @param mode_id The mode inside addon which must be performed on call. Id is set from addon by iModeNumber on AE_DSP_MODE structure during StreamCreate call,
+   * and can be defined from addon as a structure pointer or anything else what is needed to find it.
+   * @return The needed size of output array or 0 if no changes within it
+   * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
+   */
+  unsigned int PreProcessNeededSamplesize(unsigned int id, unsigned int mode_id);
+
+  /*!
+   * Returns the time in seconds that it will take
+   * for the next added packet to be heard from the speakers.
+   * @param id The stream id
+   * @param mode_id The mode inside addon which must be performed on call. Id is set from addon by iModeNumber on AE_DSP_MODE structure during StreamCreate call,
+   * and can be defined from addon as a structure pointer or anything else what is needed to find it.
+   * @return the delay in seconds
+   */
+  float PreProcessGetDelay(unsigned int id, unsigned int mode_id);
+
+  /*!
+   * @brief DSP pre processing
+   * All DSP addons allowed todo this.
+   * @param id The stream id
+   * @param mode_id The mode inside addon which must be performed on call. Id is set from addon by iModeNumber on AE_DSP_MODE structure during StreamCreate call,
+   * and can be defined from addon as a structure pointer or anything else what is needed to find it.
+   * @param array_in Pointer to input data memory
+   * @param array_out Pointer to output data memory
+   * @param samples Amount of samples inside array_in
+   * @return Amount of samples processed
+   * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
+   */
+  unsigned int PreProcess(unsigned int id, unsigned int mode_id, float **array_in, float **array_out, unsigned int samples);
   //@}
 
   /** @name DSP Master processing
@@ -260,18 +298,22 @@ extern "C"
    * If the addon operate with buffered arrays and the output size can be higher as the input
    * it becomes asked about needed size before any PostProcess call.
    * @param id The stream id
+   * @param mode_id The mode inside addon which must be performed on call. Id is set from addon by iModeNumber on AE_DSP_MODE structure during StreamCreate call,
+   * and can be defined from addon as a structure pointer or anything else what is needed to find it.
    * @return The needed size of output array or 0 if no changes within it
    * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
    */
-  unsigned int PostProcessNeededSamplesize(unsigned int id);
+  unsigned int PostProcessNeededSamplesize(unsigned int id, unsigned int mode_id);
 
   /*!
    * Returns the time in seconds that it will take
    * for the next added packet to be heard from the speakers.
    * @param id The stream id
+   * @param mode_id The mode inside addon which must be performed on call. Id is set from addon by iModeNumber on AE_DSP_MODE structure during StreamCreate call,
+   * and can be defined from addon as a structure pointer or anything else what is needed to find it.
    * @return the delay in seconds
    */
-  float PostProcessGetDelay(unsigned int id);
+  float PostProcessGetDelay(unsigned int id, unsigned int mode_id);
 
   /*!
    * @brief DSP post processing
@@ -279,13 +321,15 @@ extern "C"
    * or frequency/volume corrections, speaker distance handling, equalizer... .
    * All DSP addons allowed todo this.
    * @param id The stream id
+   * @param mode_id The mode inside addon which must be performed on call. Id is set from addon by iModeNumber on AE_DSP_MODE structure during StreamCreate call,
+   * and can be defined from addon as a structure pointer or anything else what is needed to find it.
    * @param array_in Pointer to input data memory
    * @param array_out Pointer to output data memory
    * @param samples Amount of samples inside array_in
    * @return Amount of samples processed
    * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
    */
-  unsigned int PostProcess(unsigned int id, float **array_in, float **array_out, unsigned int samples);
+  unsigned int PostProcess(unsigned int id, unsigned int mode_id, float **array_in, float **array_out, unsigned int samples);
   //@}
 
   /** @name DSP Post resampling
@@ -341,23 +385,33 @@ extern "C"
     pDSP->GetDSPName                            = GetDSPName;
     pDSP->GetDSPVersion                         = GetDSPVersion;
     pDSP->MenuHook                              = CallMenuHook;
+
     pDSP->StreamCreate                          = StreamCreate;
     pDSP->StreamDestroy                         = StreamDestroy;
     pDSP->StreamInitialize                      = StreamInitialize;
-    pDSP->PreProcess                            = PreProcess;
+
+    pDSP->InputProcess                          = InputProcess;
+
     pDSP->InputResampleProcessNeededSamplesize  = InputResampleProcessNeededSamplesize;
     pDSP->InputResampleProcess                  = InputResampleProcess;
     pDSP->InputResampleGetDelay                 = InputResampleGetDelay;
     pDSP->InputResampleSampleRate               = InputResampleSampleRate;
+
+    pDSP->PreProcessNeededSamplesize            = PreProcessNeededSamplesize;
+    pDSP->PreProcessGetDelay                    = PreProcessGetDelay;
+    pDSP->PreProcess                            = PreProcess;
+
     pDSP->MasterProcessGetModes                 = MasterProcessGetModes;
     pDSP->MasterProcessSetMode                  = MasterProcessSetMode;
     pDSP->MasterProcessNeededSamplesize         = MasterProcessNeededSamplesize;
     pDSP->MasterProcessGetDelay                 = MasterProcessGetDelay;
     pDSP->MasterProcess                         = MasterProcess;
     pDSP->MasterProcessGetStreamInfoString      = MasterProcessGetStreamInfoString;
+
     pDSP->PostProcessNeededSamplesize           = PostProcessNeededSamplesize;
     pDSP->PostProcessGetDelay                   = PostProcessGetDelay;
     pDSP->PostProcess                           = PostProcess;
+
     pDSP->OutputResampleProcessNeededSamplesize = OutputResampleProcessNeededSamplesize;
     pDSP->OutputResampleProcess                 = OutputResampleProcess;
     pDSP->OutputResampleSampleRate              = OutputResampleSampleRate;

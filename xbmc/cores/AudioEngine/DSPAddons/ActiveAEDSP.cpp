@@ -118,6 +118,45 @@ void CActiveAEDSP::Activate(bool bAsync /* = false */)
 
   Create();
   SetPriority(-1);
+
+//  TriggerModeUpdate(false);
+}
+
+class CActiveAEDSPModeUpdateJob : public CJob
+{
+public:
+  CActiveAEDSPModeUpdateJob() {}
+  ~CActiveAEDSPModeUpdateJob(void) {}
+
+  bool DoWork(void)
+  {
+    CActiveAEDSP::Get().TriggerModeUpdate(false);
+    return true;
+  }
+};
+
+void CActiveAEDSP::TriggerModeUpdate(bool bAsync /* = true */)
+{
+  if (bAsync)
+  {
+    CActiveAEDSPModeUpdateJob *job = new CActiveAEDSPModeUpdateJob();
+    CJobManager::GetInstance().AddJob(job, NULL);
+    return;
+  }
+
+  CLog::Log(LOGINFO, "ActiveAE DSP - %s - Update mode selections", __FUNCTION__);
+
+  if (!m_DatabaseDSP.IsOpen())
+  {
+    CLog::Log(LOGERROR, "ActiveAE DSP - failed to open the database");
+    return;
+  }
+
+  for (unsigned int i = 0; i < AE_DSP_MODE_TYPE_MAX; i++)
+  {
+    m_Modes[i].clear();
+    m_DatabaseDSP.GetModes(m_Modes[i], i);
+  }
 }
 
 void CActiveAEDSP::Deactivate(void)
@@ -168,6 +207,9 @@ void CActiveAEDSP::Cleanup(void)
   m_isActive                  = false;
   m_usedProcessesCnt          = 0;
   m_bIsValidAudioDSPSettings  = false;
+
+  for (unsigned int i = 0; i < AE_DSP_MODE_TYPE_MAX; i++)
+    m_Modes[i].clear();
 }
 
 bool CActiveAEDSP::InstallAddonAllowed(const std::string &strAddonId) const
@@ -192,7 +234,7 @@ void CActiveAEDSP::ResetDatabase(void)
 
   if (m_DatabaseDSP.Open())
   {
-    m_DatabaseDSP.DeleteMasterModes();
+    m_DatabaseDSP.DeleteModes();
     m_DatabaseDSP.DeleteActiveDSPSettings();
     m_DatabaseDSP.DeleteAddons();
 
@@ -381,6 +423,16 @@ unsigned int CActiveAEDSP::GetProcessingStreamsAmount(void)
   return m_usedProcessesCnt;
 }
 
+const AE_DSP_MODELIST &CActiveAEDSP::GetAvailableModes(AE_DSP_MODE_TYPE modeType)
+{
+  static AE_DSP_MODELIST emptyArray;
+  if (modeType < 0 || modeType >= AE_DSP_MODE_TYPE_MAX)
+    return emptyArray;
+
+  CSingleLock lock(m_critSection);
+  return m_Modes[modeType];
+}
+
 AE_DSP_STREAMTYPE CActiveAEDSP::GetDetectedStreamType(unsigned int iStreamId)
 {
   CSingleLock lock(m_critSection);
@@ -409,7 +461,7 @@ bool CActiveAEDSP::GetMasterModeStreamInfoString(unsigned int streamId, CStdStri
   return false;
 }
 
-void CActiveAEDSP::GetAvailableMasterModes(unsigned int streamId, AE_DSP_STREAMTYPE streamType, AE_DSP_MODELIST &modes)
+void CActiveAEDSP::GetAvailableMasterModes(unsigned int streamId, AE_DSP_STREAMTYPE streamType, std::vector<CActiveAEDSPModePtr> &modes)
 {
   CSingleLock lock(m_critSection);
 
@@ -592,7 +644,7 @@ void CActiveAEDSP::Process(void)
   CAddonMgr::Get().RegisterObserver(this);
 
   UpdateAddons();
-
+  
   m_isActive = true;
 
   while (!g_application.m_bStop && !m_bStop)
@@ -602,7 +654,9 @@ void CActiveAEDSP::Process(void)
     if (!bCheckedEnabledAddonsOnStartup)
     {
       bCheckedEnabledAddonsOnStartup = true;
-      if (!HasEnabledAudioDSPAddons() && !m_bNoAddonWarningDisplayed)
+      if (HasEnabledAudioDSPAddons())
+        TriggerModeUpdate(false);
+      else if (!m_bNoAddonWarningDisplayed)
         ShowDialogNoAddonsEnabled();
     }
 

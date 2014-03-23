@@ -18,9 +18,8 @@
  *
  */
 
-#include "ActiveAEDSPMode.h"
-#include "ActiveAEDSP.h"
 #include "ActiveAEDSPDatabase.h"
+#include "ActiveAEDSPMode.h"
 #include "cores/IPlayer.h"
 #include "Engines/ActiveAE/ActiveAEBuffer.h"
 #include "Engines/ActiveAE/ActiveAEResample.h"
@@ -35,7 +34,9 @@ bool CActiveAEDSPMode::operator==(const CActiveAEDSPMode &right) const
 {
   return (m_iModeId           == right.m_iModeId &&
           m_iAddonId          == right.m_iAddonId &&
-          m_iAddonModeNumber  == right.m_iAddonModeNumber);
+          m_iAddonModeNumber  == right.m_iAddonModeNumber &&
+          m_iModeType         == right.m_iModeType &&
+          m_iModePosition     == right.m_iModePosition);
 }
 
 bool CActiveAEDSPMode::operator!=(const CActiveAEDSPMode &right) const
@@ -45,7 +46,9 @@ bool CActiveAEDSPMode::operator!=(const CActiveAEDSPMode &right) const
 
 CActiveAEDSPMode::CActiveAEDSPMode()
 {
+  m_iModeType               = AE_DSP_MODE_TYPE_UNDEFINED;
   m_iModeId                 = -1;
+  m_iModePosition           = -1;
   m_bIsHidden               = false;
   m_bIsPrimary              = false;
   m_strOwnIconPath          = StringUtils::EmptyString;
@@ -66,7 +69,9 @@ CActiveAEDSPMode::CActiveAEDSPMode()
 
 CActiveAEDSPMode::CActiveAEDSPMode(const AE_DSP_BASETYPE baseType)
 {
+  m_iModeType               = AE_DSP_MODE_TYPE_MASTER_PROCESS;
   m_iModeId                 = AE_DSP_MASTER_MODE_ID_PASSOVER;
+  m_iModePosition           = 0;
   m_bIsHidden               = false;
   m_bIsPrimary              = true;
   m_strOwnIconPath          = StringUtils::EmptyString;
@@ -93,10 +98,12 @@ CActiveAEDSPMode::CActiveAEDSPMode(const AE_DSP_BASETYPE baseType)
 
 CActiveAEDSPMode::CActiveAEDSPMode(const AE_DSP_MODES::AE_DSP_MODE &mode, int iAddonId)
 {
-  m_iModeId                 = mode.iUniqueDBModeId;;
+  m_iModeType               = mode.iModeType;
+  m_iModePosition           = -1;
+  m_iModeId                 = mode.iUniqueDBModeId;
   m_iAddonId                = iAddonId;
   m_iBaseType               = AE_DSP_ABASE_INVALID;
-  m_bIsHidden               = mode.bIsHidden;
+  m_bIsHidden               = m_iModeType == AE_DSP_MODE_TYPE_MASTER_PROCESS ? mode.bIsHidden : true;
   m_bIsPrimary              = mode.bIsPrimary;
   m_strOwnIconPath          = mode.strOwnModeImage;
   m_strOverrideIconPath     = mode.strOverrideModeImage;
@@ -122,6 +129,8 @@ CActiveAEDSPMode::CActiveAEDSPMode(const CActiveAEDSPMode &mode)
 CActiveAEDSPMode &CActiveAEDSPMode::operator=(const CActiveAEDSPMode &mode)
 {
   m_iModeId                 = mode.m_iModeId;
+  m_iModeType               = mode.m_iModeType;
+  m_iModePosition           = mode.m_iModePosition;
   m_bIsHidden               = mode.m_bIsHidden;
   m_bIsPrimary              = mode.m_bIsPrimary;
   m_strOwnIconPath          = mode.m_strOwnIconPath;
@@ -154,12 +163,13 @@ bool CActiveAEDSPMode::Delete(void)
     return bReturn;
   }
 
-  bReturn = database->DeleteMasterMode(*this);
+  bReturn = database->DeleteMode(*this);
   return bReturn;
 }
 
-int CActiveAEDSPMode::AddUpdate(void)
+int CActiveAEDSPMode::AddUpdate(bool force)
 {
+  if (!force)
   {
     // not changed
     CSingleLock lock(m_critSection);
@@ -174,8 +184,8 @@ int CActiveAEDSPMode::AddUpdate(void)
     return -1;
   }
 
-  database->AddUpdateMasterMode(*this);
-  m_iModeId = database->GetMasterModeId(*this);
+  database->AddUpdateMode(*this);
+  m_iModeId = database->GetModeId(*this);
 
   return m_iModeId;
 }
@@ -189,7 +199,7 @@ bool CActiveAEDSPMode::IsKnown(void)
     return -1;
   }
 
-  return database->GetMasterModeId(*this) > 0;
+  return database->GetModeId(*this) > 0;
 }
 
 bool CActiveAEDSPMode::UpdateFromAddon(const CActiveAEDSPMode &mode)
@@ -211,6 +221,38 @@ bool CActiveAEDSPMode::UpdateFromAddon(const CActiveAEDSPMode &mode)
     SetIconOverrideModePath(mode.IconOverrideModePath());
 
   return m_bChanged;
+}
+
+bool CActiveAEDSPMode::SetModeType(int iModeType)
+{
+  CSingleLock lock(m_critSection);
+  if (m_iModeType != iModeType)
+  {
+    /* update the type */
+    m_iModeType = iModeType;
+    SetChanged();
+    m_bChanged = true;
+
+    return true;
+  }
+
+  return false;
+}
+
+bool CActiveAEDSPMode::SetModePosition(int iModePosition)
+{
+  CSingleLock lock(m_critSection);
+  if (m_iModePosition != iModePosition)
+  {
+    /* update the type */
+    m_iModePosition = iModePosition;
+    SetChanged();
+    m_bChanged = true;
+
+    return true;
+  }
+
+  return false;
 }
 
 bool CActiveAEDSPMode::SetModeID(int iModeId)
@@ -444,6 +486,18 @@ bool CActiveAEDSPMode::SetAddonModeName(const CStdString &strAddonModeName)
   }
 
   return false;
+}
+
+unsigned int CActiveAEDSPMode::ModeType(void) const
+{
+  CSingleLock lock(m_critSection);
+  return m_iModeType;
+}
+
+unsigned int CActiveAEDSPMode::ModePosition(void) const
+{
+  CSingleLock lock(m_critSection);
+  return m_iModePosition;
 }
 
 int CActiveAEDSPMode::ModeID(void) const

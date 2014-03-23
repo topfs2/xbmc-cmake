@@ -262,8 +262,9 @@ extern "C" {
    */
   typedef struct AE_DSP_ADDON_CAPABILITIES
   {
-    bool bSupportsPreProcess;                   /*!< @brief true if this add-on provides audio pre processing */
+    bool bSupportsInputProcess;                 /*!< @brief true if this add-on provides audio input processing */
     bool bSupportsInputResample;                /*!< @brief true if this add-on provides audio resample before master handling */
+    bool bSupportsPreProcess;                   /*!< @brief true if this add-on provides audio pre processing */
     bool bSupportsMasterProcess;                /*!< @brief true if this add-on supports audio master processing */
     bool bSupportsPostProcess;                  /*!< @brief true if this add-on supports audio post processing */
     bool bSupportsOutputResample;               /*!< @brief true if this add-on supports audio resample after master handling */
@@ -415,20 +416,29 @@ extern "C" {
     AE_DSP_ERROR (__cdecl* StreamCreate)                         (const AE_DSP_SETTINGS*, const AE_DSP_STREAM_PROPERTIES*);
     AE_DSP_ERROR (__cdecl* StreamDestroy)                        (unsigned int);
     AE_DSP_ERROR (__cdecl* StreamInitialize)                     (const AE_DSP_SETTINGS*);
-    bool         (__cdecl* PreProcess)                           (unsigned int, float**, unsigned int);
+
+    bool         (__cdecl* InputProcess)                         (unsigned int, float**, unsigned int);
+
     unsigned int (__cdecl* InputResampleProcessNeededSamplesize) (unsigned int);
     unsigned int (__cdecl* InputResampleProcess)                 (unsigned int, float**, float**, unsigned int);
     float        (__cdecl* InputResampleGetDelay)                (unsigned int);
     int          (__cdecl* InputResampleSampleRate)              (unsigned int);
+
+    unsigned int (__cdecl* PreProcessNeededSamplesize)           (unsigned int, unsigned int);
+    float        (__cdecl* PreProcessGetDelay)                   (unsigned int, unsigned int);
+    unsigned int (__cdecl* PreProcess)                           (unsigned int, unsigned int, float**, float**, unsigned int);
+
     AE_DSP_ERROR (__cdecl* MasterProcessGetModes)                (unsigned int, AE_DSP_MODES&);
     AE_DSP_ERROR (__cdecl* MasterProcessSetMode)                 (unsigned int, unsigned int, int, int);
     unsigned int (__cdecl* MasterProcessNeededSamplesize)        (unsigned int);
     float        (__cdecl* MasterProcessGetDelay)                (unsigned int);
     unsigned int (__cdecl* MasterProcess)                        (unsigned int, float**, float**, unsigned int);
     const char*  (__cdecl* MasterProcessGetStreamInfoString)     (unsigned int);
-    unsigned int (__cdecl* PostProcessNeededSamplesize)          (unsigned int);
-    float        (__cdecl* PostProcessGetDelay)                  (unsigned int);
-    unsigned int (__cdecl* PostProcess)                          (unsigned int, float**, float**, unsigned int);
+
+    unsigned int (__cdecl* PostProcessNeededSamplesize)          (unsigned int, unsigned int);
+    float        (__cdecl* PostProcessGetDelay)                  (unsigned int, unsigned int);
+    unsigned int (__cdecl* PostProcess)                          (unsigned int, unsigned int, float**, float**, unsigned int);
+
     unsigned int (__cdecl* OutputResampleProcessNeededSamplesize)(unsigned int);
     unsigned int (__cdecl* OutputResampleProcess)                (unsigned int, float**, float**, unsigned int);
     float        (__cdecl* OutputResampleGetDelay)               (unsigned int);

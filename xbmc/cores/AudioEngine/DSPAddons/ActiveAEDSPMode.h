@@ -31,14 +31,14 @@ namespace ActiveAE
 {
   class CActiveAEDSPMode;
   class CActiveAEDSPDatabase;
-  
+
   typedef boost::shared_ptr<CActiveAEDSPMode>               CActiveAEDSPModePtr;
   typedef std::pair <CActiveAEDSPModePtr, AE_DSP_ADDON>     AE_DSP_MODEPAIR;
   typedef std::vector<AE_DSP_MODEPAIR >                     AE_DSP_MODELIST;
 
   #define AE_DSP_MASTER_MODE_ID_PASSOVER          (0)  /* Used to ignore master processing */
   #define AE_DSP_MASTER_MODE_ID_INVALID           (-1)
-  
+
   /*!
    * DSP Mode information class
    */

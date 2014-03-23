@@ -145,6 +145,15 @@ namespace ActiveAE
     void StreamDestroy(unsigned int streamId);
 
     /*!
+     * @brief Ask the addon about a requested processing mode that it is supported on the current
+     * stream. Is called about every addon mode type after successed StreamCreate.
+     * @param id The stream id
+     * @param mode The mode to ask (structure data is known to XBMC from addons RegisterMode call)
+     * @return true if supported
+     */
+    bool StreamIsModeSupported(unsigned int id, unsigned int mode_type, int client_mode_id, int unique_db_mode_id);
+
+    /*!
      * Set up Audio DSP with selected audio settings (detected on data of first present audio packet)
      * @param addonSettings The add-on's audio settings.
      * @return AE_DSP_ERROR_NO_ERROR if the properties were fetched successfully.

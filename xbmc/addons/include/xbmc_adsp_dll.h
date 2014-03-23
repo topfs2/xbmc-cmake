@@ -123,6 +123,19 @@ extern "C"
   AE_DSP_ERROR StreamDestroy(unsigned int id);
 
   /*!
+   * @brief Ask the addon about a requested processing mode that it is supported on the current
+   * stream. Is called about every addon mode after successed StreamCreate.
+   * @param id The stream id
+   * @param mode_type The processing mode type, see AE_DSP_MODE_TYPE for definations
+   * @param client_mode_id The Mode identifier.
+   * @param unique_mode_id The Mode unique id generated from dsp database.
+   * @return AE_DSP_ERROR_NO_ERROR if the properties were fetched successfully or if the stream
+   * is not supported the addon must return AE_DSP_ERROR_IGNORE_ME.
+   * @remarks Valid implementation required.
+   */
+  AE_DSP_ERROR StreamIsModeSupported(unsigned int id, unsigned int mode_type, int client_mode_id, int unique_db_mode_id);
+
+  /*!
    * Set up Audio DSP with selected audio settings (detected on data of first present audio packet)
    * @param addonSettings The add-on's audio settings.
    * @return AE_DSP_ERROR_NO_ERROR if the properties were fetched successfully.
@@ -131,7 +144,7 @@ extern "C"
   AE_DSP_ERROR StreamInitialize(const AE_DSP_SETTINGS *addonSettings);
   //@}
 
-  /** @name DSP nput processing
+  /** @name DSP input processing
    *  @remarks Only used by XBMC if bSupportsInputProcess is set to true.
    */
   //@{
@@ -388,6 +401,7 @@ extern "C"
 
     pDSP->StreamCreate                          = StreamCreate;
     pDSP->StreamDestroy                         = StreamDestroy;
+    pDSP->StreamIsModeSupported                 = StreamIsModeSupported;
     pDSP->StreamInitialize                      = StreamInitialize;
 
     pDSP->InputProcess                          = InputProcess;

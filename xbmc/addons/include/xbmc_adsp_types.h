@@ -63,10 +63,10 @@
 #define AE_DSP_STREAM_MAX_MODES                 32
 
 /* current Audio DSP API version */
-#define XBMC_AE_DSP_API_VERSION                 "0.0.1"
+#define XBMC_AE_DSP_API_VERSION                 "0.0.2"
 
 /* min. Audio DSP API version */
-#define XBMC_AE_DSP_MIN_API_VERSION             "0.0.1"
+#define XBMC_AE_DSP_MIN_API_VERSION             "0.0.2"
 
 #ifdef __cplusplus
 extern "C" {
@@ -413,8 +413,10 @@ extern "C" {
     const char*  (__cdecl* GetDSPName)                           (void);
     const char*  (__cdecl* GetDSPVersion)                        (void);
     AE_DSP_ERROR (__cdecl* MenuHook)                             (const AE_DSP_MENUHOOK&, const AE_DSP_MENUHOOK_DATA&);
+
     AE_DSP_ERROR (__cdecl* StreamCreate)                         (const AE_DSP_SETTINGS*, const AE_DSP_STREAM_PROPERTIES*);
     AE_DSP_ERROR (__cdecl* StreamDestroy)                        (unsigned int);
+    AE_DSP_ERROR (__cdecl* StreamIsModeSupported)                (unsigned int, unsigned int, int, int);
     AE_DSP_ERROR (__cdecl* StreamInitialize)                     (const AE_DSP_SETTINGS*);
 
     bool         (__cdecl* InputProcess)                         (unsigned int, float**, unsigned int);

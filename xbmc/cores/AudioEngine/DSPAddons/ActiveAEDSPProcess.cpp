@@ -264,7 +264,8 @@ bool CActiveAEDSPProcess::Create(AEAudioFormat inputFormat, AEAudioFormat output
       /// For resample only one call is allowed. Use first one and ignore everything else.
       CActiveAEDSPModePtr pMode = listInputResample[i].first;
       AE_DSP_ADDON        addon = listInputResample[i].second;
-      if (addon->Enabled() && addon->SupportsInputResample() && !pMode->IsHidden())
+      if (addon->Enabled() && addon->SupportsInputResample() && !pMode->IsHidden() &&
+          addon->StreamIsModeSupported(m_StreamId, pMode->ModeType(), pMode->AddonModeNumber(), pMode->ModeID()))
       {
         AE_DSP_ERROR err = addon->StreamCreate(&m_AddonSettings, &m_AddonStreamProperties);
         if (err == AE_DSP_ERROR_NO_ERROR)
@@ -330,8 +331,8 @@ bool CActiveAEDSPProcess::Create(AEAudioFormat inputFormat, AEAudioFormat output
 
       if (m_usedMap.find(addon->GetID()) == m_usedMap.end())
         continue;
-
-      if (addon->Enabled() && addon->SupportsPreProcess() && !pMode->IsHidden())
+      if (addon->Enabled() && addon->SupportsPreProcess() && !pMode->IsHidden() &&
+          addon->StreamIsModeSupported(m_StreamId, pMode->ModeType(), pMode->AddonModeNumber(), pMode->ModeID()))
       {
         CLog::Log(LOGDEBUG, "  | - %i - %s (%s)", i, pMode->AddonModeName().c_str(), addon->GetAudioDSPName().c_str());
 
@@ -467,7 +468,8 @@ bool CActiveAEDSPProcess::Create(AEAudioFormat inputFormat, AEAudioFormat output
       if (m_usedMap.find(addon->GetID()) == m_usedMap.end())
         continue;
 
-      if (addon->Enabled() && addon->SupportsPostProcess() && !pMode->IsHidden())
+      if (addon->Enabled() && addon->SupportsPostProcess() && !pMode->IsHidden() &&
+          addon->StreamIsModeSupported(m_StreamId, pMode->ModeType(), pMode->AddonModeNumber(), pMode->ModeID()))
       {
         CLog::Log(LOGDEBUG, "  | - %i - %s (%s)", i, pMode->AddonModeName().c_str(), addon->GetAudioDSPName().c_str());
 
@@ -497,7 +499,8 @@ bool CActiveAEDSPProcess::Create(AEAudioFormat inputFormat, AEAudioFormat output
         CActiveAEDSPModePtr pMode = listOutputResample[i].first;
         AE_DSP_ADDON        addon = listOutputResample[i].second;
         if (m_usedMap.find(addon->GetID()) != m_usedMap.end() &&
-            addon->Enabled() && addon->SupportsOutputResample() && !pMode->IsHidden())
+            addon->Enabled() && addon->SupportsOutputResample() && !pMode->IsHidden() &&
+            addon->StreamIsModeSupported(m_StreamId, pMode->ModeType(), pMode->AddonModeNumber(), pMode->ModeID()))
         {
           int outSamplerate = addon->OutputResampleSampleRate(m_StreamId);
           if (outSamplerate > 0)

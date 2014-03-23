@@ -316,6 +316,21 @@ void CActiveAEDSPAddon::StreamDestroy(unsigned int streamId)
   m_bIsInUse = false;
 }
 
+bool CActiveAEDSPAddon::StreamIsModeSupported(unsigned int id, unsigned int mode_type, int client_mode_id, int unique_db_mode_id)
+{
+  try
+  {
+    AE_DSP_ERROR retVal = m_pStruct->StreamIsModeSupported(id, mode_type, client_mode_id, unique_db_mode_id);
+    if (retVal == AE_DSP_ERROR_NO_ERROR)
+      return true;
+    else if (retVal != AE_DSP_ERROR_IGNORE_ME)
+      LogError(retVal, __FUNCTION__);
+  }
+  catch (exception &e) { LogException(e, __FUNCTION__); }
+
+  return false;
+}
+
 AE_DSP_ERROR CActiveAEDSPAddon::StreamInitialize(AE_DSP_SETTINGS *addonSettings)
 {
   AE_DSP_ERROR retVal(AE_DSP_ERROR_UNKNOWN);

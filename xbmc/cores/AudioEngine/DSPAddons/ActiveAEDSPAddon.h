@@ -25,7 +25,10 @@
 
 namespace ActiveAE
 {
-  typedef std::vector<AE_DSP_MENUHOOK> AE_DSP_MENUHOOKS;
+  class CActiveAEDSPAddon;
+
+  typedef std::vector<AE_DSP_MENUHOOK>                      AE_DSP_MENUHOOKS;
+  typedef boost::shared_ptr<ActiveAE::CActiveAEDSPAddon>    AE_DSP_ADDON;
 
   #define AE_DSP_INVALID_ADDON_ID (-1)
 
@@ -177,7 +180,8 @@ namespace ActiveAE
      */
     CStdString GetMasterModeStreamInfoString(unsigned int streamId);
 
-    bool SupportsPreProcessing(void) const;
+    bool SupportsInputInfoProcess(void) const;
+    bool SupportsPreProcess(void) const;
     bool SupportsInputResample(void) const;
     bool SupportsMasterProcess(void) const;
     bool SupportsPostProcess(void) const;

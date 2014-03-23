@@ -28,20 +28,17 @@
 
 #include "ActiveAEDSPAddon.h"
 #include "ActiveAEDSPDatabase.h"
+#include "ActiveAEDSPMode.h"
 
 namespace ActiveAE
 {
-  class CActiveAEDSPMode;
   class CActiveAEDSPProcess;
   class CActiveAEDSPAddon;
 
-  typedef boost::shared_ptr<ActiveAE::CActiveAEDSPMode>     CActiveAEDSPModePtr;
   typedef boost::shared_ptr<ActiveAE::CActiveAEDSPProcess>  CActiveAEDSPProcessPtr;
-  typedef boost::shared_ptr<ActiveAE::CActiveAEDSPAddon>    AE_DSP_ADDON;
   typedef std::map< int, AE_DSP_ADDON >                     AE_DSP_ADDONMAP;
   typedef std::map< int, AE_DSP_ADDON >::iterator           AE_DSP_ADDONMAP_ITR;
   typedef std::map< int, AE_DSP_ADDON >::const_iterator     AE_DSP_ADDONMAP_CITR;
-  typedef std::vector<CActiveAEDSPModePtr>                  AE_DSP_MODELIST;
 
   #define g_AEDSPManager       CActiveAEDSP::Get()
 
@@ -288,13 +285,22 @@ namespace ActiveAE
     unsigned int GetProcessingStreamsAmount(void);
 
     /*!>
+     * Used to get all available modes on currently enabled add-ons
+     * It is used from CActiveAEDSPProcess to get a sorted modes list for a processing
+     * over the add-ons, several call to the same addon is possible with different mode id's.
+     * @param modeType The type to get
+     * @return modes Pointer to a buffer array where all available modes of type written in
+     */
+    const AE_DSP_MODELIST &GetAvailableModes(AE_DSP_MODE_TYPE modeType);
+
+    /*!>
      * Used to get all available Master mode on current stream and base type.
      * It is used to get informations about selectable modes and can be used as information
      * for the gui to make the mode selection available.
      * @param streamId The id of this stream
      * @retval modes Pointer to a buffer array where all available master mode written in
      */
-    void GetAvailableMasterModes(unsigned int streamId, AE_DSP_STREAMTYPE streamType, AE_DSP_MODELIST &modes);
+    void GetAvailableMasterModes(unsigned int streamId, AE_DSP_STREAMTYPE streamType, std::vector<CActiveAEDSPModePtr> &modes);
 
     /*!>
      * Get all dsp addon relavant information to detect a processing mode type and base values of master mode.
@@ -333,6 +339,12 @@ namespace ActiveAE
      * @return If it was present inside settings it return the type of this settings
      */
     AE_DSP_STREAMTYPE LoadCurrentAudioSettings(void);
+
+    /*!
+     * @brief Perfoms a update of all processing calls over the add-ons
+     * @param bAsync if true the update becomes performed on background
+     */
+    void TriggerModeUpdate(bool bAsync = true);
   //@}
 
   /*! @name Menu hook methods */
@@ -437,6 +449,7 @@ namespace ActiveAE
     CActiveAEDSPProcessPtr  m_usedProcesses[AE_DSP_STREAM_MAX_STREAMS]; /*!< Pointer to active process performing classes */
     unsigned int            m_activeProcessId;                          /*!< The currently active audio stream id of a playing file source */
     bool                    m_bIsValidAudioDSPSettings;                 /*!< if settings load was successfull it becomes true */
+    AE_DSP_MODELIST         m_Modes[AE_DSP_MODE_TYPE_MAX];              /*!< list of currently used dsp processing calls */
     std::map<std::string, std::string> m_outdatedAddons;
   };
   //@}

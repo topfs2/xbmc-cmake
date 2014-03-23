@@ -158,7 +158,7 @@ namespace ActiveAE
        * for the gui to make the mode selection available.
        * @retval modes Pointer to a buffer array where all available master mode written in
        */
-      void GetAvailableMasterModes(AE_DSP_STREAMTYPE streamType, AE_DSP_MODELIST &modes);
+      void GetAvailableMasterModes(AE_DSP_STREAMTYPE streamType, std::vector<CActiveAEDSPModePtr> &modes);
 
       /*!>
        * Get the mode information class by add-on id and add-on mode number
@@ -206,6 +206,7 @@ namespace ActiveAE
       void ClearArray(float **array, unsigned int samples);
       bool MasterModeChange(int iModeID, AE_DSP_STREAMTYPE iStreamType = AE_DSP_ASTREAM_INVALID);
       AE_DSP_BASETYPE GetBaseType(AE_DSP_STREAM_PROPERTIES *props);
+      bool ReallocProcessArray(unsigned int requestSize);
     //@}
     //@{
       /*!
@@ -231,18 +232,29 @@ namespace ActiveAE
       CCriticalSection                  m_critSection;
       CCriticalSection                  m_restartSection;
 
-      AE_DSP_MODELIST                   m_MasterModes;              /*!< available dsp master modes for in this class processed data */
-      int                               m_ActiveMode;               /*!< the current used master mode, is a pointer to m_MasterModes */
-
-
       /*!>
        * Selected dsp addon functions, used this way to speed up processing
        */
-      std::vector <AudioDSP*>           m_Addons_PreProc;
-      AudioDSP*                         m_Addon_InputResample;
-      AudioDSP*                         m_Addon_MasterProc;
-      std::vector <AudioDSP*>           m_Addons_PostProc;
-      AudioDSP*                         m_Addon_OutputResample;
+      struct sDSPProcessHandle
+      {
+        void Clear()
+        {
+          iAddonModeNumber = -1;
+          pFunctions       = NULL;
+        }
+        int                 iAddonModeNumber;                       /*!< The identifier, send from addon during mode registration and can be used from addon to select mode from a function table */
+        CActiveAEDSPModePtr pMode;                                  /*!< Processing mode information data */
+        AudioDSP*           pFunctions;                             /*!< The Addon function table, separeted from pAddon to safe several calls on process chain */
+        AE_DSP_ADDON        pAddon;                                 /*!< Addon control class */
+      };
+      std::vector <AudioDSP*>           m_Addons_InputProc;         /*!< Input processing list, called to all enabled dsp addons with the basic unchanged input stream, is read only. */
+      sDSPProcessHandle                 m_Addon_InputResample;      /*!< Input stream resampling over one on settings enabled input resample function only on one addon */
+      std::vector <sDSPProcessHandle>   m_Addons_PreProc;           /*!< Input stream preprocessing function calls set and aligned from dsp settings stored inside database */
+      std::vector <sDSPProcessHandle>   m_Addons_MasterProc;        /*!< The current from user selected master processing function on addon */
+      int                               m_ActiveMode;               /*!< the current used master mode, is a pointer to m_Addons_MasterProc */
+      std::vector <sDSPProcessHandle>   m_Addons_PostProc;          /*!< Output stream postprocessing function calls set and aligned from dsp settings stored inside database */
+      sDSPProcessHandle                 m_Addon_OutputResample;     /*!< Output stream resampling over one on settings enabled output resample function only on one addon */
+
 
       /*!>
        * Process arrays
@@ -251,11 +263,9 @@ namespace ActiveAE
       unsigned int                      m_AudioInArraySize;
       float                            *m_InputResampleArray[AE_DSP_CH_MAX];
       unsigned int                      m_InputResampleArraySize;
-      float                            *m_MasterArray[AE_DSP_CH_MAX];
-      unsigned int                      m_MasterArraySize;
-      float                            *m_PostProcessArray[2][AE_DSP_CH_MAX];
-      unsigned int                      m_PostProcessArrayTogglePtr;
-      unsigned int                      m_PostProcessArraySize;
+      float                            *m_ProcessArray[2][AE_DSP_CH_MAX];
+      unsigned int                      m_ProcessArraySize;
+      unsigned int                      m_ProcessArrayTogglePtr;
       float                            *m_OutputResampleArray[AE_DSP_CH_MAX];
       unsigned int                      m_OutputResampleArraySize;
 

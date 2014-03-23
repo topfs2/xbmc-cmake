@@ -25,10 +25,16 @@
 #include "threads/CriticalSection.h"
 #include "utils/Observer.h"
 #include "utils/StringUtils.h"
+#include "ActiveAEDSPAddon.h"
 
 namespace ActiveAE
 {
+  class CActiveAEDSPMode;
   class CActiveAEDSPDatabase;
+  
+  typedef boost::shared_ptr<CActiveAEDSPMode>               CActiveAEDSPModePtr;
+  typedef std::pair <CActiveAEDSPModePtr, AE_DSP_ADDON>     AE_DSP_MODEPAIR;
+  typedef std::vector<AE_DSP_MODEPAIR >                     AE_DSP_MODELIST;
 
   #define AE_DSP_MASTER_MODE_ID_PASSOVER          (0)  /* Used to ignore master processing */
   #define AE_DSP_MASTER_MODE_ID_INVALID           (-1)
@@ -53,13 +59,17 @@ namespace ActiveAE
     CActiveAEDSPMode &operator=(const CActiveAEDSPMode &mode);
 
     bool Delete(void);
-    int AddUpdate(void);
+    int AddUpdate(bool force = false);
     bool UpdateFromAddon(const CActiveAEDSPMode &mode);
     bool IsNew(void) const;
     bool IsKnown(void);
     bool IsChanged(void) const;
     bool IsPrimary(void) const;
     int ModeID(void) const;
+    unsigned int ModeType(void) const;
+    bool SetModeType(int iType);
+    unsigned int ModePosition(void) const;
+    bool SetModePosition(int iModePosition);
     bool IsHidden(void) const;
     bool SetHidden(bool bIsHidden);
     CStdString IconOwnModePath(void) const;
@@ -93,6 +103,8 @@ namespace ActiveAE
     /*! @name XBMC related mode data
      */
     //@{
+    int               m_iModeType;               /*!< the processing mode type */
+    int               m_iModePosition;           /*!< the processing mode position */
     int               m_iModeId;                 /*!< the identifier given to this mode by the DSP database */
     unsigned int      m_iStreamTypeFlags;        /*!< The stream content type flags */
     AE_DSP_BASETYPE   m_iBaseType;               /*!< The stream source coding format */

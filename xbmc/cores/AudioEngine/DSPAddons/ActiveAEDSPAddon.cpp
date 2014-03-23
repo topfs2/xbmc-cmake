@@ -373,14 +373,19 @@ CStdString CActiveAEDSPAddon::GetMasterModeStreamInfoString(unsigned int streamI
   return strReturn;
 }
 
-bool CActiveAEDSPAddon::SupportsPreProcessing(void) const
+bool CActiveAEDSPAddon::SupportsInputInfoProcess(void) const
 {
-  return m_addonCapabilities.bSupportsPreProcess;
+  return m_addonCapabilities.bSupportsInputProcess;
 }
 
 bool CActiveAEDSPAddon::SupportsInputResample(void) const
 {
   return m_addonCapabilities.bSupportsInputResample;
+}
+
+bool CActiveAEDSPAddon::SupportsPreProcess(void) const
+{
+  return m_addonCapabilities.bSupportsPreProcess;
 }
 
 bool CActiveAEDSPAddon::SupportsMasterProcess(void) const

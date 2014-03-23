@@ -1167,7 +1167,7 @@ void CSettings::InitializeISettingCallbacks()
 
   settingSet.clear();
   settingSet.insert("audiooutput.dspaddonsenabled");
-  settingSet.insert("audiooutput.dspmenuhook");
+  settingSet.insert("audiooutput.dspsettings");
   settingSet.insert("audiooutput.dspresetdb");
   m_settingsManager->RegisterCallback(&ActiveAE::CActiveAEDSP::Get(), settingSet);
 }

@@ -39,6 +39,7 @@
 #include "settings/MediaSettings.h"
 #include "settings/MediaSourceSettings.h"
 #include "settings/Settings.h"
+#include "settings/dialogs/GUIDialogAudioDSPManager.h"
 #include "utils/StringUtils.h"
 #include "utils/JobManager.h"
 
@@ -276,10 +277,14 @@ void CActiveAEDSP::OnSettingAction(const CSetting *setting)
     return;
 
   const std::string &settingId = setting->GetId();
-  if (settingId == "audiooutput.dspmenuhook")
+  if (settingId == "audiooutput.dspsettings")
   {
     if (IsActivated())
-      ProcessMenuHooks(-1, AE_DSP_MENUHOOK_SETTING);
+    {
+      CGUIDialogAudioDSPManager *dialog = (CGUIDialogAudioDSPManager *)g_windowManager.GetWindow(WINDOW_DIALOG_AUDIO_DSP_MANAGER);
+      if (dialog)
+        dialog->DoModal();
+    }
   }
   else if (settingId == "audiooutput.dspresetdb")
   {

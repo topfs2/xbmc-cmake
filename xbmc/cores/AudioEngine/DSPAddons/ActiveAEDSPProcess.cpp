@@ -254,7 +254,6 @@ bool CActiveAEDSPProcess::Create(AEAudioFormat inputFormat, AEAudioFormat output
     /* First find input resample addon to become information about processing sample rate and
      * load one allowed before master processing & final resample addon
      */
-
     CLog::Log(LOGDEBUG, "  ---- DSP input resample addon ---");
     const AE_DSP_MODELIST listInputResample = CActiveAEDSP::Get().GetAvailableModes(AE_DSP_MODE_TYPE_INPUT_RESAMPLE);
     if (listInputResample.size() == 0)
@@ -319,6 +318,13 @@ bool CActiveAEDSPProcess::Create(AEAudioFormat inputFormat, AEAudioFormat output
       }
     }
 
+    for (AE_DSP_ADDONMAP_ITR itr = m_usedMap.begin(); itr != m_usedMap.end(); itr++)
+    {
+      AE_DSP_ADDON addon = itr->second;
+      if (addon->SupportsInputInfoProcess())
+        m_Addons_InputProc.push_back(addon->GetAudioDSPFunctionStruct());
+    }
+
     /*!
      * Load all required pre process dsp addon functions
      */
@@ -350,52 +356,33 @@ bool CActiveAEDSPProcess::Create(AEAudioFormat inputFormat, AEAudioFormat output
     /*!
      * Load all available master modes from addons and put together with database
      */
-    for (AE_DSP_ADDONMAP_ITR itr = m_usedMap.begin(); itr != m_usedMap.end(); itr++)
+    CLog::Log(LOGDEBUG, "  ---- DSP active master process modes ---");
+    const AE_DSP_MODELIST listMasterProcess = CActiveAEDSP::Get().GetAvailableModes(AE_DSP_MODE_TYPE_MASTER_PROCESS);
+    for (unsigned int i = 0; i < listMasterProcess.size(); i++)
     {
-      AE_DSP_ADDON addon = itr->second;
-      if (addon->SupportsInputInfoProcess())
-      {
-        m_Addons_InputProc.push_back(addon->GetAudioDSPFunctionStruct());
-      }
-      if (addon->SupportsMasterProcess())
-      {
-        AE_DSP_MODES modes;
-        AE_DSP_ERROR err = addon->MasterProcessGetModes(m_StreamId, modes);
-        if (err == AE_DSP_ERROR_NO_ERROR)
-        {
-          CLog::Log(LOGDEBUG, "  | - %s", addon->GetAudioDSPName().c_str());
-          CLog::Log(LOGDEBUG, "  | ---- with %i modes ---", modes.iModesCount);
-          for (unsigned int i = 0; i < modes.iModesCount; i++)
-          {
-            CActiveAEDSPModePtr mode = CActiveAEDSPModePtr(new CActiveAEDSPMode(modes.mode[i], addon->GetID()));
-            if (mode->AddUpdate(true) > AE_DSP_MASTER_MODE_ID_PASSOVER)
-            {
-              CLog::Log(LOGDEBUG, "  | -- %s ModeID='%i'%s", mode->AddonModeName().c_str(), mode->ModeID(), mode->IsHidden() ? " (is hidden)" : "");
-              if (mode->IsHidden())
-                continue;
+      CActiveAEDSPModePtr pMode = listMasterProcess[i].first;
+      AE_DSP_ADDON        addon = listMasterProcess[i].second;
 
-              sDSPProcessHandle modeHandle;
-              modeHandle.iAddonModeNumber = mode->AddonModeNumber();
-              modeHandle.pMode            = mode;
-              modeHandle.pFunctions       = addon->GetAudioDSPFunctionStruct();
-              modeHandle.pAddon           = addon;
-              modeHandle.pMode->SetBaseType((AE_DSP_BASETYPE)m_AddonStreamProperties.iBaseType);
-              m_Addons_MasterProc.push_back(modeHandle);
-            }
-            else
-            {
-              CLog::Log(LOGERROR, "ActiveAE DSP - %s - Add or update of '%s' with %s ModeID='%i' to database failed", __FUNCTION__, addon->GetAudioDSPName().c_str(), mode->AddonModeName().c_str(), mode->ModeID());
-            }
-          }
-        }
-        else if (err != AE_DSP_ERROR_IGNORE_ME)
-          CLog::Log(LOGERROR, "ActiveAE DSP - %s - load of available master process modes failed on %s with %s", __FUNCTION__, addon->GetAudioDSPName().c_str(), CActiveAEDSPAddon::ToString(err));
+      if (m_usedMap.find(addon->GetID()) == m_usedMap.end())
+        continue;
+      if (addon->Enabled() && addon->SupportsMasterProcess() && !pMode->IsHidden() &&
+          addon->StreamIsModeSupported(m_StreamId, pMode->ModeType(), pMode->AddonModeNumber(), pMode->ModeID()))
+      {
+        CLog::Log(LOGDEBUG, "  | - %i - %s (%s)", i, pMode->AddonModeName().c_str(), addon->GetAudioDSPName().c_str());
+
+        sDSPProcessHandle modeHandle;
+        modeHandle.iAddonModeNumber = pMode->AddonModeNumber();
+        modeHandle.pMode            = pMode;
+        modeHandle.pFunctions       = addon->GetAudioDSPFunctionStruct();
+        modeHandle.pAddon           = addon;
+        modeHandle.pMode->SetBaseType((AE_DSP_BASETYPE)m_AddonStreamProperties.iBaseType);
+        m_Addons_MasterProc.push_back(modeHandle);
       }
     }
+    if (m_Addons_MasterProc.empty())
+      CLog::Log(LOGDEBUG, "  | - no master processing addon's present or enabled");
 
     /* Get selected source for current input */
-    CLog::Log(LOGDEBUG, "  | ---- enabled ---");
-
     int ModeID = CMediaSettings::Get().GetCurrentAudioSettings().m_MasterModes[m_AddonStreamProperties.iStreamType][m_AddonStreamProperties.iBaseType];
     for (unsigned int ptr = 0; ptr < m_Addons_MasterProc.size(); ptr++)
     {

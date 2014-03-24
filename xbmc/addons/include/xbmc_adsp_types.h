@@ -430,7 +430,6 @@ extern "C" {
     float        (__cdecl* PreProcessGetDelay)                   (unsigned int, unsigned int);
     unsigned int (__cdecl* PreProcess)                           (unsigned int, unsigned int, float**, float**, unsigned int);
 
-    AE_DSP_ERROR (__cdecl* MasterProcessGetModes)                (unsigned int, AE_DSP_MODES&);
     AE_DSP_ERROR (__cdecl* MasterProcessSetMode)                 (unsigned int, unsigned int, int, int);
     unsigned int (__cdecl* MasterProcessNeededSamplesize)        (unsigned int);
     float        (__cdecl* MasterProcessGetDelay)                (unsigned int);

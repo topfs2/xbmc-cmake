@@ -248,14 +248,6 @@ extern "C"
    */
   //@{
   /*!
-   * @brief Get the by Create call from addon detected master processing modes which are available
-   * @param id The stream id
-   * @retval modes The return modes list table to write in.
-   * @return AE_DSP_ERROR_NO_ERROR if the properties have been fetched successfully.
-   */
-  AE_DSP_ERROR MasterProcessGetModes(unsigned int id, AE_DSP_MODES &modes);
-
-  /*!
    * @brief Set the active master process mode
    * @param id The stream id
    * @param client_mode_id The Mode identifier.
@@ -415,7 +407,6 @@ extern "C"
     pDSP->PreProcessGetDelay                    = PreProcessGetDelay;
     pDSP->PreProcess                            = PreProcess;
 
-    pDSP->MasterProcessGetModes                 = MasterProcessGetModes;
     pDSP->MasterProcessSetMode                  = MasterProcessSetMode;
     pDSP->MasterProcessNeededSamplesize         = MasterProcessNeededSamplesize;
     pDSP->MasterProcessGetDelay                 = MasterProcessGetDelay;

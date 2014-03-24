@@ -175,14 +175,6 @@ namespace ActiveAE
     int OutputResampleSampleRate(unsigned int streamId);
 
     /*!
-     * @brief Get the by StreamCreate call from addon detected master processing modes which are available
-     * @param id The stream id
-     * @param modes The Modes list table.
-     * @return AE_DSP_ERROR_NO_ERROR if the properties have been fetched successfully.
-     */
-    AE_DSP_ERROR MasterProcessGetModes(unsigned int streamId, AE_DSP_MODES &modes);
-
-    /*!
      * @brief Get a from addon generated information string
      * @param id The stream id
      * @return Info string

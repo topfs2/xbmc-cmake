@@ -361,20 +361,6 @@ int CActiveAEDSPAddon::OutputResampleSampleRate(unsigned int streamId)
   return -1;
 }
 
-AE_DSP_ERROR CActiveAEDSPAddon::MasterProcessGetModes(unsigned int streamId, AE_DSP_MODES &modes)
-{
-  AE_DSP_ERROR retVal(AE_DSP_ERROR_UNKNOWN);
-
-  try
-  {
-    retVal = m_pStruct->MasterProcessGetModes(streamId, modes);
-    LogError(retVal, __FUNCTION__);
-  }
-  catch (exception &e) { LogException(e, __FUNCTION__); }
-
-  return retVal;
-}
-
 CStdString CActiveAEDSPAddon::GetMasterModeStreamInfoString(unsigned int streamId)
 {
   CStdString strReturn;

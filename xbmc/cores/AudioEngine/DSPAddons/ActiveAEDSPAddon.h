@@ -142,7 +142,7 @@ namespace ActiveAE
      * Remove the selected id from currently used dsp processes
      * @param id The stream id
      */
-    void StreamDestroy(unsigned int streamId);
+    void StreamDestroy(AE_DSP_STREAM_ID id);
 
     /*!
      * @brief Ask the addon about a requested processing mode that it is supported on the current
@@ -151,7 +151,7 @@ namespace ActiveAE
      * @param mode The mode to ask (structure data is known to XBMC from addons RegisterMode call)
      * @return true if supported
      */
-    bool StreamIsModeSupported(unsigned int id, unsigned int mode_type, int client_mode_id, int unique_db_mode_id);
+    bool StreamIsModeSupported(AE_DSP_STREAM_ID id, unsigned int mode_type, int client_mode_id, int unique_db_mode_id);
 
     /*!
      * Set up Audio DSP with selected audio settings (detected on data of first present audio packet)
@@ -165,21 +165,21 @@ namespace ActiveAE
     * @param id The stream id
     * @return The new samplerate
     */
-    int InputResampleSampleRate(unsigned int streamId);
+    int InputResampleSampleRate(AE_DSP_STREAM_ID id);
 
    /*!
     * Returns the resampling generated new sample rate used after the final process
     * @param id The stream id
     * @return The new samplerate
     */
-    int OutputResampleSampleRate(unsigned int streamId);
+    int OutputResampleSampleRate(AE_DSP_STREAM_ID id);
 
     /*!
      * @brief Get a from addon generated information string
      * @param id The stream id
      * @return Info string
      */
-    CStdString GetMasterModeStreamInfoString(unsigned int streamId);
+    CStdString GetMasterModeStreamInfoString(AE_DSP_STREAM_ID id);
 
     bool SupportsInputInfoProcess(void) const;
     bool SupportsPreProcess(void) const;

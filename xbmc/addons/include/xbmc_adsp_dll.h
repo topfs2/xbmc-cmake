@@ -120,7 +120,7 @@ extern "C"
    * @return AE_DSP_ERROR_NO_ERROR if the becomes found and removed
    * @remarks Valid implementation required.
    */
-  AE_DSP_ERROR StreamDestroy(unsigned int id);
+  AE_DSP_ERROR StreamDestroy(AE_DSP_STREAM_ID id);
 
   /*!
    * @brief Ask the addon about a requested processing mode that it is supported on the current
@@ -133,7 +133,7 @@ extern "C"
    * is not supported the addon must return AE_DSP_ERROR_IGNORE_ME.
    * @remarks Valid implementation required.
    */
-  AE_DSP_ERROR StreamIsModeSupported(unsigned int id, unsigned int mode_type, int client_mode_id, int unique_db_mode_id);
+  AE_DSP_ERROR StreamIsModeSupported(AE_DSP_STREAM_ID id, unsigned int mode_type, int client_mode_id, int unique_db_mode_id);
 
   /*!
    * Set up Audio DSP with selected audio settings (detected on data of first present audio packet)
@@ -158,7 +158,7 @@ extern "C"
    * @return true if work was ok
    * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
    */
-  bool InputProcess(unsigned int id, float **array_in, unsigned int samples);
+  bool InputProcess(AE_DSP_STREAM_ID id, float **array_in, unsigned int samples);
   //@}
 
   /** @name DSP pre resampling
@@ -172,7 +172,7 @@ extern "C"
    * @return The needed size of output array or 0 if no changes within it
    * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
    */
-  unsigned int InputResampleProcessNeededSamplesize(unsigned int id);
+  unsigned int InputResampleProcessNeededSamplesize(AE_DSP_STREAM_ID id);
 
   /*!
    * @brief DSP resample processing before master Here a high quality resample can be performed.
@@ -184,7 +184,7 @@ extern "C"
    * @return Amount of samples processed
    * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
    */
-  unsigned int InputResampleProcess(unsigned int id, float **array_in, float **array_out, unsigned int samples);
+  unsigned int InputResampleProcess(AE_DSP_STREAM_ID id, float **array_in, float **array_out, unsigned int samples);
 
   /*!
    * Returns the resampling generated new sample rate used before the master process
@@ -192,7 +192,7 @@ extern "C"
    * @return The new samplerate
    * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
    */
-  int InputResampleSampleRate(unsigned int id);
+  int InputResampleSampleRate(AE_DSP_STREAM_ID id);
 
   /*!
    * Returns the time in seconds that it will take
@@ -200,7 +200,7 @@ extern "C"
    * @param id The stream id
    * @return the delay in seconds
    */
-  float InputResampleGetDelay(unsigned int id);
+  float InputResampleGetDelay(AE_DSP_STREAM_ID id);
   //@}
 
   /** @name DSP Pre processing
@@ -216,7 +216,7 @@ extern "C"
    * @return The needed size of output array or 0 if no changes within it
    * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
    */
-  unsigned int PreProcessNeededSamplesize(unsigned int id, unsigned int mode_id);
+  unsigned int PreProcessNeededSamplesize(AE_DSP_STREAM_ID id, unsigned int mode_id);
 
   /*!
    * Returns the time in seconds that it will take
@@ -226,7 +226,7 @@ extern "C"
    * and can be defined from addon as a structure pointer or anything else what is needed to find it.
    * @return the delay in seconds
    */
-  float PreProcessGetDelay(unsigned int id, unsigned int mode_id);
+  float PreProcessGetDelay(AE_DSP_STREAM_ID id, unsigned int mode_id);
 
   /*!
    * @brief DSP pre processing
@@ -240,7 +240,7 @@ extern "C"
    * @return Amount of samples processed
    * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
    */
-  unsigned int PreProcess(unsigned int id, unsigned int mode_id, float **array_in, float **array_out, unsigned int samples);
+  unsigned int PreProcess(AE_DSP_STREAM_ID id, unsigned int mode_id, float **array_in, float **array_out, unsigned int samples);
   //@}
 
   /** @name DSP Master processing
@@ -255,7 +255,7 @@ extern "C"
    * @return AE_DSP_ERROR_NO_ERROR if the setup was successful
    * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
    */
-  AE_DSP_ERROR MasterProcessSetMode(unsigned int id, unsigned int mode_type, int client_mode_id, int unique_db_mode_id);
+  AE_DSP_ERROR MasterProcessSetMode(AE_DSP_STREAM_ID id, unsigned int mode_type, int client_mode_id, int unique_db_mode_id);
 
   /*!
    * @brief If the addon operate with buffered arrays and the output size can be higher as the input
@@ -264,7 +264,7 @@ extern "C"
    * @return The needed size of output array or 0 if no changes within it
    * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
    */
-  unsigned int MasterProcessNeededSamplesize(unsigned int id);
+  unsigned int MasterProcessNeededSamplesize(AE_DSP_STREAM_ID id);
 
   /*!
    * Returns the time in seconds that it will take
@@ -272,7 +272,7 @@ extern "C"
    * @param id The stream id
    * @return the delay in seconds
    */
-  float MasterProcessGetDelay(unsigned int id);
+  float MasterProcessGetDelay(AE_DSP_STREAM_ID id);
 
   /*!
    * @brief Master processing becomes performed with it
@@ -285,14 +285,14 @@ extern "C"
    * @return Amount of samples processed
    * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
    */
-  unsigned int MasterProcess(unsigned int id, float **array_in, float **array_out, unsigned int samples);
+  unsigned int MasterProcess(AE_DSP_STREAM_ID id, float **array_in, float **array_out, unsigned int samples);
 
   /*!
    * Used to get a information string about the processed work to show on skin
    * @return A string to show
    * @remarks Valid implementation required.
    */
-  const char *MasterProcessGetStreamInfoString(unsigned int id);
+  const char *MasterProcessGetStreamInfoString(AE_DSP_STREAM_ID id);
   //@}
 
   /** @name DSP Post processing
@@ -308,7 +308,7 @@ extern "C"
    * @return The needed size of output array or 0 if no changes within it
    * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
    */
-  unsigned int PostProcessNeededSamplesize(unsigned int id, unsigned int mode_id);
+  unsigned int PostProcessNeededSamplesize(AE_DSP_STREAM_ID id, unsigned int mode_id);
 
   /*!
    * Returns the time in seconds that it will take
@@ -318,7 +318,7 @@ extern "C"
    * and can be defined from addon as a structure pointer or anything else what is needed to find it.
    * @return the delay in seconds
    */
-  float PostProcessGetDelay(unsigned int id, unsigned int mode_id);
+  float PostProcessGetDelay(AE_DSP_STREAM_ID id, unsigned int mode_id);
 
   /*!
    * @brief DSP post processing
@@ -334,7 +334,7 @@ extern "C"
    * @return Amount of samples processed
    * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
    */
-  unsigned int PostProcess(unsigned int id, unsigned int mode_id, float **array_in, float **array_out, unsigned int samples);
+  unsigned int PostProcess(AE_DSP_STREAM_ID id, unsigned int mode_id, float **array_in, float **array_out, unsigned int samples);
   //@}
 
   /** @name DSP Post resampling
@@ -348,7 +348,7 @@ extern "C"
    * @return The needed size of output array or 0 if no changes within it
    * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
    */
-  unsigned int OutputResampleProcessNeededSamplesize(unsigned int id);
+  unsigned int OutputResampleProcessNeededSamplesize(AE_DSP_STREAM_ID id);
 
   /*!
    * @brief Resampling after master processing becomes performed with it if neeeded, only
@@ -360,7 +360,7 @@ extern "C"
    * @return Amount of samples processed
    * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
    */
-  unsigned int OutputResampleProcess(unsigned int id, float **array_in, float **array_out, unsigned int samples);
+  unsigned int OutputResampleProcess(AE_DSP_STREAM_ID id, float **array_in, float **array_out, unsigned int samples);
 
   /*!
    * Returns the resampling generated new sample rate used after the master process
@@ -368,7 +368,7 @@ extern "C"
    * @return The new samplerate
    * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
    */
-  int OutputResampleSampleRate(unsigned int id);
+  int OutputResampleSampleRate(AE_DSP_STREAM_ID id);
 
   /*!
    * Returns the time in seconds that it will take
@@ -376,7 +376,7 @@ extern "C"
    * @param id The stream id
    * @return the delay in seconds
    */
-  float OutputResampleGetDelay(unsigned int id);
+  float OutputResampleGetDelay(AE_DSP_STREAM_ID id);
   //@}
 
   // function to export the above structure to XBMC

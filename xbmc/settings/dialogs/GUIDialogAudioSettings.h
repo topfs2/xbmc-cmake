@@ -50,7 +50,7 @@ protected:
   void GetAudioDSPMenus(AE_DSP_MENUHOOK_CAT category, std::vector<MenuHookMember> &menus);
   void OpenAudioDSPMenu(AE_DSP_MENUHOOK_CAT category, ActiveAE::AE_DSP_ADDON client, unsigned int iHookId, unsigned int iLocalizedStringId);
 
-  unsigned int                                m_ActiveStreamId;
+  AE_DSP_STREAM_ID                            m_ActiveStreamId;
   bool                                        m_AddonMasterModeSetupPresent;             /* If any addon have a own settings dialog for a master mode it is set to true */
   bool                                        m_streamTypeReset;
   AE_DSP_STREAMTYPE                           m_streamTypeUsed;

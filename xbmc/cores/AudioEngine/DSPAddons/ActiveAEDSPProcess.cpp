@@ -36,7 +36,7 @@ using namespace ActiveAE;
 
 #define MIN_DSP_ARRAY_SIZE 4096
 
-CActiveAEDSPProcess::CActiveAEDSPProcess(unsigned int streamId)
+CActiveAEDSPProcess::CActiveAEDSPProcess(AE_DSP_STREAM_ID streamId)
  : m_StreamId(streamId)
 {
   m_ChannelLayoutIn         = 0;      /* Undefined input channel layout */
@@ -632,7 +632,7 @@ AE_DSP_STREAMTYPE CActiveAEDSPProcess::DetectStreamType(const CFileItem *item)
   return detected;
 }
 
-unsigned int CActiveAEDSPProcess::GetStreamId() const
+AE_DSP_STREAM_ID CActiveAEDSPProcess::GetStreamId() const
 {
   return m_StreamId;
 }

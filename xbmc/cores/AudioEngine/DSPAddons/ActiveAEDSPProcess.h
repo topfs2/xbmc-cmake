@@ -35,7 +35,7 @@ namespace ActiveAE
   class CActiveAEDSPProcess
   {
     public:
-      CActiveAEDSPProcess(unsigned int streamId);
+      CActiveAEDSPProcess(AE_DSP_STREAM_ID streamId);
       virtual ~CActiveAEDSPProcess();
 
       //@{
@@ -63,7 +63,7 @@ namespace ActiveAE
        * Get the stream id for this class
        * @return The current used stream id
        */
-      unsigned int GetStreamId() const;
+      AE_DSP_STREAM_ID GetStreamId() const;
 
       /*!>
        * Get the used output samplerate for this class
@@ -212,7 +212,7 @@ namespace ActiveAE
       /*!
        * Data
        */
-      const unsigned int                m_StreamId;                 /*!< stream id of this class, is a increase/decrease number of the amount of process streams */
+      const AE_DSP_STREAM_ID            m_StreamId;                 /*!< stream id of this class, is a increase/decrease number of the amount of process streams */
       AE_DSP_STREAMTYPE                 m_StreamTypeDetected;       /*! The detected stream type of the stream from the source of it */
       AE_DSP_STREAMTYPE                 m_StreamTypeAsked;          /*! The stream type we want to have */
       AE_DSP_STREAMTYPE                 m_StreamType;               /*!< The currently used stream type */

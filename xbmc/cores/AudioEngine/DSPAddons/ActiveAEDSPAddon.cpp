@@ -309,14 +309,14 @@ AE_DSP_ERROR CActiveAEDSPAddon::StreamCreate(AE_DSP_SETTINGS *addonSettings, AE_
   return retVal;
 }
 
-void CActiveAEDSPAddon::StreamDestroy(unsigned int streamId)
+void CActiveAEDSPAddon::StreamDestroy(AE_DSP_STREAM_ID id)
 {
-  try { m_pStruct->StreamDestroy(streamId); }
+  try { m_pStruct->StreamDestroy(id); }
   catch (exception &e) { LogException(e, __FUNCTION__); }
   m_bIsInUse = false;
 }
 
-bool CActiveAEDSPAddon::StreamIsModeSupported(unsigned int id, unsigned int mode_type, int client_mode_id, int unique_db_mode_id)
+bool CActiveAEDSPAddon::StreamIsModeSupported(AE_DSP_STREAM_ID id, unsigned int mode_type, int client_mode_id, int unique_db_mode_id)
 {
   try
   {
@@ -345,30 +345,30 @@ AE_DSP_ERROR CActiveAEDSPAddon::StreamInitialize(AE_DSP_SETTINGS *addonSettings)
   return retVal;
 }
 
-int CActiveAEDSPAddon::InputResampleSampleRate(unsigned int streamId)
+int CActiveAEDSPAddon::InputResampleSampleRate(AE_DSP_STREAM_ID id)
 {
-  try { return m_pStruct->InputResampleSampleRate(streamId); }
+  try { return m_pStruct->InputResampleSampleRate(id); }
   catch (exception &e) { LogException(e, __FUNCTION__); }
 
   return -1;
 }
 
-int CActiveAEDSPAddon::OutputResampleSampleRate(unsigned int streamId)
+int CActiveAEDSPAddon::OutputResampleSampleRate(AE_DSP_STREAM_ID id)
 {
-  try { return m_pStruct->OutputResampleSampleRate(streamId); }
+  try { return m_pStruct->OutputResampleSampleRate(id); }
   catch (exception &e) { LogException(e, __FUNCTION__); }
 
   return -1;
 }
 
-CStdString CActiveAEDSPAddon::GetMasterModeStreamInfoString(unsigned int streamId)
+CStdString CActiveAEDSPAddon::GetMasterModeStreamInfoString(AE_DSP_STREAM_ID id)
 {
   CStdString strReturn;
 
   if (!m_bReadyToUse)
     return strReturn;
 
-  try { strReturn = m_pStruct->MasterProcessGetStreamInfoString(streamId); }
+  try { strReturn = m_pStruct->MasterProcessGetStreamInfoString(id); }
   catch (exception &e) { LogException(e, __FUNCTION__); }
 
   return strReturn;

@@ -72,6 +72,8 @@
 extern "C" {
 #endif
 
+  typedef unsigned int AE_DSP_STREAM_ID;
+
   /*!
    * @brief Audio DSP add-on error codes
    */
@@ -276,21 +278,21 @@ extern "C" {
    */
   typedef struct AE_DSP_SETTINGS
   {
-    unsigned int  iStreamID;                    /*!< @brief id of the audio stream packets */
-    int           iStreamType;                  /*!< @brief the input stream type source eg, Movie or Music */
-    int           iInChannels;                  /*!< @brief the amount of input channels */
-    unsigned long lInChannelPresentFlags;       /*!< @brief the exact channel mapping flags of input */
-    int           iInFrames;                    /*!< @brief the input frame size from XBMC */
-    unsigned int  iInSamplerate;                /*!< @brief the basic samplerate of the audio packet */
-    int           iProcessFrames;               /*!< @brief the processing frame size inside add-on's */
-    unsigned int  iProcessSamplerate;           /*!< @brief the samplerate after input resample present in master processing */
-    int           iOutChannels;                 /*!< @brief the amount of output channels */
-    unsigned long lOutChannelPresentFlags;      /*!< @brief the exact channel mapping flags for output */
-    int           iOutFrames;                   /*!< @brief the final out frame size for XBMC */
-    unsigned int  iOutSamplerate;               /*!< @brief the final samplerate of the audio packet */
-    bool          bInputResamplingActive;       /*!< @brief if a resampling is performed before master processing this flag is set to true */
-    bool          bStereoUpmix;                 /*!< @brief true if the stereo upmix setting on xbmc is set */
-    int           iQualityLevel;                /*!< @brief the from XBMC selected quality level for signal processing */
+    AE_DSP_STREAM_ID  iStreamID;                /*!< @brief id of the audio stream packets */
+    int               iStreamType;              /*!< @brief the input stream type source eg, Movie or Music */
+    int               iInChannels;              /*!< @brief the amount of input channels */
+    unsigned long     lInChannelPresentFlags;   /*!< @brief the exact channel mapping flags of input */
+    int               iInFrames;                /*!< @brief the input frame size from XBMC */
+    unsigned int      iInSamplerate;            /*!< @brief the basic samplerate of the audio packet */
+    int               iProcessFrames;           /*!< @brief the processing frame size inside add-on's */
+    unsigned int      iProcessSamplerate;       /*!< @brief the samplerate after input resample present in master processing */
+    int               iOutChannels;             /*!< @brief the amount of output channels */
+    unsigned long     lOutChannelPresentFlags;  /*!< @brief the exact channel mapping flags for output */
+    int               iOutFrames;               /*!< @brief the final out frame size for XBMC */
+    unsigned int      iOutSamplerate;           /*!< @brief the final samplerate of the audio packet */
+    bool              bInputResamplingActive;   /*!< @brief if a resampling is performed before master processing this flag is set to true */
+    bool              bStereoUpmix;             /*!< @brief true if the stereo upmix setting on xbmc is set */
+    int               iQualityLevel;            /*!< @brief the from XBMC selected quality level for signal processing */
     /*!
      * @note about "iProcessSamplerate" and "iProcessFrames" is set from XBMC after call of StreamCreate on resample add-on, if resampling
      * and processing is handled inside the same addon, this value must be ignored!
@@ -336,16 +338,16 @@ extern "C" {
 
   typedef struct AE_DSP_STREAM_PROPERTIES
   {
-    unsigned int    iStreamID;                    /*!< @brief stream id of the audio stream packets */
-    int             iStreamType;                  /*!< @brief the input stream type source eg, Movie or Music */
-    int             iBaseType;                    /*!< @brief the input stream base type source eg, Dolby Digital */
-    const char*     strName;                      /*!< @brief the audio stream name */
-    const char*     strCodecId;                   /*!< @brief codec id string of the audio stream */
-    const char*     strLanguage;                  /*!< @brief language id of the audio stream */
-    int             iIdentifier;                  /*!< @brief audio stream id inside player */
-    int             iChannels;                    /*!< @brief amount of basic channels */
-    int             iSampleRate;                  /*!< @brief sample rate */
-    AE_DSP_PROFILE  Profile;
+    AE_DSP_STREAM_ID  iStreamID;                  /*!< @brief stream id of the audio stream packets */
+    int               iStreamType;                /*!< @brief the input stream type source eg, Movie or Music */
+    int               iBaseType;                  /*!< @brief the input stream base type source eg, Dolby Digital */
+    const char*       strName;                    /*!< @brief the audio stream name */
+    const char*       strCodecId;                 /*!< @brief codec id string of the audio stream */
+    const char*       strLanguage;                /*!< @brief language id of the audio stream */
+    int               iIdentifier;                /*!< @brief audio stream id inside player */
+    int               iChannels;                  /*!< @brief amount of basic channels */
+    int               iSampleRate;                /*!< @brief sample rate */
+    AE_DSP_PROFILE    Profile;
   } ATTRIBUTE_PACKED AE_DSP_STREAM_PROPERTIES;
 
   /*!
@@ -395,7 +397,7 @@ extern "C" {
   {
     AE_DSP_MENUHOOK_CAT category;
     union data {
-      unsigned int  iStreamId;
+      AE_DSP_STREAM_ID  iStreamId;
     } data;
     /// TODO: complete defination of required menu data!!!
   } ATTRIBUTE_PACKED AE_DSP_MENUHOOK_DATA;
@@ -415,35 +417,35 @@ extern "C" {
     AE_DSP_ERROR (__cdecl* MenuHook)                             (const AE_DSP_MENUHOOK&, const AE_DSP_MENUHOOK_DATA&);
 
     AE_DSP_ERROR (__cdecl* StreamCreate)                         (const AE_DSP_SETTINGS*, const AE_DSP_STREAM_PROPERTIES*);
-    AE_DSP_ERROR (__cdecl* StreamDestroy)                        (unsigned int);
-    AE_DSP_ERROR (__cdecl* StreamIsModeSupported)                (unsigned int, unsigned int, int, int);
+    AE_DSP_ERROR (__cdecl* StreamDestroy)                        (AE_DSP_STREAM_ID);
+    AE_DSP_ERROR (__cdecl* StreamIsModeSupported)                (AE_DSP_STREAM_ID, unsigned int, int, int);
     AE_DSP_ERROR (__cdecl* StreamInitialize)                     (const AE_DSP_SETTINGS*);
 
-    bool         (__cdecl* InputProcess)                         (unsigned int, float**, unsigned int);
+    bool         (__cdecl* InputProcess)                         (AE_DSP_STREAM_ID, float**, unsigned int);
 
-    unsigned int (__cdecl* InputResampleProcessNeededSamplesize) (unsigned int);
-    unsigned int (__cdecl* InputResampleProcess)                 (unsigned int, float**, float**, unsigned int);
-    float        (__cdecl* InputResampleGetDelay)                (unsigned int);
-    int          (__cdecl* InputResampleSampleRate)              (unsigned int);
+    unsigned int (__cdecl* InputResampleProcessNeededSamplesize) (AE_DSP_STREAM_ID);
+    unsigned int (__cdecl* InputResampleProcess)                 (AE_DSP_STREAM_ID, float**, float**, unsigned int);
+    float        (__cdecl* InputResampleGetDelay)                (AE_DSP_STREAM_ID);
+    int          (__cdecl* InputResampleSampleRate)              (AE_DSP_STREAM_ID);
 
-    unsigned int (__cdecl* PreProcessNeededSamplesize)           (unsigned int, unsigned int);
-    float        (__cdecl* PreProcessGetDelay)                   (unsigned int, unsigned int);
-    unsigned int (__cdecl* PreProcess)                           (unsigned int, unsigned int, float**, float**, unsigned int);
+    unsigned int (__cdecl* PreProcessNeededSamplesize)           (AE_DSP_STREAM_ID, unsigned int);
+    float        (__cdecl* PreProcessGetDelay)                   (AE_DSP_STREAM_ID, unsigned int);
+    unsigned int (__cdecl* PreProcess)                           (AE_DSP_STREAM_ID, unsigned int, float**, float**, unsigned int);
 
-    AE_DSP_ERROR (__cdecl* MasterProcessSetMode)                 (unsigned int, unsigned int, int, int);
-    unsigned int (__cdecl* MasterProcessNeededSamplesize)        (unsigned int);
-    float        (__cdecl* MasterProcessGetDelay)                (unsigned int);
-    unsigned int (__cdecl* MasterProcess)                        (unsigned int, float**, float**, unsigned int);
-    const char*  (__cdecl* MasterProcessGetStreamInfoString)     (unsigned int);
+    AE_DSP_ERROR (__cdecl* MasterProcessSetMode)                 (AE_DSP_STREAM_ID, unsigned int, int, int);
+    unsigned int (__cdecl* MasterProcessNeededSamplesize)        (AE_DSP_STREAM_ID);
+    float        (__cdecl* MasterProcessGetDelay)                (AE_DSP_STREAM_ID);
+    unsigned int (__cdecl* MasterProcess)                        (AE_DSP_STREAM_ID, float**, float**, unsigned int);
+    const char*  (__cdecl* MasterProcessGetStreamInfoString)     (AE_DSP_STREAM_ID);
 
-    unsigned int (__cdecl* PostProcessNeededSamplesize)          (unsigned int, unsigned int);
-    float        (__cdecl* PostProcessGetDelay)                  (unsigned int, unsigned int);
-    unsigned int (__cdecl* PostProcess)                          (unsigned int, unsigned int, float**, float**, unsigned int);
+    unsigned int (__cdecl* PostProcessNeededSamplesize)          (AE_DSP_STREAM_ID, unsigned int);
+    float        (__cdecl* PostProcessGetDelay)                  (AE_DSP_STREAM_ID, unsigned int);
+    unsigned int (__cdecl* PostProcess)                          (AE_DSP_STREAM_ID, unsigned int, float**, float**, unsigned int);
 
-    unsigned int (__cdecl* OutputResampleProcessNeededSamplesize)(unsigned int);
-    unsigned int (__cdecl* OutputResampleProcess)                (unsigned int, float**, float**, unsigned int);
-    float        (__cdecl* OutputResampleGetDelay)               (unsigned int);
-    int          (__cdecl* OutputResampleSampleRate)             (unsigned int);
+    unsigned int (__cdecl* OutputResampleProcessNeededSamplesize)(AE_DSP_STREAM_ID);
+    unsigned int (__cdecl* OutputResampleProcess)                (AE_DSP_STREAM_ID, float**, float**, unsigned int);
+    float        (__cdecl* OutputResampleGetDelay)               (AE_DSP_STREAM_ID);
+    int          (__cdecl* OutputResampleSampleRate)             (AE_DSP_STREAM_ID);
   };
 
 #ifdef __cplusplus

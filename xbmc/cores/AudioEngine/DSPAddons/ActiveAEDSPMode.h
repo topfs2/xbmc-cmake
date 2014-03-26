@@ -66,9 +66,9 @@ namespace ActiveAE
     bool IsChanged(void) const;
     bool IsPrimary(void) const;
     int ModeID(void) const;
-    unsigned int ModeType(void) const;
-    bool SetModeType(int iType);
-    unsigned int ModePosition(void) const;
+    AE_DSP_MODE_TYPE ModeType(void) const;
+    bool SetModeType(AE_DSP_MODE_TYPE iType);
+    int ModePosition(void) const;
     bool SetModePosition(int iModePosition);
     bool IsHidden(void) const;
     bool SetHidden(bool bIsHidden);
@@ -94,8 +94,8 @@ namespace ActiveAE
     bool HasSettingsDialog(void) const;
     int AddonID(void) const;
     bool SetAddonID(int iAddonId);
-    int AddonModeNumber(void) const;
-    bool SetAddonModeNumber(int iAddonModeNumber);
+    unsigned int AddonModeNumber(void) const;
+    bool SetAddonModeNumber(unsigned int iAddonModeNumber);
     CStdString AddonModeName(void) const;
     bool SetAddonModeName(const CStdString &strAddonModeName);
 
@@ -103,7 +103,7 @@ namespace ActiveAE
     /*! @name XBMC related mode data
      */
     //@{
-    int               m_iModeType;               /*!< the processing mode type */
+    AE_DSP_MODE_TYPE  m_iModeType;               /*!< the processing mode type */
     int               m_iModePosition;           /*!< the processing mode position */
     int               m_iModeId;                 /*!< the identifier given to this mode by the DSP database */
     unsigned int      m_iStreamTypeFlags;        /*!< The stream content type flags */
@@ -123,7 +123,7 @@ namespace ActiveAE
      */
     //@{
     int               m_iAddonId;                /*!< the identifier of the Addon that serves this mode */
-    int               m_iAddonModeNumber;        /*!< the mode number on the Addon */
+    unsigned int      m_iAddonModeNumber;        /*!< the mode number on the Addon */
     CStdString        m_strAddonModeName;        /*!< the name of this mode on the Addon */
     bool              m_bIsPrimary;              /*!< if set to true this mode is the first used one (if nothing other becomes selected by hand) */
     //@}

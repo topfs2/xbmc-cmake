@@ -92,7 +92,7 @@ CActiveAEDSPMode::CActiveAEDSPMode(const AE_DSP_BASETYPE baseType)
   m_bHasSettingsDialog      = false;
 
   m_iAddonId                = -1;
-  m_iAddonModeNumber        = AE_DSP_MASTER_MODE_ID_PASSOVER;
+  m_iAddonModeNumber        = -1;
   m_strAddonModeName        = StringUtils::EmptyString;
 }
 
@@ -209,6 +209,7 @@ bool CActiveAEDSPMode::UpdateFromAddon(const CActiveAEDSPMode &mode)
   SetAddonModeName(mode.AddonModeName());
   SetBaseType(mode.BaseType());
   SetStreamTypeFlags(mode.StreamTypeFlags());
+  SetModeSetupName(mode.ModeSetupName());
   SetModeName(mode.ModeName());
   SetModeHelp(mode.ModeHelp());
   SetModeDescription(mode.ModeDescription());
@@ -223,7 +224,7 @@ bool CActiveAEDSPMode::UpdateFromAddon(const CActiveAEDSPMode &mode)
   return m_bChanged;
 }
 
-bool CActiveAEDSPMode::SetModeType(int iModeType)
+bool CActiveAEDSPMode::SetModeType(AE_DSP_MODE_TYPE iModeType)
 {
   CSingleLock lock(m_critSection);
   if (m_iModeType != iModeType)
@@ -454,11 +455,11 @@ bool CActiveAEDSPMode::SetAddonID(int iAddonId)
   return false;
 }
 
-bool CActiveAEDSPMode::SetAddonModeNumber(int iAddonModeNumber)
+bool CActiveAEDSPMode::SetAddonModeNumber(unsigned int iAddonModeNumber)
 {
   CSingleLock lock(m_critSection);
 
-  if (m_iAddonModeNumber != iAddonModeNumber && iAddonModeNumber > 0)
+  if (m_iAddonModeNumber != iAddonModeNumber)
   {
     /* update the Addon Mode number */
     m_iAddonModeNumber = iAddonModeNumber;
@@ -488,13 +489,13 @@ bool CActiveAEDSPMode::SetAddonModeName(const CStdString &strAddonModeName)
   return false;
 }
 
-unsigned int CActiveAEDSPMode::ModeType(void) const
+AE_DSP_MODE_TYPE CActiveAEDSPMode::ModeType(void) const
 {
   CSingleLock lock(m_critSection);
   return m_iModeType;
 }
 
-unsigned int CActiveAEDSPMode::ModePosition(void) const
+int CActiveAEDSPMode::ModePosition(void) const
 {
   CSingleLock lock(m_critSection);
   return m_iModePosition;
@@ -592,7 +593,7 @@ int CActiveAEDSPMode::AddonID(void) const
   return m_iAddonId;
 }
 
-int CActiveAEDSPMode::AddonModeNumber(void) const
+unsigned int CActiveAEDSPMode::AddonModeNumber(void) const
 {
   CSingleLock lock(m_critSection);
   return m_iAddonModeNumber;

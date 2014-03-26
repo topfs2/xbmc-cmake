@@ -126,14 +126,14 @@ extern "C"
    * @brief Ask the addon about a requested processing mode that it is supported on the current
    * stream. Is called about every addon mode after successed StreamCreate.
    * @param id The stream id
-   * @param mode_type The processing mode type, see AE_DSP_MODE_TYPE for definations
-   * @param client_mode_id The Mode identifier.
+   * @param type The processing mode type, see AE_DSP_MODE_TYPE for definations
+   * @param mode_id The mode inside addon which must be performed on call. Id is set from addon by iModeNumber on AE_DSP_MODE structure during RegisterMode callback,
    * @param unique_mode_id The Mode unique id generated from dsp database.
    * @return AE_DSP_ERROR_NO_ERROR if the properties were fetched successfully or if the stream
    * is not supported the addon must return AE_DSP_ERROR_IGNORE_ME.
    * @remarks Valid implementation required.
    */
-  AE_DSP_ERROR StreamIsModeSupported(AE_DSP_STREAM_ID id, unsigned int mode_type, int client_mode_id, int unique_db_mode_id);
+  AE_DSP_ERROR StreamIsModeSupported(AE_DSP_STREAM_ID id, AE_DSP_MODE_TYPE type, unsigned int mode_id, int unique_db_mode_id);
 
   /*!
    * Set up Audio DSP with selected audio settings (detected on data of first present audio packet)
@@ -211,7 +211,7 @@ extern "C"
    * If the addon operate with buffered arrays and the output size can be higher as the input
    * it becomes asked about needed size before any PreProcess call.
    * @param id The stream id
-   * @param mode_id The mode inside addon which must be performed on call. Id is set from addon by iModeNumber on AE_DSP_MODE structure during StreamCreate call,
+   * @param mode_id The mode inside addon which must be performed on call. Id is set from addon by iModeNumber on AE_DSP_MODE structure during RegisterMode callback,
    * and can be defined from addon as a structure pointer or anything else what is needed to find it.
    * @return The needed size of output array or 0 if no changes within it
    * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
@@ -222,7 +222,7 @@ extern "C"
    * Returns the time in seconds that it will take
    * for the next added packet to be heard from the speakers.
    * @param id The stream id
-   * @param mode_id The mode inside addon which must be performed on call. Id is set from addon by iModeNumber on AE_DSP_MODE structure during StreamCreate call,
+   * @param mode_id The mode inside addon which must be performed on call. Id is set from addon by iModeNumber on AE_DSP_MODE structure during RegisterMode callback,
    * and can be defined from addon as a structure pointer or anything else what is needed to find it.
    * @return the delay in seconds
    */
@@ -232,7 +232,7 @@ extern "C"
    * @brief DSP pre processing
    * All DSP addons allowed todo this.
    * @param id The stream id
-   * @param mode_id The mode inside addon which must be performed on call. Id is set from addon by iModeNumber on AE_DSP_MODE structure during StreamCreate call,
+   * @param mode_id The mode inside addon which must be performed on call. Id is set from addon by iModeNumber on AE_DSP_MODE structure during RegisterMode callback,
    * and can be defined from addon as a structure pointer or anything else what is needed to find it.
    * @param array_in Pointer to input data memory
    * @param array_out Pointer to output data memory
@@ -251,12 +251,12 @@ extern "C"
    * @brief Set the active master process mode
    * @param id The stream id
    * @param type Requested stream type for the selected master mode
-   * @param client_mode_id The Mode identifier.
+   * @param mode_id The Mode identifier.
    * @param unique_mode_id The Mode unique id generated from dsp database.
    * @return AE_DSP_ERROR_NO_ERROR if the setup was successful
    * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
    */
-  AE_DSP_ERROR MasterProcessSetMode(AE_DSP_STREAM_ID id, AE_DSP_STREAMTYPE type, int client_mode_id, int unique_db_mode_id);
+  AE_DSP_ERROR MasterProcessSetMode(AE_DSP_STREAM_ID id, AE_DSP_STREAMTYPE type, unsigned int mode_id, int unique_db_mode_id);
 
   /*!
    * @brief If the addon operate with buffered arrays and the output size can be higher as the input
@@ -304,7 +304,7 @@ extern "C"
    * If the addon operate with buffered arrays and the output size can be higher as the input
    * it becomes asked about needed size before any PostProcess call.
    * @param id The stream id
-   * @param mode_id The mode inside addon which must be performed on call. Id is set from addon by iModeNumber on AE_DSP_MODE structure during StreamCreate call,
+   * @param mode_id The mode inside addon which must be performed on call. Id is set from addon by iModeNumber on AE_DSP_MODE structure during RegisterMode callback,
    * and can be defined from addon as a structure pointer or anything else what is needed to find it.
    * @return The needed size of output array or 0 if no changes within it
    * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
@@ -315,7 +315,7 @@ extern "C"
    * Returns the time in seconds that it will take
    * for the next added packet to be heard from the speakers.
    * @param id The stream id
-   * @param mode_id The mode inside addon which must be performed on call. Id is set from addon by iModeNumber on AE_DSP_MODE structure during StreamCreate call,
+   * @param mode_id The mode inside addon which must be performed on call. Id is set from addon by iModeNumber on AE_DSP_MODE structure during RegisterMode callback,
    * and can be defined from addon as a structure pointer or anything else what is needed to find it.
    * @return the delay in seconds
    */
@@ -327,7 +327,7 @@ extern "C"
    * or frequency/volume corrections, speaker distance handling, equalizer... .
    * All DSP addons allowed todo this.
    * @param id The stream id
-   * @param mode_id The mode inside addon which must be performed on call. Id is set from addon by iModeNumber on AE_DSP_MODE structure during StreamCreate call,
+   * @param mode_id The mode inside addon which must be performed on call. Id is set from addon by iModeNumber on AE_DSP_MODE structure during RegisterMode callback,
    * and can be defined from addon as a structure pointer or anything else what is needed to find it.
    * @param array_in Pointer to input data memory
    * @param array_out Pointer to output data memory

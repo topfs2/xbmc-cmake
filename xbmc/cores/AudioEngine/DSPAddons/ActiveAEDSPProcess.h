@@ -166,7 +166,7 @@ namespace ActiveAE
        * @param iModeNumber the from add-on used identifier for this mode
        * @return pointer to the info class, or unitialized class if no master processing present
        */
-      CActiveAEDSPModePtr GetMasterModeByAddon(int iAddonID, int iModeNumber) const;
+      CActiveAEDSPModePtr GetMasterModeByAddon(int iAddonID, unsigned int iModeNumber) const;
 
       /*!>
        * Returns the information class from the currently used dsp addon
@@ -242,7 +242,7 @@ namespace ActiveAE
           iAddonModeNumber = -1;
           pFunctions       = NULL;
         }
-        int                 iAddonModeNumber;                       /*!< The identifier, send from addon during mode registration and can be used from addon to select mode from a function table */
+        unsigned int        iAddonModeNumber;                       /*!< The identifier, send from addon during mode registration and can be used from addon to select mode from a function table */
         CActiveAEDSPModePtr pMode;                                  /*!< Processing mode information data */
         AudioDSP*           pFunctions;                             /*!< The Addon function table, separeted from pAddon to safe several calls on process chain */
         AE_DSP_ADDON        pAddon;                                 /*!< Addon control class */

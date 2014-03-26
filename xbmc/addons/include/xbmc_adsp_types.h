@@ -279,7 +279,7 @@ extern "C" {
   typedef struct AE_DSP_SETTINGS
   {
     AE_DSP_STREAM_ID  iStreamID;                /*!< @brief id of the audio stream packets */
-    int               iStreamType;              /*!< @brief the input stream type source eg, Movie or Music */
+    AE_DSP_STREAMTYPE iStreamType;              /*!< @brief the input stream type source eg, Movie or Music */
     int               iInChannels;              /*!< @brief the amount of input channels */
     unsigned long     lInChannelPresentFlags;   /*!< @brief the exact channel mapping flags of input */
     int               iInFrames;                /*!< @brief the input frame size from XBMC */
@@ -339,7 +339,7 @@ extern "C" {
   typedef struct AE_DSP_STREAM_PROPERTIES
   {
     AE_DSP_STREAM_ID  iStreamID;                  /*!< @brief stream id of the audio stream packets */
-    int               iStreamType;                /*!< @brief the input stream type source eg, Movie or Music */
+    AE_DSP_STREAMTYPE iStreamType;                /*!< @brief the input stream type source eg, Movie or Music */
     int               iBaseType;                  /*!< @brief the input stream base type source eg, Dolby Digital */
     const char*       strName;                    /*!< @brief the audio stream name */
     const char*       strCodecId;                 /*!< @brief codec id string of the audio stream */
@@ -432,7 +432,7 @@ extern "C" {
     float        (__cdecl* PreProcessGetDelay)                   (AE_DSP_STREAM_ID, unsigned int);
     unsigned int (__cdecl* PreProcess)                           (AE_DSP_STREAM_ID, unsigned int, float**, float**, unsigned int);
 
-    AE_DSP_ERROR (__cdecl* MasterProcessSetMode)                 (AE_DSP_STREAM_ID, unsigned int, int, int);
+    AE_DSP_ERROR (__cdecl* MasterProcessSetMode)                 (AE_DSP_STREAM_ID, AE_DSP_STREAMTYPE, int, int);
     unsigned int (__cdecl* MasterProcessNeededSamplesize)        (AE_DSP_STREAM_ID);
     float        (__cdecl* MasterProcessGetDelay)                (AE_DSP_STREAM_ID);
     unsigned int (__cdecl* MasterProcess)                        (AE_DSP_STREAM_ID, float**, float**, unsigned int);

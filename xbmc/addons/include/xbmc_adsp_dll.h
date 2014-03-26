@@ -250,12 +250,13 @@ extern "C"
   /*!
    * @brief Set the active master process mode
    * @param id The stream id
+   * @param type Requested stream type for the selected master mode
    * @param client_mode_id The Mode identifier.
    * @param unique_mode_id The Mode unique id generated from dsp database.
    * @return AE_DSP_ERROR_NO_ERROR if the setup was successful
    * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
    */
-  AE_DSP_ERROR MasterProcessSetMode(AE_DSP_STREAM_ID id, unsigned int mode_type, int client_mode_id, int unique_db_mode_id);
+  AE_DSP_ERROR MasterProcessSetMode(AE_DSP_STREAM_ID id, AE_DSP_STREAMTYPE type, int client_mode_id, int unique_db_mode_id);
 
   /*!
    * @brief If the addon operate with buffered arrays and the output size can be higher as the input

@@ -146,12 +146,13 @@ namespace ActiveAE
 
     /*!
      * @brief Ask the addon about a requested processing mode that it is supported on the current
-     * stream. Is called about every addon mode type after successed StreamCreate.
+     * stream. Is called about every addon mode after successed StreamCreate.
      * @param id The stream id
-     * @param mode The mode to ask (structure data is known to XBMC from addons RegisterMode call)
+     * @param addon_mode_id The mode inside addon which must be performed on call. Id is set from addon by iModeNumber on AE_DSP_MODE structure during RegisterMode callback,
+     * @param unique_mode_id The Mode unique id generated from dsp database.
      * @return true if supported
      */
-    bool StreamIsModeSupported(AE_DSP_STREAM_ID id, unsigned int mode_type, int client_mode_id, int unique_db_mode_id);
+    bool StreamIsModeSupported(AE_DSP_STREAM_ID id, AE_DSP_MODE_TYPE type, unsigned int addon_mode_id, int unique_db_mode_id);
 
     /*!
      * Set up Audio DSP with selected audio settings (detected on data of first present audio packet)

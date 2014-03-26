@@ -1409,7 +1409,7 @@ void CActiveAEDSPProcess::GetAvailableMasterModes(AE_DSP_STREAMTYPE streamType, 
   }
 }
 
-CActiveAEDSPModePtr CActiveAEDSPProcess::GetMasterModeByAddon(int iAddonID, int iModeNumber) const
+CActiveAEDSPModePtr CActiveAEDSPProcess::GetMasterModeByAddon(int iAddonID, unsigned int iModeNumber) const
 {
   CSingleLock lock(m_critSection);
 

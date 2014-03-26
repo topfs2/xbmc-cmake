@@ -1438,3 +1438,47 @@ CActiveAEDSPModePtr CActiveAEDSPProcess::GetMasterModeRunning() const
   mode = m_Addons_MasterProc[m_ActiveMode].pMode;
   return mode;
 }
+
+bool CActiveAEDSPProcess::IsModeActive(AE_DSP_MENUHOOK_CAT category, int iAddonId, unsigned int iModeNumber)
+{
+  std::vector <sDSPProcessHandle> *m_Addons = NULL;
+
+  switch (category)
+  {
+    case AE_DSP_MENUHOOK_MASTER_PROCESS:
+      m_Addons = &m_Addons_MasterProc;
+      break;
+    case AE_DSP_MENUHOOK_PRE_PROCESS:
+      m_Addons = &m_Addons_PreProc;
+      break;
+    case AE_DSP_MENUHOOK_POST_PROCESS:
+      m_Addons = &m_Addons_PostProc;
+      break;
+    case AE_DSP_MENUHOOK_RESAMPLE:
+      {
+        if (m_Addon_InputResample.iAddonModeNumber > 0 &&
+            m_Addon_InputResample.pMode->AddonID() == iAddonId &&
+            m_Addon_InputResample.pMode->AddonModeNumber() == iModeNumber)
+          return true;
+
+        if (m_Addon_OutputResample.iAddonModeNumber > 0 &&
+            m_Addon_OutputResample.pMode->AddonID() == iAddonId &&
+            m_Addon_OutputResample.pMode->AddonModeNumber() == iModeNumber)
+          return true;
+      }
+    default:
+      break;
+  }
+
+  if (m_Addons)
+  {
+    for (unsigned int i = 0; i < m_Addons->size(); i++)
+    {
+      if (m_Addons->at(i).iAddonModeNumber > 0 &&
+          m_Addons->at(i).pMode->AddonID() == iAddonId &&
+          m_Addons->at(i).pMode->AddonModeNumber() == iModeNumber)
+        return true;
+    }
+  }
+  return false;
+}

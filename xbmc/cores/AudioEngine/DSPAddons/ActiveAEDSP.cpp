@@ -438,6 +438,15 @@ const AE_DSP_MODELIST &CActiveAEDSP::GetAvailableModes(AE_DSP_MODE_TYPE modeType
   return m_Modes[modeType];
 }
 
+bool CActiveAEDSP::IsModeActive(unsigned int streamId, AE_DSP_MENUHOOK_CAT category, int iAddonId, unsigned int iAddonModeId)
+{
+  CSingleLock lock(m_critSection);
+
+  if (m_usedProcesses[streamId])
+    return m_usedProcesses[streamId]->IsModeActive(category, iAddonId, iAddonModeId);
+  return false;
+}
+
 AE_DSP_STREAMTYPE CActiveAEDSP::GetDetectedStreamType(unsigned int iStreamId)
 {
   CSingleLock lock(m_critSection);
@@ -649,7 +658,7 @@ void CActiveAEDSP::Process(void)
   CAddonMgr::Get().RegisterObserver(this);
 
   UpdateAddons();
-  
+
   m_isActive = true;
 
   while (!g_application.m_bStop && !m_bStop)

@@ -174,6 +174,15 @@ namespace ActiveAE
        */
       CActiveAEDSPModePtr GetMasterModeRunning() const;
 
+      /*!>
+       * Used check that asked addon with his mode id is used on given stream identifier
+       * @param category The type to get
+       * @param iAddonId The ID of the addon to get the menu entries for it
+       * @param iModeNumber From addon defined identifier of the mode
+       * @return true if in use
+       */
+      bool IsModeActive(AE_DSP_MENUHOOK_CAT category, int iAddonId, unsigned int iModeNumber);
+
     protected:
       friend class CActiveAEBufferPoolResample;
 

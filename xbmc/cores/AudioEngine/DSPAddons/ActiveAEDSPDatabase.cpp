@@ -72,6 +72,7 @@ void CActiveAEDSPDatabase::CreateTables()
         "sOwnIconPath         varchar(255), "
         "sOverrideIconPath    varchar(255), "
         "iModeName            integer, "
+        "iModeSetupName       integer, "
         "iModeHelp            integer, "
         "iModeDescription     integer, "
         "sAddonModeName       varchar(64), "
@@ -242,6 +243,7 @@ bool CActiveAEDSPDatabase::AddUpdateMode(CActiveAEDSPMode &mode)
         "sOwnIconPath='%s', "
         "sOverrideIconPath='%s', "
         "iModeName=%i, "
+        "iModeSetupName=%i, "
         "iModeHelp=%i, "
         "iModeDescription=%i, "
         "sAddonModeName='%s', "
@@ -251,6 +253,7 @@ bool CActiveAEDSPDatabase::AddUpdateMode(CActiveAEDSPMode &mode)
         mode.IconOwnModePath().c_str(),
         mode.IconOverrideModePath().c_str(),
         mode.ModeName(),
+        mode.ModeSetupName(),
         mode.ModeHelp(),
         mode.ModeDescription(),
         mode.AddonModeName().c_str(),
@@ -269,13 +272,14 @@ bool CActiveAEDSPDatabase::AddUpdateMode(CActiveAEDSPMode &mode)
         "sOwnIconPath, "
         "sOverrideIconPath, "
         "iModeName, "
+        "iModeSetupName, "
         "iModeHelp, "
         "iModeDescription, "
         "sAddonModeName, "
         "iAddonId, "
         "iAddonModeNumber, "
         "bHasSettings) "
-        "VALUES (%i, %i, %i, %i, '%s', '%s', %i, %i, %i, '%s', %i, %i, %i)",
+        "VALUES (%i, %i, %i, %i, '%s', '%s', %i,  %i, %i, %i, '%s', %i, %i, %i)",
         mode.ModeType(),
         mode.ModePosition(),
         mode.StreamTypeFlags(),
@@ -283,6 +287,7 @@ bool CActiveAEDSPDatabase::AddUpdateMode(CActiveAEDSPMode &mode)
         mode.IconOwnModePath().c_str(),
         mode.IconOverrideModePath().c_str(),
         mode.ModeName(),
+        mode.ModeSetupName(),
         mode.ModeHelp(),
         mode.ModeDescription(),
         mode.AddonModeName().c_str(),
@@ -338,7 +343,7 @@ int CActiveAEDSPDatabase::GetModes(AE_DSP_MODELIST &results, int modeType)
         CActiveAEDSPModePtr mode = CActiveAEDSPModePtr(new CActiveAEDSPMode());
 
         mode->m_iModeId                 = m_pDS->fv("idMode").get_asInt();
-        mode->m_iModeType               = m_pDS->fv("iType").get_asInt();
+        mode->m_iModeType               = (AE_DSP_MODE_TYPE)m_pDS->fv("iType").get_asInt();
         mode->m_iModePosition           = m_pDS->fv("iPosition").get_asInt();
         mode->m_iStreamTypeFlags        = m_pDS->fv("iStreamTypeFlags").get_asInt();
         mode->m_iBaseType               = (AE_DSP_BASETYPE)m_pDS->fv("iBaseType").get_asInt();
@@ -346,6 +351,7 @@ int CActiveAEDSPDatabase::GetModes(AE_DSP_MODELIST &results, int modeType)
         mode->m_strOwnIconPath          = m_pDS->fv("sOwnIconPath").get_asString();
         mode->m_strOverrideIconPath     = m_pDS->fv("sOverrideIconPath").get_asString();
         mode->m_iModeName               = m_pDS->fv("iModeName").get_asInt();
+        mode->m_iModeSetupName          = m_pDS->fv("iModeSetupName").get_asInt();
         mode->m_iModeHelp               = m_pDS->fv("iModeHelp").get_asInt();
         mode->m_iModeDescription        = m_pDS->fv("iModeDescription").get_asInt();
         mode->m_strAddonModeName        = m_pDS->fv("sAddonModeName").get_asString();

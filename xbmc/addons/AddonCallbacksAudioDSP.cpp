@@ -77,6 +77,7 @@ void CAddonCallbacksADSP::ADSPAddMenuHook(void *addonData, AE_DSP_MENUHOOK *hook
     hookInt.iHookId            = hook->iHookId;
     hookInt.iLocalizedStringId = hook->iLocalizedStringId;
     hookInt.category           = hook->category;
+    hookInt.iRelevantModeId    = hook->iRelevantModeId;
 
     /* add this new hook */
     hooks->push_back(hookInt);

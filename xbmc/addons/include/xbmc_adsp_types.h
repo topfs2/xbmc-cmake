@@ -247,6 +247,7 @@ extern "C" {
     unsigned int        iHookId;                /*!< @brief (required) this hook's identifier */
     unsigned int        iLocalizedStringId;     /*!< @brief (required) the id of the label for this hook in g_localizeStrings */
     AE_DSP_MENUHOOK_CAT category;               /*!< @brief (required) category of menu hook */
+    unsigned int        iRelevantModeId;        /*!< @brief (required) except category AE_DSP_MENUHOOK_SETTING, AE_DSP_MENUHOOK_INFORMATION and AE_DSP_MENUHOOK_ALL must be the related mode id present here */
   } ATTRIBUTE_PACKED AE_DSP_MENUHOOK;
 
   /*!

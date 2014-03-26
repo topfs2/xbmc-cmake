@@ -564,11 +564,15 @@ void CGUIDialogAudioDSPSettings::GetAudioDSPMenus(AE_DSP_MENUHOOK_CAT category, 
       {
         for (unsigned int i = 0; i < hooks.size(); i++)
         {
+          if (!CActiveAEDSP::Get().IsModeActive(m_ActiveStreamId, hooks[i].category, itr->second->GetID(), hooks[i].iRelevantModeId))
+            continue;
+
           MenuHookMember menu;
           menu.clientId                 = itr->second->GetID();
           menu.hook.category            = hooks[i].category;
           menu.hook.iHookId             = hooks[i].iHookId;
           menu.hook.iLocalizedStringId  = hooks[i].iLocalizedStringId;
+          menu.hook.iRelevantModeId     = hooks[i].iRelevantModeId;
           menus.push_back(menu);
         }
       }

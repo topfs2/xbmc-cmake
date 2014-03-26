@@ -294,6 +294,16 @@ namespace ActiveAE
     const AE_DSP_MODELIST &GetAvailableModes(AE_DSP_MODE_TYPE modeType);
 
     /*!>
+     * Used check that asked addon with his mode id is used on given stream identfier
+     * @param streamId The id of this stream
+     * @param category The type to get
+     * @param iAddonId The ID of the addon to get the menu entries for it
+     * @param iAddonModeId From addon defined identifier of the mode
+     * @return true if in use
+     */
+    bool IsModeActive(unsigned int streamId, AE_DSP_MENUHOOK_CAT category, int iAddonId, unsigned int iAddonModeId);
+
+    /*!>
      * Used to get all available Master mode on current stream and base type.
      * It is used to get informations about selectable modes and can be used as information
      * for the gui to make the mode selection available.

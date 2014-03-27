@@ -139,10 +139,6 @@ bool CMediaSettings::Load(const TiXmlNode *settings)
   pElement = settings->FirstChildElement("defaultaudiosettings");
   if (pElement != NULL)
   {
-    if (!XMLUtils::GetInt(pElement, "inputresample", m_defaultAudioSettings.m_InputResampleAddon))
-      m_defaultAudioSettings.m_InputResampleAddon = -1;
-    if (!XMLUtils::GetInt(pElement, "outputresample", m_defaultAudioSettings.m_OutputResampleAddon))
-      m_defaultAudioSettings.m_OutputResampleAddon = -1;
     if (!XMLUtils::GetInt(pElement, "masterstreamtype", m_defaultAudioSettings.m_MasterStreamType))
       m_defaultAudioSettings.m_MasterStreamType = AE_DSP_ASTREAM_AUTO;
     if (!XMLUtils::GetInt(pElement, "masterstreamtypesel", m_defaultAudioSettings.m_MasterStreamTypeSel))
@@ -151,9 +147,9 @@ bool CMediaSettings::Load(const TiXmlNode *settings)
       m_defaultAudioSettings.m_MasterStreamBase = AE_DSP_ABASE_STEREO;
 
     CStdString strTag;
-    for (int type = AE_DSP_ASTREAM_BASIC; type < AE_DSP_ASTREAM_UNDEFINED; type++)
+    for (int type = AE_DSP_ASTREAM_BASIC; type < AE_DSP_ASTREAM_MAX; type++)
     {
-      for (int base = AE_DSP_ABASE_STEREO; base < AE_DSP_ABASE_UNDEFINED; base++)
+      for (int base = AE_DSP_ABASE_STEREO; base < AE_DSP_ABASE_MAX; base++)
       {
         int tmp;
         strTag = StringUtils::Format("masterprocess_%i_%i", type, base);
@@ -244,16 +240,14 @@ bool CMediaSettings::Save(TiXmlNode *settings) const
   if (pNode == NULL)
     return false;
 
-  XMLUtils::SetInt(pNode, "inputresample", m_defaultAudioSettings.m_InputResampleAddon);
-  XMLUtils::SetInt(pNode, "outputresample", m_defaultAudioSettings.m_OutputResampleAddon);
   XMLUtils::SetInt(pNode, "masterstreamtype", m_defaultAudioSettings.m_MasterStreamType);
   XMLUtils::SetInt(pNode, "masterstreamtypesel", m_defaultAudioSettings.m_MasterStreamTypeSel);
   XMLUtils::SetInt(pNode, "masterstreambase", m_defaultAudioSettings.m_MasterStreamBase);
 
   CStdString strTag;
-  for (int type = AE_DSP_ASTREAM_BASIC; type < AE_DSP_ASTREAM_UNDEFINED; type++)
+  for (int type = AE_DSP_ASTREAM_BASIC; type < AE_DSP_ASTREAM_MAX; type++)
   {
-    for (int base = AE_DSP_ABASE_STEREO; base < AE_DSP_ABASE_UNDEFINED; base++)
+    for (int base = AE_DSP_ABASE_STEREO; base < AE_DSP_ABASE_MAX; base++)
     {
       strTag = StringUtils::Format("masterprocess_%i_%i", type, base);
       XMLUtils::SetInt(pNode, strTag.c_str(), m_defaultAudioSettings.m_MasterModes[type][base]);

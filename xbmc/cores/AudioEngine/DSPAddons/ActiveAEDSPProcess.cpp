@@ -285,12 +285,10 @@ bool CActiveAEDSPProcess::Create(AEAudioFormat inputFormat, AEAudioFormat output
             m_Addon_InputResample.pAddon            = addon;
             foundInputResamplerId                   = addon->GetID();
             m_usedMap.insert(std::make_pair(addon->GetID(), addon));
-            CMediaSettings::Get().GetCurrentAudioSettings().m_InputResampleAddon = addon->GetID();
           }
           else
           {
             CLog::Log(LOGERROR, "ActiveAE DSP - %s - input resample addon %s return invalid samplerate and becomes disabled", __FUNCTION__, addon->GetFriendlyName().c_str());
-            CMediaSettings::Get().GetCurrentAudioSettings().m_InputResampleAddon = -1;
           }
         }
         else if (err != AE_DSP_ERROR_IGNORE_ME)
@@ -384,28 +382,17 @@ bool CActiveAEDSPProcess::Create(AEAudioFormat inputFormat, AEAudioFormat output
 
     /* Get selected source for current input */
     int ModeID = CMediaSettings::Get().GetCurrentAudioSettings().m_MasterModes[m_AddonStreamProperties.iStreamType][m_AddonStreamProperties.iBaseType];
+    if (ModeID == AE_DSP_MASTER_MODE_ID_INVALID)
+      ModeID = AE_DSP_MASTER_MODE_ID_PASSOVER;
+
     for (unsigned int ptr = 0; ptr < m_Addons_MasterProc.size(); ptr++)
     {
       CActiveAEDSPModePtr mode = m_Addons_MasterProc.at(ptr).pMode;
-      if (mode->ModeID() != AE_DSP_MASTER_MODE_ID_PASSOVER)
+      if (mode->ModeID() != AE_DSP_MASTER_MODE_ID_PASSOVER && mode->ModeID() == ModeID)
       {
-        if (mode->IsPrimary())
-        {
-          if (ModeID == AE_DSP_MASTER_MODE_ID_INVALID)
-          {
-            m_ActiveMode = (int)ptr;
-            CMediaSettings::Get().GetCurrentAudioSettings().m_MasterModes[m_AddonStreamProperties.iStreamType][m_AddonStreamProperties.iBaseType] = mode->ModeID();
-            CLog::Log(LOGDEBUG, "  | -- %s (as default)", mode->AddonModeName().c_str());
-            break;
-          }
-        }
-
-        if (ModeID == mode->ModeID())
-        {
-          m_ActiveMode = (int)ptr;
-          CLog::Log(LOGDEBUG, "  | -- %s (selected)", mode->AddonModeName().c_str());
-          break;
-        }
+        m_ActiveMode = (int)ptr;
+        CLog::Log(LOGDEBUG, "  | -- %s (selected)", mode->AddonModeName().c_str());
+        break;
       }
     }
 
@@ -500,12 +487,10 @@ bool CActiveAEDSPProcess::Create(AEAudioFormat inputFormat, AEAudioFormat output
             m_Addon_OutputResample.pMode            = pMode;
             m_Addon_OutputResample.pFunctions       = addon->GetAudioDSPFunctionStruct();
             m_Addon_OutputResample.pAddon           = addon;
-            CMediaSettings::Get().GetCurrentAudioSettings().m_OutputResampleAddon = addon->GetID();
           }
           else
           {
             CLog::Log(LOGERROR, "ActiveAE DSP - %s - post resample addon %s return invalid samplerate and becomes disabled", __FUNCTION__, addon->GetFriendlyName().c_str());
-            CMediaSettings::Get().GetCurrentAudioSettings().m_OutputResampleAddon = -1;
           }
           break;
         }

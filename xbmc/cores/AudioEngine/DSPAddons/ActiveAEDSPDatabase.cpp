@@ -91,9 +91,7 @@ void CActiveAEDSPDatabase::CreateTables()
         "MasterStreamTypeSel  integer, "
         "MasterStreamType     integer, "
         "MasterBaseType       integer, "
-        "MasterModeId         integer, "
-        "InputResample        integer, "
-        "OutputResample       integer"
+        "MasterModeId         integer"
       ")"
   );
 
@@ -454,8 +452,6 @@ bool CActiveAEDSPDatabase::GetActiveDSPSettings(const CFileItem *file, CAudioSet
     m_pDS->query( strSQL.c_str() );
     if (m_pDS->num_rows() > 0)
     { // get the audio dsp settings info
-      settings.m_InputResampleAddon       = m_pDS->fv("InputResample").get_asInt();
-      settings.m_OutputResampleAddon      = m_pDS->fv("OutputResample").get_asInt();
       settings.m_MasterStreamTypeSel      = m_pDS->fv("MasterStreamTypeSel").get_asInt();
       int type                            = m_pDS->fv("MasterStreamType").get_asInt();
       int base                            = m_pDS->fv("MasterBaseType").get_asInt();
@@ -497,21 +493,14 @@ void CActiveAEDSPDatabase::SetActiveDSPSettings(const CFileItem *file, const CAu
           "MasterStreamTypeSel=%i,"
           "MasterStreamType=%i,"
           "MasterBaseType=%i,"
-          "MasterModeId=%i,",
-           setting.m_MasterStreamTypeSel,
-           setting.m_MasterStreamType,
-           setting.m_MasterStreamBase,
-           setting.m_MasterModes[setting.m_MasterStreamType][setting.m_MasterStreamBase]);
-      CStdString strSQL2;
-      strSQL2=PrepareSQL(
-            "InputResample=%i,"
-            "OutputResample=%i "
+          "MasterModeId=%i,"
           "WHERE settings.strPath='%s' and settings.strFileName='%s'\n",
-            setting.m_InputResampleAddon,
-            setting.m_OutputResampleAddon,
+          setting.m_MasterStreamTypeSel,
+          setting.m_MasterStreamType,
+          setting.m_MasterStreamBase,
+          setting.m_MasterModes[setting.m_MasterStreamType][setting.m_MasterStreamBase],
           strPath.c_str(),
           strFileName.c_str());
-      strSQL += strSQL2;
       m_pDS->exec(strSQL.c_str());
       return ;
     }
@@ -525,19 +514,15 @@ void CActiveAEDSPDatabase::SetActiveDSPSettings(const CFileItem *file, const CAu
                 "MasterStreamTypeSel,"
                 "MasterStreamType,"
                 "MasterBaseType,"
-                "MasterModeId,"
-                "InputResample,"
-                "OutputResample) "
+                "MasterModeId) "
               "VALUES ";
-      strSQL += PrepareSQL("(NULL,'%s','%s',%i,%i,%i,%i,%i,%i)",
+      strSQL += PrepareSQL("(NULL,'%s','%s',%i,%i,%i,%i)",
                            strPath.c_str(),
                            strFileName.c_str(),
                            setting.m_MasterStreamTypeSel,
                            setting.m_MasterStreamType,
                            setting.m_MasterStreamBase,
-                           setting.m_MasterModes[setting.m_MasterStreamType][setting.m_MasterStreamBase],
-                           setting.m_InputResampleAddon,
-                           setting.m_OutputResampleAddon);
+                           setting.m_MasterModes[setting.m_MasterStreamType][setting.m_MasterStreamBase]);
       m_pDS->exec(strSQL.c_str());
     }
   }

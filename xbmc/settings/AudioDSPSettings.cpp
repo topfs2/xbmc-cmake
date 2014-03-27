@@ -33,16 +33,12 @@ CAudioSettings::CAudioSettings()
   m_MasterStreamType    = AE_DSP_ASTREAM_AUTO;
   m_MasterStreamTypeSel = AE_DSP_ASTREAM_AUTO;
   m_MasterStreamBase    = AE_DSP_ABASE_STEREO;
-  m_InputResampleAddon  = -1;
-  m_OutputResampleAddon = -1;
 
   memset(m_MasterModes, AE_DSP_MASTER_MODE_ID_PASSOVER, sizeof(m_MasterModes));
 }
 
 bool CAudioSettings::operator!=(const CAudioSettings &right) const
 {
-  if (m_InputResampleAddon    != right.m_InputResampleAddon)    return true;
-  if (m_OutputResampleAddon   != right.m_OutputResampleAddon)   return true;
   if (m_MasterStreamType      != right.m_MasterStreamType)      return true;
   if (m_MasterStreamTypeSel   != right.m_MasterStreamTypeSel)   return true;
   if (memcmp(m_MasterModes, right.m_MasterModes, sizeof(m_MasterModes))) return true;

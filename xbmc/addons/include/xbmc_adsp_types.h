@@ -59,14 +59,14 @@
 
 #define AE_DSP_ADDON_STRING_LENGTH              1024
 
-#define AE_DSP_STREAM_MAX_STREAMS               16
+#define AE_DSP_STREAM_MAX_STREAMS               8
 #define AE_DSP_STREAM_MAX_MODES                 32
 
 /* current Audio DSP API version */
-#define XBMC_AE_DSP_API_VERSION                 "0.0.3"
+#define XBMC_AE_DSP_API_VERSION                 "0.0.4"
 
 /* min. Audio DSP API version */
-#define XBMC_AE_DSP_MIN_API_VERSION             "0.0.3"
+#define XBMC_AE_DSP_MIN_API_VERSION             "0.0.4"
 
 #ifdef __cplusplus
 extern "C" {
@@ -165,7 +165,6 @@ extern "C" {
     AE_DSP_ASTREAM_MESSAGE,
 
     AE_DSP_ASTREAM_AUTO,
-    AE_DSP_ASTREAM_UNDEFINED,
     AE_DSP_ASTREAM_MAX
   } AE_DSP_STREAMTYPE;
 
@@ -204,11 +203,16 @@ extern "C" {
     AE_DSP_ABASE_MLP,
     AE_DSP_ABASE_FLAC,
 
-    AE_DSP_ABASE_UNDEFINED,
     AE_DSP_ABASE_MAX
   } AE_DSP_BASETYPE;
 
 
+  /**
+   * @brief The from XBMC in settings requested audio process quality.
+   * The XBMC internal used quality levels is translated to this values
+   * for usage on dsp processing addon's. Is present on iQualityLevel
+   * inside AE_DSP_SETTINGS.
+   */
   typedef enum
   {
     AE_DSP_QUALITY_UNKNOWN    = -1,             /*!< @brief  Unset, unknown or incorrect quality level */
@@ -224,7 +228,13 @@ extern "C" {
   } AE_DSP_QUALITY;
 
   /*!
-   * @brief Audio DSP menu hook categories
+   * @brief Audio DSP menu hook categories.
+   * Used to identify on AE_DSP_MENUHOOK given addon related skin dialog/windows.
+   * Except AE_DSP_MENUHOOK_ALL and AE_DSP_MENUHOOK_SETTING are the menus available
+   * from dsp playback dialog which can be opened over XBMC file context menu and over
+   * button on fullscreen OSD window.
+   *
+   * Menu hook AE_DSP_MENUHOOK_SETTING is available from dsp processing setup dialog.
    */
   typedef enum
   {
@@ -261,7 +271,7 @@ extern "C" {
 
   /*!
    * @brief Audio DSP add-on capabilities. All capabilities are set to "false" as default.
-   * If a capabilty is set to true, then the corresponding methods from xbmc_audiodsp_dll.h need to be implemented.
+   * If a capability is set to true, then the corresponding methods from xbmc_audiodsp_dll.h need to be implemented.
    */
   typedef struct AE_DSP_ADDON_CAPABILITIES
   {
@@ -295,7 +305,7 @@ extern "C" {
     bool              bStereoUpmix;             /*!< @brief true if the stereo upmix setting on xbmc is set */
     int               iQualityLevel;            /*!< @brief the from XBMC selected quality level for signal processing */
     /*!
-     * @note about "iProcessSamplerate" and "iProcessFrames" is set from XBMC after call of StreamCreate on resample add-on, if resampling
+     * @note about "iProcessSamplerate" and "iProcessFrames" is set from XBMC after call of StreamCreate on input resample add-on, if resampling
      * and processing is handled inside the same addon, this value must be ignored!
      */
   } ATTRIBUTE_PACKED AE_DSP_SETTINGS;
@@ -374,20 +384,22 @@ extern "C" {
     unsigned int iModesCount;
     struct AE_DSP_MODE
     {
-      int               iUniqueDBModeId;                                  /*!< @brief (required) the inside addon used identfier for the mode, set by audio dsp database */
+      int               iUniqueDBModeId;                                  /*!< @brief (required) the inside addon used identfier for the mode, set by XBMC's audio dsp database */
       AE_DSP_MODE_TYPE  iModeType;                                        /*!< @brief (required) the processong mode type, see AE_DSP_MODE_TYPE */
-      bool              bIsPrimary;                                       /*!< @brief (required) if set to true this mode is the first used one (if nothing other becomes selected by hand) */
-      unsigned int      iModeNumber;                                      /*!< @brief (required) mode number of this mode on the add-on, is used on process functions with value "mode_id" */
+      char              strModeName[AE_DSP_ADDON_STRING_LENGTH];          /*!< @brief (required) the addon name of the mode, used on XBMC's logs  */
+
+      unsigned int      iModeNumber;                                      /*!< @brief (required) number of this mode on the add-on, is used on process functions with value "mode_id" */
+      unsigned int      iModeSupportTypeFlags;                            /*!< @brief (required) flags about supported input types for this mode, see AE_DSP_ASTREAM_PRESENT */
+      bool              bHasSettingsDialog;                               /*!< @brief (required) if setting dialog(s) are available it must be set to true */
+      bool              bIsHidden;                                        /*!< @brief (optional) true if this mode is marked as hidden and not enabled default, only relevant for master processes, all other types always disabled as default */
+
       unsigned int      iModeName;                                        /*!< @brief (required) the name id of the mode for this hook in g_localizeStrings */
-      unsigned int      iModeSupportTypeFlags;                            /*!< @brief (required) flags about supported input types for this mode */
       unsigned int      iModeSetupName;                                   /*!< @brief (optional) the name id of the mode inside settings for this hook in g_localizeStrings */
       unsigned int      iModeDescription;                                 /*!< @brief (optional) the description id of the mode for this hook in g_localizeStrings */
       unsigned int      iModeHelp;                                        /*!< @brief (optional) help string id for inside dsp settings dialog of the mode for this hook in g_localizeStrings */
-      bool              bHasSettingsDialog;                               /*!< @brief (required) if settings are available it must be set to true */
-      char              strModeName[AE_DSP_ADDON_STRING_LENGTH];          /*!< @brief (required) the addon name of the mode  */
+
       char              strOwnModeImage[AE_DSP_ADDON_STRING_LENGTH];      /*!< @brief (optional) flag image for the mode */
-      char              strOverrideModeImage[AE_DSP_ADDON_STRING_LENGTH]; /*!< @brief (optional) image to override XBMC Image for the mode, eg. Dolby Digital with Dolby Digital Ex */
-      bool              bIsHidden;                                        /*!< @brief (optional) true if this mode is marked as hidden and not usable */
+      char              strOverrideModeImage[AE_DSP_ADDON_STRING_LENGTH]; /*!< @brief (optional) image to override XBMC Image for the mode, eg. Dolby Digital with Dolby Digital Ex (only used on master modes) */
     } mode[AE_DSP_STREAM_MAX_MODES];
   } ATTRIBUTE_PACKED AE_DSP_MODES;
 
@@ -400,7 +412,6 @@ extern "C" {
     union data {
       AE_DSP_STREAM_ID  iStreamId;
     } data;
-    /// TODO: complete defination of required menu data!!!
   } ATTRIBUTE_PACKED AE_DSP_MENUHOOK_DATA;
 
   /*!

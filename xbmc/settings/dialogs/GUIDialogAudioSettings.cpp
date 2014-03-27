@@ -357,20 +357,8 @@ void CGUIDialogAudioDSPSettings::OnSettingChanged(SettingInfo &setting)
       if (type >= AE_DSP_ASTREAM_BASIC && type < AE_DSP_ASTREAM_AUTO && !m_MasterModes[type].empty())
       {
         /* Find the master mode id for the selected stream type if it was not known before */
-        if (CMediaSettings::Get().GetCurrentAudioSettings().m_MasterModes[type][m_baseTypeUsed] <= 0)
-        {
-          /* Set default to first one */
+        if (CMediaSettings::Get().GetCurrentAudioSettings().m_MasterModes[type][m_baseTypeUsed] < 0)
           CMediaSettings::Get().GetCurrentAudioSettings().m_MasterModes[type][m_baseTypeUsed] = m_MasterModes[type][0]->ModeID();
-          for (unsigned int i = 0; i < m_MasterModes[type].size(); i++)
-          {
-            /* Check here if a primary is present for this type */
-            if (m_MasterModes[type][i]->IsPrimary())
-            {
-              CMediaSettings::Get().GetCurrentAudioSettings().m_MasterModes[type][m_baseTypeUsed] = m_MasterModes[type][i]->ModeID();
-              break;
-            }
-          }
-        }
 
         /* Switch now the master mode and stream type for audio dsp processing */
         CActiveAEDSP::Get().SetMasterMode(m_ActiveStreamId,

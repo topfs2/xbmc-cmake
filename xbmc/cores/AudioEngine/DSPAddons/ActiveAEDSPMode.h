@@ -64,7 +64,6 @@ namespace ActiveAE
     bool IsNew(void) const;
     bool IsKnown(void);
     bool IsChanged(void) const;
-    bool IsPrimary(void) const;
     int ModeID(void) const;
     AE_DSP_MODE_TYPE ModeType(void) const;
     bool SetModeType(AE_DSP_MODE_TYPE iType);
@@ -125,7 +124,6 @@ namespace ActiveAE
     int               m_iAddonId;                /*!< the identifier of the Addon that serves this mode */
     unsigned int      m_iAddonModeNumber;        /*!< the mode number on the Addon */
     CStdString        m_strAddonModeName;        /*!< the name of this mode on the Addon */
-    bool              m_bIsPrimary;              /*!< if set to true this mode is the first used one (if nothing other becomes selected by hand) */
     //@}
 
     CCriticalSection m_critSection;

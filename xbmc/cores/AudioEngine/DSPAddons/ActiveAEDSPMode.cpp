@@ -50,7 +50,6 @@ CActiveAEDSPMode::CActiveAEDSPMode()
   m_iModeId                 = -1;
   m_iModePosition           = -1;
   m_bIsHidden               = false;
-  m_bIsPrimary              = false;
   m_strOwnIconPath          = StringUtils::EmptyString;
   m_strOverrideIconPath     = StringUtils::EmptyString;
   m_iStreamTypeFlags        = 0;
@@ -73,7 +72,6 @@ CActiveAEDSPMode::CActiveAEDSPMode(const AE_DSP_BASETYPE baseType)
   m_iModeId                 = AE_DSP_MASTER_MODE_ID_PASSOVER;
   m_iModePosition           = 0;
   m_bIsHidden               = false;
-  m_bIsPrimary              = true;
   m_strOwnIconPath          = StringUtils::EmptyString;
   m_strOverrideIconPath     = StringUtils::EmptyString;
   m_iStreamTypeFlags        = AE_DSP_PRSNT_ASTREAM_BASIC |
@@ -104,7 +102,6 @@ CActiveAEDSPMode::CActiveAEDSPMode(const AE_DSP_MODES::AE_DSP_MODE &mode, int iA
   m_iAddonId                = iAddonId;
   m_iBaseType               = AE_DSP_ABASE_INVALID;
   m_bIsHidden               = m_iModeType == AE_DSP_MODE_TYPE_MASTER_PROCESS ? mode.bIsHidden : true;
-  m_bIsPrimary              = mode.bIsPrimary;
   m_strOwnIconPath          = mode.strOwnModeImage;
   m_strOverrideIconPath     = mode.strOverrideModeImage;
   m_iStreamTypeFlags        = mode.iModeSupportTypeFlags;
@@ -132,7 +129,6 @@ CActiveAEDSPMode &CActiveAEDSPMode::operator=(const CActiveAEDSPMode &mode)
   m_iModeType               = mode.m_iModeType;
   m_iModePosition           = mode.m_iModePosition;
   m_bIsHidden               = mode.m_bIsHidden;
-  m_bIsPrimary              = mode.m_bIsPrimary;
   m_strOwnIconPath          = mode.m_strOwnIconPath;
   m_strOverrideIconPath     = mode.m_strOverrideIconPath;
   m_iStreamTypeFlags        = mode.m_iStreamTypeFlags;
@@ -511,12 +507,6 @@ bool CActiveAEDSPMode::IsNew(void) const
 {
   CSingleLock lock(m_critSection);
   return m_iModeId <= 0;
-}
-
-bool CActiveAEDSPMode::IsPrimary(void) const
-{
-  CSingleLock lock(m_critSection);
-  return m_bIsPrimary;
 }
 
 bool CActiveAEDSPMode::IsHidden(void) const

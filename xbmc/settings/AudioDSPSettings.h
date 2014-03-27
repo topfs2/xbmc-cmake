@@ -34,9 +34,6 @@ public:
 
   bool operator!=(const CAudioSettings &right) const;
 
-  int m_InputResampleAddon;
-  int m_OutputResampleAddon;
-
   int m_MasterStreamTypeSel;
   int m_MasterStreamType;
   int m_MasterStreamBase;

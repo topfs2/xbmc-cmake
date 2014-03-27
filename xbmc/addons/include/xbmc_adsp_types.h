@@ -391,7 +391,7 @@ extern "C" {
       unsigned int      iModeNumber;                                      /*!< @brief (required) number of this mode on the add-on, is used on process functions with value "mode_id" */
       unsigned int      iModeSupportTypeFlags;                            /*!< @brief (required) flags about supported input types for this mode, see AE_DSP_ASTREAM_PRESENT */
       bool              bHasSettingsDialog;                               /*!< @brief (required) if setting dialog(s) are available it must be set to true */
-      bool              bIsHidden;                                        /*!< @brief (optional) true if this mode is marked as hidden and not enabled default, only relevant for master processes, all other types always disabled as default */
+      bool              bIsDisabled;                                      /*!< @brief (optional) true if this mode is marked as disabled and not enabled default, only relevant for master processes, all other types always disabled as default */
 
       unsigned int      iModeName;                                        /*!< @brief (required) the name id of the mode for this hook in g_localizeStrings */
       unsigned int      iModeSetupName;                                   /*!< @brief (optional) the name id of the mode inside settings for this hook in g_localizeStrings */

@@ -69,8 +69,8 @@ namespace ActiveAE
     bool SetModeType(AE_DSP_MODE_TYPE iType);
     int ModePosition(void) const;
     bool SetModePosition(int iModePosition);
-    bool IsHidden(void) const;
-    bool SetHidden(bool bIsHidden);
+    bool IsEnabled(void) const;
+    bool SetEnabled(bool bIsEnabled);
     CStdString IconOwnModePath(void) const;
     bool SetIconOwnModePath(const CStdString &strIconPath);
     CStdString IconOverrideModePath(void) const;
@@ -107,7 +107,7 @@ namespace ActiveAE
     int               m_iModeId;                 /*!< the identifier given to this mode by the DSP database */
     unsigned int      m_iStreamTypeFlags;        /*!< The stream content type flags */
     AE_DSP_BASETYPE   m_iBaseType;               /*!< The stream source coding format */
-    bool              m_bIsHidden;               /*!< true if this mode is hidden, false if not */
+    bool              m_bIsEnabled;              /*!< true if this mode is enabled, false if not */
     CStdString        m_strOwnIconPath;          /*!< the path to the icon for this mode */
     CStdString        m_strOverrideIconPath;     /*!< the path to the icon for this mode */
     int               m_iModeName;               /*!< the name id for this mode used by XBMC */

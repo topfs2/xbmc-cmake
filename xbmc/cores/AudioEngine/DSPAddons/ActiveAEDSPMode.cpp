@@ -49,7 +49,7 @@ CActiveAEDSPMode::CActiveAEDSPMode()
   m_iModeType               = AE_DSP_MODE_TYPE_UNDEFINED;
   m_iModeId                 = -1;
   m_iModePosition           = -1;
-  m_bIsHidden               = false;
+  m_bIsEnabled              = false;
   m_strOwnIconPath          = StringUtils::EmptyString;
   m_strOverrideIconPath     = StringUtils::EmptyString;
   m_iStreamTypeFlags        = 0;
@@ -71,7 +71,7 @@ CActiveAEDSPMode::CActiveAEDSPMode(const AE_DSP_BASETYPE baseType)
   m_iModeType               = AE_DSP_MODE_TYPE_MASTER_PROCESS;
   m_iModeId                 = AE_DSP_MASTER_MODE_ID_PASSOVER;
   m_iModePosition           = 0;
-  m_bIsHidden               = false;
+  m_bIsEnabled              = true;
   m_strOwnIconPath          = StringUtils::EmptyString;
   m_strOverrideIconPath     = StringUtils::EmptyString;
   m_iStreamTypeFlags        = AE_DSP_PRSNT_ASTREAM_BASIC |
@@ -101,7 +101,7 @@ CActiveAEDSPMode::CActiveAEDSPMode(const AE_DSP_MODES::AE_DSP_MODE &mode, int iA
   m_iModeId                 = mode.iUniqueDBModeId;
   m_iAddonId                = iAddonId;
   m_iBaseType               = AE_DSP_ABASE_INVALID;
-  m_bIsHidden               = m_iModeType == AE_DSP_MODE_TYPE_MASTER_PROCESS ? mode.bIsHidden : true;
+  m_bIsEnabled              = m_iModeType == AE_DSP_MODE_TYPE_MASTER_PROCESS ? !mode.bIsDisabled : false;
   m_strOwnIconPath          = mode.strOwnModeImage;
   m_strOverrideIconPath     = mode.strOverrideModeImage;
   m_iStreamTypeFlags        = mode.iModeSupportTypeFlags;
@@ -128,7 +128,7 @@ CActiveAEDSPMode &CActiveAEDSPMode::operator=(const CActiveAEDSPMode &mode)
   m_iModeId                 = mode.m_iModeId;
   m_iModeType               = mode.m_iModeType;
   m_iModePosition           = mode.m_iModePosition;
-  m_bIsHidden               = mode.m_bIsHidden;
+  m_bIsEnabled              = mode.m_bIsEnabled;
   m_strOwnIconPath          = mode.m_strOwnIconPath;
   m_strOverrideIconPath     = mode.m_strOverrideIconPath;
   m_iStreamTypeFlags        = mode.m_iStreamTypeFlags;
@@ -268,14 +268,14 @@ bool CActiveAEDSPMode::SetModeID(int iModeId)
   return false;
 }
 
-bool CActiveAEDSPMode::SetHidden(bool bIsHidden)
+bool CActiveAEDSPMode::SetEnabled(bool bIsEnabled)
 {
   CSingleLock lock(m_critSection);
 
-  if (m_bIsHidden != bIsHidden)
+  if (m_bIsEnabled != bIsEnabled)
   {
-    /* update the hidden flag */
-    m_bIsHidden = bIsHidden;
+    /* update the Enabled flag */
+    m_bIsEnabled = bIsEnabled;
     SetChanged();
     m_bChanged = true;
 
@@ -509,10 +509,10 @@ bool CActiveAEDSPMode::IsNew(void) const
   return m_iModeId <= 0;
 }
 
-bool CActiveAEDSPMode::IsHidden(void) const
+bool CActiveAEDSPMode::IsEnabled(void) const
 {
   CSingleLock lock(m_critSection);
-  return m_bIsHidden;
+  return m_bIsEnabled;
 }
 
 CStdString CActiveAEDSPMode::IconOwnModePath(void) const

@@ -588,7 +588,7 @@ void CGUIDialogAudioDSPManager::Update()
     CStdString addonName;
     CActiveAEDSP::Get().GetAudioDSPAddonName(modes[iModePtr].first->AddonID(), addonName);
 
-    bool isActive = !modes[iModePtr].first->IsHidden();
+    bool isActive = modes[iModePtr].first->IsEnabled();
 
     CStdString description;
     if (modes[iModePtr].first->ModeDescription() > 0)

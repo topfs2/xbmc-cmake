@@ -68,7 +68,7 @@ void CActiveAEDSPDatabase::CreateTables()
         "iPosition            integer, "
         "iStreamTypeFlags     integer, "
         "iBaseType            integer, "
-        "bIsHidden            bool, "
+        "bIsEnabled           bool, "
         "sOwnIconPath         varchar(255), "
         "sOverrideIconPath    varchar(255), "
         "iModeName            integer, "
@@ -204,7 +204,7 @@ bool CActiveAEDSPDatabase::UpdateMode(int modeType, bool active, int addonId, in
     if (NULL == m_pDB.get()) return false;
     if (NULL == m_pDS.get()) return false;
 
-    CStdString strSQL = PrepareSQL("update modes set iPosition=%i,bIsHidden='%i' WHERE modes.iAddonId='%i' AND modes.iAddonModeNumber='%i' AND modes.iType='%i'", listNumber, (active ? 0 : 1), addonId, addonModeNumber, modeType);
+    CStdString strSQL = PrepareSQL("update modes set iPosition=%i,bIsEnabled='%i' WHERE modes.iAddonId='%i' AND modes.iAddonModeNumber='%i' AND modes.iType='%i'", listNumber, (active ? 1 : 0), addonId, addonModeNumber, modeType);
     bReturn = m_pDS->exec(strSQL.c_str());
   }
   catch (...)
@@ -231,7 +231,7 @@ bool CActiveAEDSPDatabase::AddUpdateMode(CActiveAEDSPMode &mode)
       mode.m_iModeId        = m_pDS->fv("idMode").get_asInt();
       mode.m_iModePosition  = m_pDS->fv("iPosition").get_asInt();
       mode.m_iBaseType      = (AE_DSP_BASETYPE)m_pDS->fv("iBaseType").get_asInt();
-      mode.m_bIsHidden      = m_pDS->fv("bIsHidden").get_asBool();
+      mode.m_bIsEnabled     = m_pDS->fv("bIsEnabled").get_asBool();
       m_pDS->close();
 
       /* update addon related settings */
@@ -266,7 +266,7 @@ bool CActiveAEDSPDatabase::AddUpdateMode(CActiveAEDSPMode &mode)
         "iType, "
         "iPosition, "
         "iStreamTypeFlags, "
-        "bIsHidden, "
+        "bIsEnabled, "
         "sOwnIconPath, "
         "sOverrideIconPath, "
         "iModeName, "
@@ -281,7 +281,7 @@ bool CActiveAEDSPDatabase::AddUpdateMode(CActiveAEDSPMode &mode)
         mode.ModeType(),
         mode.ModePosition(),
         mode.StreamTypeFlags(),
-        (mode.IsHidden() ? 1 : 0),
+        (mode.IsEnabled() ? 1 : 0),
         mode.IconOwnModePath().c_str(),
         mode.IconOverrideModePath().c_str(),
         mode.ModeName(),
@@ -345,7 +345,7 @@ int CActiveAEDSPDatabase::GetModes(AE_DSP_MODELIST &results, int modeType)
         mode->m_iModePosition           = m_pDS->fv("iPosition").get_asInt();
         mode->m_iStreamTypeFlags        = m_pDS->fv("iStreamTypeFlags").get_asInt();
         mode->m_iBaseType               = (AE_DSP_BASETYPE)m_pDS->fv("iBaseType").get_asInt();
-        mode->m_bIsHidden               = m_pDS->fv("bIsHidden").get_asBool();
+        mode->m_bIsEnabled              = m_pDS->fv("bIsEnabled").get_asBool();
         mode->m_strOwnIconPath          = m_pDS->fv("sOwnIconPath").get_asString();
         mode->m_strOverrideIconPath     = m_pDS->fv("sOverrideIconPath").get_asString();
         mode->m_iModeName               = m_pDS->fv("iModeName").get_asInt();
@@ -395,7 +395,7 @@ bool CActiveAEDSPDatabase::IsModeEnabled(const CActiveAEDSPMode &mode, int &posi
     m_pDS->query(strSQL.c_str());
     if (m_pDS->num_rows() > 0)
     {
-      if (!m_pDS->fv("bIsHidden").get_asBool())
+      if (!m_pDS->fv("bIsEnabled").get_asBool())
         return false;
       position = m_pDS->fv("iPosition").get_asInt();
     }

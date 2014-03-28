@@ -1,4 +1,4 @@
-/*
+﻿/*
  *      Copyright (C) 2005-2014 Team XBMC
  *      http://xbmc.org
  *
@@ -19,7 +19,7 @@
  */
 
 /*
- * Common data structures shared between XBMC and XBMC's audio dsp addons
+ * Common data structures shared between XBMC and XBMC's audio DSP add-ons
  */
 
 #ifndef __AUDIODSP_TYPES_H__
@@ -81,9 +81,9 @@ extern "C" {
   {
     AE_DSP_ERROR_NO_ERROR             = 0,      /*!< @brief no error occurred */
     AE_DSP_ERROR_UNKNOWN              = -1,     /*!< @brief an unknown error occurred */
-    AE_DSP_ERROR_IGNORE_ME            = -2,     /*!< @brief the used input stream can not processed and addon want to ignore */
+    AE_DSP_ERROR_IGNORE_ME            = -2,     /*!< @brief the used input stream can not processed and add-on want to ignore */
     AE_DSP_ERROR_NOT_IMPLEMENTED      = -3,     /*!< @brief the method that XBMC called is not implemented by the add-on */
-    AE_DSP_ERROR_REJECTED             = -4,     /*!< @brief the command was rejected by the dsp */
+    AE_DSP_ERROR_REJECTED             = -4,     /*!< @brief the command was rejected by the DSP */
     AE_DSP_ERROR_INVALID_PARAMETERS   = -5,     /*!< @brief the parameters of the method that was called are invalid for this operation */
     AE_DSP_ERROR_INVALID_SAMPLERATE   = -6,     /*!< @brief the processed samplerate is not supported */
     AE_DSP_ERROR_INVALID_IN_CHANNELS  = -7,     /*!< @brief the processed input channel format is not supported */
@@ -92,7 +92,7 @@ extern "C" {
   } AE_DSP_ERROR;
 
   /*!
-   * @brief The possible dsp channels (used as pointer inside arrays)
+   * @brief The possible DSP channels (used as pointer inside arrays)
    */
   typedef enum
   {
@@ -151,7 +151,7 @@ extern "C" {
 
   /**
    * @brief The various stream type formats
-   * Used for audio dsp processing to know input audio type
+   * Used for audio DSP processing to know input audio type
    */
   typedef enum
   {
@@ -169,7 +169,7 @@ extern "C" {
   } AE_DSP_STREAMTYPE;
 
   /*!
-   * @brief Addons supported audio stream type flags
+   * @brief Add-ons supported audio stream type flags
    * used on master mode information on AE_DSP_MODES to know
    * on which audio stream the master mode is supported
    */
@@ -186,7 +186,7 @@ extern "C" {
 
   /**
    * @brief The various base type formats
-   * Used for audio dsp processing to know input audio source
+   * Used for audio DSP processing to know input audio source
    */
   typedef enum
   {
@@ -210,7 +210,7 @@ extern "C" {
   /**
    * @brief The from XBMC in settings requested audio process quality.
    * The XBMC internal used quality levels is translated to this values
-   * for usage on dsp processing addon's. Is present on iQualityLevel
+   * for usage on DSP processing add-ons. Is present on iQualityLevel
    * inside AE_DSP_SETTINGS.
    */
   typedef enum
@@ -224,17 +224,17 @@ extern "C" {
     AE_DSP_QUALITY_HIGH       = 50,             /*!< @brief  Best sound processing quality */
 
     /* Optional quality levels */
-    AE_DSP_QUALITY_REALLYHIGH = 100             /*!< @brief  Uncompromised optional quality level, usually with unmeasurable and unnoticeable improvement */
+    AE_DSP_QUALITY_REALLYHIGH = 100             /*!< @brief  Uncompromising optional quality level, usually with unmeasurable and unnoticeable improvement */
   } AE_DSP_QUALITY;
 
   /*!
    * @brief Audio DSP menu hook categories.
-   * Used to identify on AE_DSP_MENUHOOK given addon related skin dialog/windows.
+   * Used to identify on AE_DSP_MENUHOOK given add-on related skin dialog/windows.
    * Except AE_DSP_MENUHOOK_ALL and AE_DSP_MENUHOOK_SETTING are the menus available
-   * from dsp playback dialog which can be opened over XBMC file context menu and over
-   * button on fullscreen OSD window.
+   * from DSP playback dialogue which can be opened over XBMC file context menu and over
+   * button on full screen OSD window.
    *
-   * Menu hook AE_DSP_MENUHOOK_SETTING is available from dsp processing setup dialog.
+   * Menu hook AE_DSP_MENUHOOK_SETTING is available from DSP processing setup dialogue.
    */
   typedef enum
   {
@@ -243,9 +243,9 @@ extern "C" {
     AE_DSP_MENUHOOK_PRE_PROCESS     = 1,        /*!< @brief for pre processing */
     AE_DSP_MENUHOOK_MASTER_PROCESS  = 2,        /*!< @brief for master processing */
     AE_DSP_MENUHOOK_POST_PROCESS    = 3,        /*!< @brief for post processing */
-    AE_DSP_MENUHOOK_RESAMPLE        = 4,        /*!< @brief for resample */
-    AE_DSP_MENUHOOK_MISCELLANEOUS   = 5,        /*!< @brief for miscellaneous dialogs */
-    AE_DSP_MENUHOOK_INFORMATION     = 6,        /*!< @brief dialog to show processing information */
+    AE_DSP_MENUHOOK_RESAMPLE        = 4,        /*!< @brief for re sample */
+    AE_DSP_MENUHOOK_MISCELLANEOUS   = 5,        /*!< @brief for miscellaneous dialogues */
+    AE_DSP_MENUHOOK_INFORMATION     = 6,        /*!< @brief dialogue to show processing information */
     AE_DSP_MENUHOOK_SETTING         = 7,        /*!< @brief for settings */
   } AE_DSP_MENUHOOK_CAT;
 
@@ -257,7 +257,7 @@ extern "C" {
     unsigned int        iHookId;                /*!< @brief (required) this hook's identifier */
     unsigned int        iLocalizedStringId;     /*!< @brief (required) the id of the label for this hook in g_localizeStrings */
     AE_DSP_MENUHOOK_CAT category;               /*!< @brief (required) category of menu hook */
-    unsigned int        iRelevantModeId;        /*!< @brief (required) except category AE_DSP_MENUHOOK_SETTING, AE_DSP_MENUHOOK_INFORMATION and AE_DSP_MENUHOOK_ALL must be the related mode id present here */
+    unsigned int        iRelevantModeId;        /*!< @brief (required) except category AE_DSP_MENUHOOK_SETTING and AE_DSP_MENUHOOK_ALL must be the related mode id present here */
   } ATTRIBUTE_PACKED AE_DSP_MENUHOOK;
 
   /*!
@@ -278,14 +278,14 @@ extern "C" {
     bool bSupportsInputProcess;                 /*!< @brief true if this add-on provides audio input processing */
     bool bSupportsInputResample;                /*!< @brief true if this add-on provides audio resample before master handling */
     bool bSupportsPreProcess;                   /*!< @brief true if this add-on provides audio pre processing */
-    bool bSupportsMasterProcess;                /*!< @brief true if this add-on supports audio master processing */
-    bool bSupportsPostProcess;                  /*!< @brief true if this add-on supports audio post processing */
-    bool bSupportsOutputResample;               /*!< @brief true if this add-on supports audio resample after master handling */
+    bool bSupportsMasterProcess;                /*!< @brief true if this add-on provides audio master processing */
+    bool bSupportsPostProcess;                  /*!< @brief true if this add-on provides audio post processing */
+    bool bSupportsOutputResample;               /*!< @brief true if this add-on provides audio re sample after master handling */
   } ATTRIBUTE_PACKED AE_DSP_ADDON_CAPABILITIES;
 
   /*!
    * @brief Audio processing settings for in and out arrays
-   * Send on creation and before first processed audio packet to addon
+   * Send on creation and before first processed audio packet to add-on
    */
   typedef struct AE_DSP_SETTINGS
   {
@@ -294,19 +294,19 @@ extern "C" {
     int               iInChannels;              /*!< @brief the amount of input channels */
     unsigned long     lInChannelPresentFlags;   /*!< @brief the exact channel mapping flags of input */
     int               iInFrames;                /*!< @brief the input frame size from XBMC */
-    unsigned int      iInSamplerate;            /*!< @brief the basic samplerate of the audio packet */
+    unsigned int      iInSamplerate;            /*!< @brief the basic sample rate of the audio packet */
     int               iProcessFrames;           /*!< @brief the processing frame size inside add-on's */
-    unsigned int      iProcessSamplerate;       /*!< @brief the samplerate after input resample present in master processing */
+    unsigned int      iProcessSamplerate;       /*!< @brief the sample rate after input resample present in master processing */
     int               iOutChannels;             /*!< @brief the amount of output channels */
     unsigned long     lOutChannelPresentFlags;  /*!< @brief the exact channel mapping flags for output */
     int               iOutFrames;               /*!< @brief the final out frame size for XBMC */
-    unsigned int      iOutSamplerate;           /*!< @brief the final samplerate of the audio packet */
-    bool              bInputResamplingActive;   /*!< @brief if a resampling is performed before master processing this flag is set to true */
+    unsigned int      iOutSamplerate;           /*!< @brief the final sample rate of the audio packet */
+    bool              bInputResamplingActive;   /*!< @brief if a re-sampling is performed before master processing this flag is set to true */
     bool              bStereoUpmix;             /*!< @brief true if the stereo upmix setting on xbmc is set */
     int               iQualityLevel;            /*!< @brief the from XBMC selected quality level for signal processing */
     /*!
-     * @note about "iProcessSamplerate" and "iProcessFrames" is set from XBMC after call of StreamCreate on input resample add-on, if resampling
-     * and processing is handled inside the same addon, this value must be ignored!
+     * @note about "iProcessSamplerate" and "iProcessFrames" is set from XBMC after call of StreamCreate on input re sample add-on, if re-sampling
+     * and processing is handled inside the same add-on, this value must be ignored!
      */
   } ATTRIBUTE_PACKED AE_DSP_SETTINGS;
 
@@ -338,7 +338,7 @@ extern "C" {
 
   /*!
    * @brief Audio DSP stream properties
-   * Used to check for the dsp addon that the stream is supported,
+   * Used to check for the DSP add-on that the stream is supported,
    * as example Dolby Digital Ex processing is only required on Dolby Digital with 5.1 layout
    */
   union AE_DSP_PROFILE
@@ -366,12 +366,12 @@ extern "C" {
    */
   typedef enum
   {
-    AE_DSP_MODE_TYPE_UNDEFINED       = -1,       /*!< @brief undefined type, never be used from addon! */
-    AE_DSP_MODE_TYPE_INPUT_RESAMPLE  = 0,        /*!< @brief for input resample */
-    AE_DSP_MODE_TYPE_PRE_PROCESS     = 1,        /*!< @brief for pre processing */
+    AE_DSP_MODE_TYPE_UNDEFINED       = -1,       /*!< @brief undefined type, never be used from add-on! */
+    AE_DSP_MODE_TYPE_INPUT_RESAMPLE  = 0,        /*!< @brief for input re sample */
+    AE_DSP_MODE_TYPE_PRE_PROCESS     = 1,        /*!< @brief for preprocessing */
     AE_DSP_MODE_TYPE_MASTER_PROCESS  = 2,        /*!< @brief for master processing */
     AE_DSP_MODE_TYPE_POST_PROCESS    = 3,        /*!< @brief for post processing */
-    AE_DSP_MODE_TYPE_OUTPUT_RESAMPLE = 4,        /*!< @brief for output resample */
+    AE_DSP_MODE_TYPE_OUTPUT_RESAMPLE = 4,        /*!< @brief for output re sample */
     AE_DSP_MODE_TYPE_MAX             = 5
   } AE_DSP_MODE_TYPE;
 
@@ -384,7 +384,7 @@ extern "C" {
     unsigned int iModesCount;
     struct AE_DSP_MODE
     {
-      int               iUniqueDBModeId;                                  /*!< @brief (required) the inside addon used identfier for the mode, set by XBMC's audio dsp database */
+      int               iUniqueDBModeId;                                  /*!< @brief (required) the inside add-on used identifier for the mode, set by XBMC's audio DSP database */
       AE_DSP_MODE_TYPE  iModeType;                                        /*!< @brief (required) the processong mode type, see AE_DSP_MODE_TYPE */
       char              strModeName[AE_DSP_ADDON_STRING_LENGTH];          /*!< @brief (required) the addon name of the mode, used on XBMC's logs  */
 
@@ -396,7 +396,7 @@ extern "C" {
       unsigned int      iModeName;                                        /*!< @brief (required) the name id of the mode for this hook in g_localizeStrings */
       unsigned int      iModeSetupName;                                   /*!< @brief (optional) the name id of the mode inside settings for this hook in g_localizeStrings */
       unsigned int      iModeDescription;                                 /*!< @brief (optional) the description id of the mode for this hook in g_localizeStrings */
-      unsigned int      iModeHelp;                                        /*!< @brief (optional) help string id for inside dsp settings dialog of the mode for this hook in g_localizeStrings */
+      unsigned int      iModeHelp;                                        /*!< @brief (optional) help string id for inside DSP settings dialog of the mode for this hook in g_localizeStrings */
 
       char              strOwnModeImage[AE_DSP_ADDON_STRING_LENGTH];      /*!< @brief (optional) flag image for the mode */
       char              strOverrideModeImage[AE_DSP_ADDON_STRING_LENGTH]; /*!< @brief (optional) image to override XBMC Image for the mode, eg. Dolby Digital with Dolby Digital Ex (only used on master modes) */

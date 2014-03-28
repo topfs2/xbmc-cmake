@@ -1,4 +1,4 @@
-/*
+﻿/*
  *      Copyright (C) 2005-2014 Team XBMC
  *      http://xbmc.org
  *
@@ -68,23 +68,23 @@ extern "C"
 
   /*!
    * Get the list of features that this add-on provides.
-   * Called by XBMC to query the add-on's capabilities.
+   * Called by XBMC to query the add-ons capabilities.
    * Used to check which options should be presented in the DSP, which methods to call, etc.
    * All capabilities that the add-on supports should be set to true.
-   * @param pCapabilities The add-on's capabilities.
+   * @param pCapabilities The add-ons capabilities.
    * @return AE_DSP_ERROR_NO_ERROR if the properties were fetched successfully.
    * @remarks Valid implementation required.
    */
   AE_DSP_ERROR GetAddonCapabilities(AE_DSP_ADDON_CAPABILITIES *pCapabilities);
 
   /*!
-   * @return The name reported by the backend that will be displayed in the UI.
+   * @return The name reported by the back end that will be displayed in the UI.
    * @remarks Valid implementation required.
    */
   const char* GetDSPName(void);
 
   /*!
-   * @return The version string reported by the backend that will be displayed in the UI.
+   * @return The version string reported by the back end that will be displayed in the UI.
    * @remarks Valid implementation required.
    */
   const char* GetDSPVersion(void);
@@ -106,8 +106,8 @@ extern "C"
   //@{
   /*!
    * Set up Audio DSP with selected audio settings (use the basic present audio stream data format)
-   * Used to detect available addons for present stream, as example stereo surround upmix not needed on 5.1 audio stream
-   * @param addonSettings The add-on's audio settings.
+   * Used to detect available add-ons for present stream, as example stereo surround upmix not needed on 5.1 audio stream
+   * @param addonSettings The add-ons audio settings.
    * @param pProperties The properties of the currently playing stream.
    * @return AE_DSP_ERROR_NO_ERROR if the properties were fetched successfully and data can be performed. AE_DSP_ERROR_IGNORE_ME if format is not supported, but without fault.
    * @remarks Valid implementation required.
@@ -115,7 +115,7 @@ extern "C"
   AE_DSP_ERROR StreamCreate(const AE_DSP_SETTINGS *addonSettings, const AE_DSP_STREAM_PROPERTIES* pProperties);
 
   /*!
-   * Remove the selected id from currently used dsp processes
+   * Remove the selected id from currently used DSP processes
    * @param id The stream id
    * @return AE_DSP_ERROR_NO_ERROR if the becomes found and removed
    * @remarks Valid implementation required.
@@ -123,21 +123,21 @@ extern "C"
   AE_DSP_ERROR StreamDestroy(AE_DSP_STREAM_ID id);
 
   /*!
-   * @brief Ask the addon about a requested processing mode that it is supported on the current
-   * stream. Is called about every addon mode after successed StreamCreate.
+   * @brief Ask the add-on about a requested processing mode that it is supported on the current
+   * stream. Is called about every add-on mode after successed StreamCreate.
    * @param id The stream id
-   * @param type The processing mode type, see AE_DSP_MODE_TYPE for definations
-   * @param mode_id The mode inside addon which must be performed on call. Id is set from addon by iModeNumber on AE_DSP_MODE structure during RegisterMode callback,
+   * @param type The processing mode type, see AE_DSP_MODE_TYPE for definitions
+   * @param mode_id The mode inside add-on which must be performed on call. Id is set from add-on by iModeNumber on AE_DSP_MODE structure during RegisterMode callback,
    * @param unique_mode_id The Mode unique id generated from dsp database.
    * @return AE_DSP_ERROR_NO_ERROR if the properties were fetched successfully or if the stream
-   * is not supported the addon must return AE_DSP_ERROR_IGNORE_ME.
+   * is not supported the add-on must return AE_DSP_ERROR_IGNORE_ME.
    * @remarks Valid implementation required.
    */
   AE_DSP_ERROR StreamIsModeSupported(AE_DSP_STREAM_ID id, AE_DSP_MODE_TYPE type, unsigned int mode_id, int unique_db_mode_id);
 
   /*!
    * Set up Audio DSP with selected audio settings (detected on data of first present audio packet)
-   * @param addonSettings The add-on's audio settings.
+   * @param addonSettings The add-ons audio settings.
    * @return AE_DSP_ERROR_NO_ERROR if the properties were fetched successfully.
    * @remarks Valid implementation required.
    */
@@ -151,22 +151,22 @@ extern "C"
   /*!
    * @brief DSP input processing
    * Can be used to have unchanged stream..
-   * All DSP addons allowed todo this.
+   * All DSP add-ons allowed to-do this.
    * @param id The stream id
    * @param array_in Pointer to data memory
    * @param samples Amount of samples inside array_in
-   * @return true if work was ok
+   * @return true if work was OK
    * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
    */
   bool InputProcess(AE_DSP_STREAM_ID id, float **array_in, unsigned int samples);
   //@}
 
-  /** @name DSP pre resampling
+  /** @name DSP pre-resampling
    *  @remarks Only used by XBMC if bSupportsInputResample is set to true.
    */
   //@{
   /*!
-   * If the addon operate with buffered arrays and the output size can be higher as the input
+   * If the add-on operate with buffered arrays and the output size can be higher as the input
    * it becomes asked about needed size before any InputResampleProcess call.
    * @param id The stream id
    * @return The needed size of output array or 0 if no changes within it
@@ -175,8 +175,8 @@ extern "C"
   unsigned int InputResampleProcessNeededSamplesize(AE_DSP_STREAM_ID id);
 
   /*!
-   * @brief DSP resample processing before master Here a high quality resample can be performed.
-   * Only one DSP addon is allowed todo this!
+   * @brief DSP re sample processing before master Here a high quality resample can be performed.
+   * Only one DSP add-on is allowed to-do this!
    * @param id The stream id
    * @param array_in Pointer to input data memory
    * @param array_out Pointer to output data memory
@@ -187,9 +187,9 @@ extern "C"
   unsigned int InputResampleProcess(AE_DSP_STREAM_ID id, float **array_in, float **array_out, unsigned int samples);
 
   /*!
-   * Returns the resampling generated new sample rate used before the master process
+   * Returns the re-sampling generated new sample rate used before the master process
    * @param id The stream id
-   * @return The new samplerate
+   * @return The new sample rate
    * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
    */
   int InputResampleSampleRate(AE_DSP_STREAM_ID id);
@@ -211,8 +211,8 @@ extern "C"
    * If the addon operate with buffered arrays and the output size can be higher as the input
    * it becomes asked about needed size before any PreProcess call.
    * @param id The stream id
-   * @param mode_id The mode inside addon which must be performed on call. Id is set from addon by iModeNumber on AE_DSP_MODE structure during RegisterMode callback,
-   * and can be defined from addon as a structure pointer or anything else what is needed to find it.
+   * @param mode_id The mode inside add-on which must be performed on call. Id is set from add-on by iModeNumber on AE_DSP_MODE structure during RegisterMode callback,
+   * and can be defined from add-on as a structure pointer or anything else what is needed to find it.
    * @return The needed size of output array or 0 if no changes within it
    * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
    */
@@ -222,18 +222,18 @@ extern "C"
    * Returns the time in seconds that it will take
    * for the next added packet to be heard from the speakers.
    * @param id The stream id
-   * @param mode_id The mode inside addon which must be performed on call. Id is set from addon by iModeNumber on AE_DSP_MODE structure during RegisterMode callback,
-   * and can be defined from addon as a structure pointer or anything else what is needed to find it.
+   * @param mode_id The mode inside add-on which must be performed on call. Id is set from add-on by iModeNumber on AE_DSP_MODE structure during RegisterMode callback,
+   * and can be defined from add-on as a structure pointer or anything else what is needed to find it.
    * @return the delay in seconds
    */
   float PreProcessGetDelay(AE_DSP_STREAM_ID id, unsigned int mode_id);
 
   /*!
-   * @brief DSP pre processing
-   * All DSP addons allowed todo this.
+   * @brief DSP preprocessing
+   * All DSP add-ons allowed to-do this.
    * @param id The stream id
-   * @param mode_id The mode inside addon which must be performed on call. Id is set from addon by iModeNumber on AE_DSP_MODE structure during RegisterMode callback,
-   * and can be defined from addon as a structure pointer or anything else what is needed to find it.
+   * @param mode_id The mode inside add-on which must be performed on call. Id is set from add-on by iModeNumber on AE_DSP_MODE structure during RegisterMode callback,
+   * and can be defined from add-on as a structure pointer or anything else what is needed to find it.
    * @param array_in Pointer to input data memory
    * @param array_out Pointer to output data memory
    * @param samples Amount of samples inside array_in
@@ -252,14 +252,14 @@ extern "C"
    * @param id The stream id
    * @param type Requested stream type for the selected master mode
    * @param mode_id The Mode identifier.
-   * @param unique_mode_id The Mode unique id generated from dsp database.
+   * @param unique_mode_id The Mode unique id generated from DSP database.
    * @return AE_DSP_ERROR_NO_ERROR if the setup was successful
    * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
    */
   AE_DSP_ERROR MasterProcessSetMode(AE_DSP_STREAM_ID id, AE_DSP_STREAMTYPE type, unsigned int mode_id, int unique_db_mode_id);
 
   /*!
-   * @brief If the addon operate with buffered arrays and the output size can be higher as the input
+   * @brief If the add-on operate with buffered arrays and the output size can be higher as the input
    * it becomes asked about needed size before any MasterProcess call.
    * @param id The stream id
    * @return The needed size of output array or 0 if no changes within it
@@ -277,8 +277,8 @@ extern "C"
 
   /*!
    * @brief Master processing becomes performed with it
-   * Here a channel upmix/downmix for stereo surround sound can be performed
-   * Only one DSP addon is allowed todo this!
+   * Here a channel up-mix/down-mix for stereo surround sound can be performed
+   * Only one DSP add-on is allowed to-do this!
    * @param id The stream id
    * @param array_in Pointer to input data memory
    * @param array_out Pointer to output data memory
@@ -301,11 +301,11 @@ extern "C"
    */
   //@{
   /*!
-   * If the addon operate with buffered arrays and the output size can be higher as the input
+   * If the add-on operate with buffered arrays and the output size can be higher as the input
    * it becomes asked about needed size before any PostProcess call.
    * @param id The stream id
-   * @param mode_id The mode inside addon which must be performed on call. Id is set from addon by iModeNumber on AE_DSP_MODE structure during RegisterMode callback,
-   * and can be defined from addon as a structure pointer or anything else what is needed to find it.
+   * @param mode_id The mode inside add-on which must be performed on call. Id is set from add-on by iModeNumber on AE_DSP_MODE structure during RegisterMode callback,
+   * and can be defined from add-on as a structure pointer or anything else what is needed to find it.
    * @return The needed size of output array or 0 if no changes within it
    * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
    */
@@ -315,8 +315,8 @@ extern "C"
    * Returns the time in seconds that it will take
    * for the next added packet to be heard from the speakers.
    * @param id The stream id
-   * @param mode_id The mode inside addon which must be performed on call. Id is set from addon by iModeNumber on AE_DSP_MODE structure during RegisterMode callback,
-   * and can be defined from addon as a structure pointer or anything else what is needed to find it.
+   * @param mode_id The mode inside add-on which must be performed on call. Id is set from add-on by iModeNumber on AE_DSP_MODE structure during RegisterMode callback,
+   * and can be defined from add-on as a structure pointer or anything else what is needed to find it.
    * @return the delay in seconds
    */
   float PostProcessGetDelay(AE_DSP_STREAM_ID id, unsigned int mode_id);
@@ -325,10 +325,10 @@ extern "C"
    * @brief DSP post processing
    * On the post processing can be things performed with additional channel upmix like 6.1 to 7.1
    * or frequency/volume corrections, speaker distance handling, equalizer... .
-   * All DSP addons allowed todo this.
+   * All DSP add-ons allowed to-do this.
    * @param id The stream id
-   * @param mode_id The mode inside addon which must be performed on call. Id is set from addon by iModeNumber on AE_DSP_MODE structure during RegisterMode callback,
-   * and can be defined from addon as a structure pointer or anything else what is needed to find it.
+   * @param mode_id The mode inside add-on which must be performed on call. Id is set from add-on by iModeNumber on AE_DSP_MODE structure during RegisterMode callback,
+   * and can be defined from add-on as a structure pointer or anything else what is needed to find it.
    * @param array_in Pointer to input data memory
    * @param array_out Pointer to output data memory
    * @param samples Amount of samples inside array_in
@@ -338,12 +338,12 @@ extern "C"
   unsigned int PostProcess(AE_DSP_STREAM_ID id, unsigned int mode_id, float **array_in, float **array_out, unsigned int samples);
   //@}
 
-  /** @name DSP Post resampling
+  /** @name DSP Post re-sampling
    *  @remarks Only used by XBMC if bSupportsOutputResample is set to true.
    */
   //@{
   /*!
-   * @brief If the addon operate with buffered arrays and the output size can be higher as the input
+   * @brief If the add-on operate with buffered arrays and the output size can be higher as the input
    * it becomes asked about needed size before any OutputResampleProcess call.
    * @param id The stream id
    * @return The needed size of output array or 0 if no changes within it
@@ -352,8 +352,8 @@ extern "C"
   unsigned int OutputResampleProcessNeededSamplesize(AE_DSP_STREAM_ID id);
 
   /*!
-   * @brief Resampling after master processing becomes performed with it if neeeded, only
-   * one addon can perfom it.
+   * @brief Re-sampling after master processing becomes performed with it if needed, only
+   * one add-on can perform it.
    * @param id The stream id
    * @param array_in Pointer to input data memory
    * @param array_out Pointer to output data memory
@@ -364,9 +364,9 @@ extern "C"
   unsigned int OutputResampleProcess(AE_DSP_STREAM_ID id, float **array_in, float **array_out, unsigned int samples);
 
   /*!
-   * Returns the resampling generated new sample rate used after the master process
+   * Returns the re-sampling generated new sample rate used after the master process
    * @param id The stream id
-   * @return The new samplerate
+   * @return The new sample rate
    * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
    */
   int OutputResampleSampleRate(AE_DSP_STREAM_ID id);

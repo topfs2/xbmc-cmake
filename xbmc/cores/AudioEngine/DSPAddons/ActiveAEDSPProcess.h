@@ -66,10 +66,52 @@ namespace ActiveAE
       AE_DSP_STREAM_ID GetStreamId() const;
 
       /*!>
+       * Get the incoming channels amount for this class
+       * @return The current used input channels
+       */
+      unsigned int GetInputChannels();
+
+      /*!>
+       * Get the incoming sample rate for this class
+       * @return The current used input samplerate
+       */
+      unsigned int GetInputSamplerate();
+
+      /*!>
+       * Get the incoming channel names
+       * @return The current used input channel name string
+       */
+      std::string GetInputChannelNames();
+
+      /*!>
+       * Get the inside addons used samplerate for this class
+       * @return The current used output samplerate
+       */
+      unsigned int GetProcessSamplerate();
+
+      /*!>
+       * Get the outgoing channels amount for this class
+       * @return The current used output channels
+       */
+      unsigned int GetOutputChannels();
+
+      /*!>
+       * Get the outgoing channel names
+       * @return The current used output channel name string
+       */
+      std::string GetOutputChannelNames();
+
+      /*!>
        * Get the used output samplerate for this class
        * @return The current used output samplerate
        */
-      unsigned int GetSamplerate();
+      unsigned int GetOutputSamplerate();
+
+      /*!>
+       * Get the amount of percent what the cpu need to process complete dsp stream
+       * @return The current cpu usage
+       */
+      float GetCPUUsage(void) const;
 
       /*!>
        * Get the channel layout which is passed out from it
@@ -151,6 +193,12 @@ namespace ActiveAE
        * @return The identification code, or 0 if no master process is running
        */
       int GetMasterModeID();
+
+      /*!>
+       * Used to get all active modes of type on running stream id
+       * @param modes The active modes in process chain list
+       */
+      void GetActiveModes(std::vector<CActiveAEDSPModePtr> &modes);
 
       /*!>
        * Used to get all available Master mode on current stream and base type.
@@ -250,11 +298,15 @@ namespace ActiveAE
         {
           iAddonModeNumber = -1;
           pFunctions       = NULL;
+          iLastTime        = 0;
+          iLastUsage       = 0;
         }
         unsigned int        iAddonModeNumber;                       /*!< The identifier, send from addon during mode registration and can be used from addon to select mode from a function table */
         CActiveAEDSPModePtr pMode;                                  /*!< Processing mode information data */
         AudioDSP*           pFunctions;                             /*!< The Addon function table, separeted from pAddon to safe several calls on process chain */
         AE_DSP_ADDON        pAddon;                                 /*!< Addon control class */
+        uint64_t            iLastUsage;
+        uint64_t            iLastTime;
       };
       std::vector <AudioDSP*>           m_Addons_InputProc;         /*!< Input processing list, called to all enabled dsp addons with the basic unchanged input stream, is read only. */
       sDSPProcessHandle                 m_Addon_InputResample;      /*!< Input stream resampling over one on settings enabled input resample function only on one addon */
@@ -263,7 +315,6 @@ namespace ActiveAE
       int                               m_ActiveMode;               /*!< the current used master mode, is a pointer to m_Addons_MasterProc */
       std::vector <sDSPProcessHandle>   m_Addons_PostProc;          /*!< Output stream postprocessing function calls set and aligned from dsp settings stored inside database */
       sDSPProcessHandle                 m_Addon_OutputResample;     /*!< Output stream resampling over one on settings enabled output resample function only on one addon */
-
 
       /*!>
        * Process arrays
@@ -277,6 +328,9 @@ namespace ActiveAE
       unsigned int                      m_ProcessArrayTogglePtr;
       float                            *m_OutputResampleArray[AE_DSP_CH_MAX];
       unsigned int                      m_OutputResampleArraySize;
+      uint64_t                          m_iLastProcessTime;
+      uint64_t                          m_iLastProcessUsage;
+      float                             m_fLastProcessUsage;
 
       /*!>
        * Index pointers for interleaved audio streams to detect correct channel alignment

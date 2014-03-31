@@ -190,15 +190,15 @@ bool CActiveAEBufferPoolResample::Create(unsigned int totaltime, bool remap, boo
     if (m_useDSP)
     {
 
-      m_inputFormat.m_channelLayout = m_processor->GetChannelLayout();  /* Overide input format with DSP's supported format */
-      m_inputFormat.m_sampleRate    = m_processor->GetSamplerate();     /* Overide input format with DSP's generated samplerate */
-      m_inputFormat.m_dataFormat    = m_processor->GetDataFormat();     /* Overide input format with DSP's processed data format, normally it is float */
-      m_changeResampler             = true;                             /* Force load of ffmpeg resampler, required to detect exact input and output channel alignment pointers */
+      m_inputFormat.m_channelLayout = m_processor->GetChannelLayout();    /* Overide input format with DSP's supported format */
+      m_inputFormat.m_sampleRate    = m_processor->GetOutputSamplerate(); /* Overide input format with DSP's generated samplerate */
+      m_inputFormat.m_dataFormat    = m_processor->GetDataFormat();       /* Overide input format with DSP's processed data format, normally it is float */
+      m_changeResampler             = true;                               /* Force load of ffmpeg resampler, required to detect exact input and output channel alignment pointers */
       m_stereoUpmix                 = upmix;
-      if (m_processor->GetChannelLayout().Count() > 2)                  /* Disable upmix for CActiveAEResample if DSP layout > 2.0, becomes perfomed by DSP */
+      if (m_processor->GetChannelLayout().Count() > 2)                    /* Disable upmix for CActiveAEResample if DSP layout > 2.0, becomes perfomed by DSP */
         upmix = false;
 
-      m_dspBuffer = new CActiveAEBufferPool(m_format);                  /* Get dsp processing buffer class, based on output format */
+      m_dspBuffer = new CActiveAEBufferPool(m_format);                    /* Get dsp processing buffer class, based on output format */
       m_dspBuffer->Create(totaltime);
     }
   }
@@ -287,10 +287,10 @@ void CActiveAEBufferPoolResample::ChangeAudioDSP()
   m_useDSP = CActiveAEDSP::Get().CreateDSPs(m_streamId, m_processor, m_dspFormat, m_format, m_stereoUpmix, m_resampleQuality, wasActive);
   if (m_useDSP)
   {
-    m_inputFormat.m_channelLayout = m_processor->GetChannelLayout();  /* Overide input format with DSP's supported format */
-    m_inputFormat.m_sampleRate    = m_processor->GetSamplerate();     /* Overide input format with DSP's generated samplerate */
-    m_inputFormat.m_dataFormat    = m_processor->GetDataFormat();     /* Overide input format with DSP's processed data format, normally it is float */
-    m_changeResampler             = true;                             /* Force load of ffmpeg resampler, required to detect exact input and output channel alignment pointers */
+    m_inputFormat.m_channelLayout = m_processor->GetChannelLayout();    /* Overide input format with DSP's supported format */
+    m_inputFormat.m_sampleRate    = m_processor->GetOutputSamplerate(); /* Overide input format with DSP's generated samplerate */
+    m_inputFormat.m_dataFormat    = m_processor->GetDataFormat();       /* Overide input format with DSP's processed data format, normally it is float */
+    m_changeResampler             = true;                               /* Force load of ffmpeg resampler, required to detect exact input and output channel alignment pointers */
   }
   else if (wasActive)
   {

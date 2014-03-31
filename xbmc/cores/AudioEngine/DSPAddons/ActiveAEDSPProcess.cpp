@@ -26,6 +26,7 @@
 #include "cores/AudioEngine/Engines/ActiveAE/ActiveAEResample.h"
 #include "cores/AudioEngine/Utils/AEUtil.h"
 #include "cores/IPlayer.h"
+#include "utils/TimeUtils.h"
 
 #include "ActiveAEDSPProcess.h"
 #include "ActiveAEDSPMode.h"
@@ -622,9 +623,45 @@ AE_DSP_STREAM_ID CActiveAEDSPProcess::GetStreamId() const
   return m_StreamId;
 }
 
-unsigned int CActiveAEDSPProcess::GetSamplerate()
+
+unsigned int CActiveAEDSPProcess::GetInputChannels()
+{
+  return m_InputFormat.m_channelLayout.Count();
+}
+
+std::string CActiveAEDSPProcess::GetInputChannelNames()
+{
+  return m_InputFormat.m_channelLayout;
+}
+
+unsigned int CActiveAEDSPProcess::GetInputSamplerate()
+{
+  return m_InputFormat.m_sampleRate;
+}
+
+unsigned int CActiveAEDSPProcess::GetProcessSamplerate()
+{
+  return m_AddonSettings.iProcessSamplerate;
+}
+
+unsigned int CActiveAEDSPProcess::GetOutputChannels()
+{
+  return m_OutputFormat.m_channelLayout.Count();
+}
+
+std::string CActiveAEDSPProcess::GetOutputChannelNames()
+{
+  return m_OutputFormat.m_channelLayout;
+}
+
+unsigned int CActiveAEDSPProcess::GetOutputSamplerate()
 {
   return m_OutputSamplerate;
+}
+
+float CActiveAEDSPProcess::GetCPUUsage(void) const
+{
+  return m_fLastProcessUsage;
 }
 
 CAEChannelInfo CActiveAEDSPProcess::GetChannelLayout()
@@ -981,6 +1018,9 @@ bool CActiveAEDSPProcess::Process(CSampleBuffer *in, CSampleBuffer *out, CActive
 
     needDSPAddonsReinit = false;
     m_ForceInit = false;
+    m_iLastProcessTime = XbmcThreads::SystemClockMillis() * 10000;
+    m_iLastProcessUsage = 0;
+    m_fLastProcessUsage = 0.0f;
   }
 
   float * DataIn          = (float *)in->pkt->data[0];
@@ -1036,8 +1076,11 @@ bool CActiveAEDSPProcess::Process(CSampleBuffer *in, CSampleBuffer *out, CActive
    /** DSP Processing Algorithms following here **/
   /**********************************************/
 
-  float **lastOutArray  = m_AudioInArray;             // If nothing becomes performed copy in to out
-  unsigned int frames   = framesOut;                  // frames out is on default the same as in
+  float **lastOutArray    = m_AudioInArray;             // If nothing becomes performed copy in to out
+  unsigned int frames     = framesOut;                  // frames out is on default the same as in
+  CThread *processThread  = CThread::GetCurrentThread();
+  unsigned int iTime      = XbmcThreads::SystemClockMillis() * 10000;
+  int64_t hostFrequency   = CurrentHostFrequency();
 //
   /**
    * DSP input processing
@@ -1087,9 +1130,13 @@ bool CActiveAEDSPProcess::Process(CSampleBuffer *in, CSampleBuffer *out, CActive
         }
       }
 
+      int64_t start = CurrentHostCounter();
+
       frames = m_Addon_InputResample.pFunctions->InputResampleProcess(m_StreamId, lastOutArray, m_InputResampleArray, frames);
       if (frames == 0)
         return false;
+
+      m_Addon_InputResample.iLastTime += 1000.f * 10000.f * (CurrentHostCounter() - start) / hostFrequency;
 
       lastOutArray = m_InputResampleArray;
     }
@@ -1116,9 +1163,13 @@ bool CActiveAEDSPProcess::Process(CSampleBuffer *in, CSampleBuffer *out, CActive
           return false;
       }
 
+      int64_t start = CurrentHostCounter();
+
       frames = m_Addons_PreProc[i].pFunctions->PreProcess(m_StreamId, m_Addons_PreProc[i].iAddonModeNumber, lastOutArray, m_ProcessArray[m_ProcessArrayTogglePtr], frames);
       if (frames == 0)
         return false;
+
+      m_Addons_PreProc[i].iLastTime += 1000.f * 10000.f * (CurrentHostCounter() - start) / hostFrequency;
 
       lastOutArray = m_ProcessArray[m_ProcessArrayTogglePtr];
       m_ProcessArrayTogglePtr ^= 1;
@@ -1148,9 +1199,13 @@ bool CActiveAEDSPProcess::Process(CSampleBuffer *in, CSampleBuffer *out, CActive
           return false;
       }
 
+      int64_t start = CurrentHostCounter();
+
       frames = m_Addons_MasterProc[m_ActiveMode].pFunctions->MasterProcess(m_StreamId, lastOutArray, m_ProcessArray[m_ProcessArrayTogglePtr], frames);
       if (frames == 0)
         return false;
+
+      m_Addons_MasterProc[m_ActiveMode].iLastTime += 1000.f * 10000.f * (CurrentHostCounter() - start) / hostFrequency;
 
       lastOutArray = m_ProcessArray[m_ProcessArrayTogglePtr];
       m_ProcessArrayTogglePtr ^= 1;
@@ -1181,9 +1236,13 @@ bool CActiveAEDSPProcess::Process(CSampleBuffer *in, CSampleBuffer *out, CActive
           return false;
       }
 
+      int64_t start = CurrentHostCounter();
+
       frames = m_Addons_PostProc[i].pFunctions->PostProcess(m_StreamId, m_Addons_PostProc[i].iAddonModeNumber, lastOutArray, m_ProcessArray[m_ProcessArrayTogglePtr], frames);
       if (frames == 0)
         return false;
+
+      m_Addons_PostProc[i].iLastTime += 1000.f * 10000.f * (CurrentHostCounter() - start) / hostFrequency;
 
       lastOutArray = m_ProcessArray[m_ProcessArrayTogglePtr];
       m_ProcessArrayTogglePtr ^= 1;
@@ -1221,9 +1280,13 @@ bool CActiveAEDSPProcess::Process(CSampleBuffer *in, CSampleBuffer *out, CActive
         }
       }
 
+      int64_t start = CurrentHostCounter();
+
       frames = m_Addon_OutputResample.pFunctions->OutputResampleProcess(m_StreamId, lastOutArray, m_OutputResampleArray, frames);
       if (frames == 0)
         return false;
+
+      m_Addon_OutputResample.iLastTime += 1000.f * 10000.f * (CurrentHostCounter() - start) / hostFrequency;
 
       lastOutArray = m_OutputResampleArray;
     }
@@ -1232,6 +1295,60 @@ bool CActiveAEDSPProcess::Process(CSampleBuffer *in, CSampleBuffer *out, CActive
       CLog::Log(LOGERROR, "ActiveAE DSP - exception '%s' caught while trying to call 'OutputResampleProcess' on add-on'. Please contact the developer of this add-on", e.what());
       m_Addon_InputResample.pFunctions = NULL;
     }
+  }
+
+  if (iTime >= m_iLastProcessTime + 1000*10000)
+  {
+    int64_t iUsage = processThread->GetAbsoluteUsage();
+
+    if (m_iLastProcessUsage > 0 && m_iLastProcessTime > 0)
+      m_fLastProcessUsage = (float)( iUsage - m_iLastProcessUsage ) / (float)( iTime - m_iLastProcessTime) * 100.0f;
+
+    if (m_Addon_InputResample.iLastUsage > 0 && m_Addon_InputResample.iLastTime > 0)
+    {
+      m_Addon_InputResample.pMode->SetCPUUsage(m_fLastProcessUsage / ((float)(iUsage - m_Addon_InputResample.iLastUsage) / (float)m_Addon_InputResample.iLastTime));
+      m_Addon_InputResample.iLastTime = 0;
+    }
+    m_Addon_InputResample.iLastUsage = iUsage;
+
+    for (unsigned int i = 0; i < m_Addons_PreProc.size(); i++)
+    {
+      if (m_Addons_PreProc[i].iLastUsage > 0 && m_Addons_PreProc[i].iLastTime > 0)
+      {
+        m_Addons_PreProc[i].pMode->SetCPUUsage(m_fLastProcessUsage / ((float)(iUsage - m_Addons_PreProc[i].iLastUsage) / (float)m_Addons_PreProc[i].iLastTime));
+        m_Addons_PreProc[i].iLastTime = 0;
+      }
+
+      m_Addons_PreProc[i].iLastUsage = iUsage;
+    }
+
+    if (m_Addons_MasterProc[m_ActiveMode].iLastUsage > 0 && m_Addons_MasterProc[m_ActiveMode].iLastTime > 0)
+    {
+      m_Addons_MasterProc[m_ActiveMode].pMode->SetCPUUsage(m_fLastProcessUsage / ((float)(iUsage - m_Addons_MasterProc[m_ActiveMode].iLastUsage) / (float)m_Addons_MasterProc[m_ActiveMode].iLastTime));
+      m_Addons_MasterProc[m_ActiveMode].iLastTime = 0;
+    }
+    m_Addons_MasterProc[m_ActiveMode].iLastUsage = iUsage;
+
+    for (unsigned int i = 0; i < m_Addons_PostProc.size(); i++)
+    {
+      if (m_Addons_PostProc[i].iLastUsage > 0 && m_Addons_PostProc[i].iLastTime > 0)
+      {
+        m_Addons_PostProc[i].pMode->SetCPUUsage(m_fLastProcessUsage / ((float)(iUsage - m_Addons_PostProc[i].iLastUsage) / (float)m_Addons_PostProc[i].iLastTime));
+        m_Addons_PostProc[i].iLastTime = 0;
+      }
+      m_Addons_PostProc[i].iLastUsage = iUsage;
+    }
+
+    if (m_Addon_OutputResample.iLastUsage > 0 && m_Addon_OutputResample.iLastTime > 0)
+    {
+      m_Addon_OutputResample.pMode->SetCPUUsage(m_fLastProcessUsage / ((float)(iUsage - m_Addon_OutputResample.iLastUsage) / (float)m_Addon_OutputResample.iLastTime));
+      m_Addon_OutputResample.iLastTime = 0;
+    }
+    m_Addon_OutputResample.iLastUsage = iUsage;
+
+
+    m_iLastProcessUsage = iUsage;
+    m_iLastProcessTime = iTime;
   }
 
   /* Put every supported channel now back to the interleaved out buffer */
@@ -1381,6 +1498,26 @@ bool CActiveAEDSPProcess::SetMasterMode(AE_DSP_STREAMTYPE streamType, int iModeI
 int CActiveAEDSPProcess::GetMasterModeID()
 {
   return m_ActiveMode < 0 ? AE_DSP_MASTER_MODE_ID_INVALID : m_Addons_MasterProc[m_ActiveMode].pMode->ModeID();
+}
+
+void CActiveAEDSPProcess::GetActiveModes(std::vector<CActiveAEDSPModePtr> &modes)
+{
+  CSingleLock lock(m_critSection);
+
+  if (m_Addon_InputResample.pFunctions != NULL)
+    modes.push_back(m_Addon_InputResample.pMode);
+
+  for (unsigned int i = 0; i < m_Addons_PreProc.size(); i++)
+    modes.push_back(m_Addons_PreProc[i].pMode);
+
+  if (m_Addons_MasterProc[m_ActiveMode].pFunctions != NULL)
+    modes.push_back(m_Addons_MasterProc[m_ActiveMode].pMode);
+
+  for (unsigned int i = 0; i < m_Addons_PostProc.size(); i++)
+    modes.push_back(m_Addons_PostProc[i].pMode);
+
+  if (m_Addon_OutputResample.pFunctions != NULL)
+    modes.push_back(m_Addon_OutputResample.pMode);
 }
 
 void CActiveAEDSPProcess::GetAvailableMasterModes(AE_DSP_STREAMTYPE streamType, std::vector<CActiveAEDSPModePtr> &modes)

@@ -428,6 +428,62 @@ unsigned int CActiveAEDSP::GetProcessingStreamsAmount(void)
   return m_usedProcessesCnt;
 }
 
+unsigned int CActiveAEDSP::GetInputChannels(unsigned int streamId)
+{
+  if (m_usedProcesses[streamId])
+    return m_usedProcesses[streamId]->GetInputChannels();
+  return 0;
+}
+
+std::string CActiveAEDSP::GetInputChannelNames(unsigned int streamId)
+{
+  if (m_usedProcesses[streamId])
+    return m_usedProcesses[streamId]->GetInputChannelNames();
+  return "";
+}
+
+unsigned int CActiveAEDSP::GetInputSamplerate(unsigned int streamId)
+{
+  if (m_usedProcesses[streamId])
+    return m_usedProcesses[streamId]->GetInputSamplerate();
+  return 0;
+}
+
+unsigned int CActiveAEDSP::GetProcessSamplerate(unsigned int streamId)
+{
+  if (m_usedProcesses[streamId])
+    return m_usedProcesses[streamId]->GetProcessSamplerate();
+  return 0;
+}
+
+unsigned int CActiveAEDSP::GetOutputChannels(unsigned int streamId)
+{
+  if (m_usedProcesses[streamId])
+    return m_usedProcesses[streamId]->GetOutputChannels();
+  return 0;
+}
+
+std::string CActiveAEDSP::GetOutputChannelNames(unsigned int streamId)
+{
+  if (m_usedProcesses[streamId])
+    return m_usedProcesses[streamId]->GetOutputChannelNames();
+  return "";
+}
+
+unsigned int CActiveAEDSP::GetOutputSamplerate(unsigned int streamId)
+{
+  if (m_usedProcesses[streamId])
+    return m_usedProcesses[streamId]->GetOutputSamplerate();
+  return 0;
+}
+
+float CActiveAEDSP::GetCPUUsage(unsigned int streamId) const
+{
+  if (m_usedProcesses[streamId])
+    return m_usedProcesses[streamId]->GetCPUUsage();
+  return 0.0f;
+}
+
 const AE_DSP_MODELIST &CActiveAEDSP::GetAvailableModes(AE_DSP_MODE_TYPE modeType)
 {
   static AE_DSP_MODELIST emptyArray;
@@ -436,6 +492,14 @@ const AE_DSP_MODELIST &CActiveAEDSP::GetAvailableModes(AE_DSP_MODE_TYPE modeType
 
   CSingleLock lock(m_critSection);
   return m_Modes[modeType];
+}
+
+void CActiveAEDSP::GetActiveModes(unsigned int streamId, std::vector<CActiveAEDSPModePtr> &modes)
+{
+  CSingleLock lock(m_critSection);
+
+  if (m_usedProcesses[streamId])
+    m_usedProcesses[streamId]->GetActiveModes(modes);
 }
 
 bool CActiveAEDSP::IsModeActive(unsigned int streamId, AE_DSP_MENUHOOK_CAT category, int iAddonId, unsigned int iAddonModeId)

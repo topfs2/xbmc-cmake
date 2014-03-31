@@ -284,6 +284,20 @@ namespace ActiveAE
      */
     unsigned int GetProcessingStreamsAmount(void);
 
+    unsigned int GetInputChannels(unsigned int streamId);
+    std::string GetInputChannelNames(unsigned int streamId);
+    unsigned int GetInputSamplerate(unsigned int streamId);
+    unsigned int GetProcessSamplerate(unsigned int streamId);
+    unsigned int GetOutputChannels(unsigned int streamId);
+    std::string GetOutputChannelNames(unsigned int streamId);
+    float GetCPUUsage(unsigned int streamId) const;
+
+    /*!>
+     * Get the used output samplerate for this class
+     * @return The current used output samplerate
+     */
+    unsigned int GetOutputSamplerate(unsigned int streamId);
+
     /*!>
      * Used to get all available modes on currently enabled add-ons
      * It is used from CActiveAEDSPProcess to get a sorted modes list for a processing
@@ -292,6 +306,13 @@ namespace ActiveAE
      * @return modes Pointer to a buffer array where all available modes of type written in
      */
     const AE_DSP_MODELIST &GetAvailableModes(AE_DSP_MODE_TYPE modeType);
+
+    /*!>
+     * Used to get all active modes of type on given stream id
+     * @param streamId The id of this stream
+     * @param modes The type to get
+     */
+    void GetActiveModes(unsigned int streamId, std::vector<CActiveAEDSPModePtr> &modes);
 
     /*!>
      * Used check that asked addon with his mode id is used on given stream identfier

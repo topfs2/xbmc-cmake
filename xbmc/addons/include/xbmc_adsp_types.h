@@ -63,10 +63,10 @@
 #define AE_DSP_STREAM_MAX_MODES                 32
 
 /* current Audio DSP API version */
-#define XBMC_AE_DSP_API_VERSION                 "0.0.4"
+#define XBMC_AE_DSP_API_VERSION                 "0.1.0"
 
 /* min. Audio DSP API version */
-#define XBMC_AE_DSP_MIN_API_VERSION             "0.0.4"
+#define XBMC_AE_DSP_MIN_API_VERSION             "0.1.0"
 
 #ifdef __cplusplus
 extern "C" {
@@ -358,7 +358,7 @@ extern "C" {
     int               iIdentifier;                /*!< @brief audio stream id inside player */
     int               iChannels;                  /*!< @brief amount of basic channels */
     int               iSampleRate;                /*!< @brief sample rate */
-    AE_DSP_PROFILE    Profile;
+    AE_DSP_PROFILE    Profile;                    /*!< @brief current running stream profile data */
   } ATTRIBUTE_PACKED AE_DSP_STREAM_PROPERTIES;
 
   /*!

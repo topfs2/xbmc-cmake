@@ -6971,6 +6971,66 @@ msgctxt "#15080"
 msgid "Change resampler"
 msgstr ""
 
+msgctxt "#15081"
+msgid "Process Chain (with CPU usage)"
+msgstr ""
+
+msgctxt "#15082"
+msgid "Resampling to %i Hz"
+msgstr ""
+
+msgctxt "#15083"
+msgid "Final Resampling to %i Hz"
+msgstr ""
+
+msgctxt "#15084"
+msgid " Master processing:"
+msgstr ""
+
+msgctxt "#15085"
+msgid " Preprocess:"
+msgstr ""
+
+msgctxt "#15086"
+msgid " Post process:"
+msgstr ""
+
+msgctxt "#15087"
+msgid " Input:"
+msgstr ""
+
+msgctxt "#15088"
+msgid " Output:"
+msgstr ""
+
+msgctxt "#15089"
+msgid "Input signal"
+msgstr ""
+
+msgctxt "#15090"
+msgid "Output signal"
+msgstr ""
+
+msgctxt "#15091"
+msgid " Channels"
+msgstr ""
+
+msgctxt "#15092"
+msgid " Samplerate"
+msgstr ""
+
+msgctxt "#15093"
+msgid " Positions"
+msgstr ""
+
+msgctxt "#15094"
+msgid " CPU Usage for DSP"
+msgstr ""
+
+msgctxt "#15095"
+msgid " No information dialogue present for this mode"
+msgstr ""
+
 #empty strings from id 15081 to 15099
 
 msgctxt "#15100"

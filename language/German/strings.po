@@ -5809,6 +5809,66 @@ msgctxt "#15080"
 msgid "Change resampler"
 msgstr "Umwandler austauschen"
 
+msgctxt "#15081"
+msgid "Process Chain (with CPU usage)"
+msgstr "Verarbeitungskette (mit Prozessorlast)"
+
+msgctxt "#15082"
+msgid "Resampling to %i Hz"
+msgstr "Umwandlung zu %i Hz"
+
+msgctxt "#15083"
+msgid "Final Resampling to %i Hz"
+msgstr "Finale Umwandlung zu %i Hz"
+
+msgctxt "#15084"
+msgid " Master processing:"
+msgstr " Hauptverarbeitung:"
+
+msgctxt "#15085"
+msgid " Preprocess:"
+msgstr " Vorverarbeitung:"
+
+msgctxt "#15086"
+msgid " Post process:"
+msgstr " Nachbearbeitung:"
+
+msgctxt "#15087"
+msgid " Input:"
+msgstr " Eingang:"
+
+msgctxt "#15088"
+msgid " Output:"
+msgstr " Ausgang:"
+
+msgctxt "#15089"
+msgid "Input signal"
+msgstr "Eingangssignal"
+
+msgctxt "#15090"
+msgid "Output signal"
+msgstr "Ausgangssignal"
+
+msgctxt "#15091"
+msgid " Channels"
+msgstr " Kanäle"
+
+msgctxt "#15092"
+msgid " Samplerate"
+msgstr " Signalrate"
+
+msgctxt "#15093"
+msgid " Positions"
+msgstr " Positionen"
+
+msgctxt "#15094"
+msgid " CPU Usage for DSP"
+msgstr " Gesamtverbrauch für Signalverarbeitung"
+
+msgctxt "#15095"
+msgid " No information dialogue present for this mode"
+msgstr "Kein Dialog für Informationen des Modus verfügbar"
+
 msgctxt "#15100"
 msgid "Library"
 msgstr "Datenbank"

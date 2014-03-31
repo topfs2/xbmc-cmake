@@ -54,10 +54,21 @@ protected:
   bool                                        m_AddonMasterModeSetupPresent;             /* If any addon have a own settings dialog for a master mode it is set to true */
   bool                                        m_streamTypeReset;
   AE_DSP_STREAMTYPE                           m_streamTypeUsed;
-  float                                       m_volume;
   AE_DSP_BASETYPE                             m_baseTypeUsed;
-  std::vector<ActiveAE::CActiveAEDSPModePtr>  m_MasterModes[AE_DSP_ASTREAM_MAX];
+  std::vector<ActiveAE::CActiveAEDSPModePtr>  m_ActiveModes;                            /*!< The process modes currently active on dsp processing stream */
+  std::vector<float>                          m_ActiveModesCPUUsage;                    /*!< CPU usauge of the modes in previous vector, used seperate vector to have CActiveAEDSP::GetActiveModes call with a constant vector table value */
+  std::vector<ActiveAE::CActiveAEDSPModePtr>  m_MasterModes[AE_DSP_ASTREAM_MAX];        /*!< table about selectable and usable master processing modes */
   int                                         m_CurrentMenu;
   std::vector<MenuHookMember>                 m_Menus;
   Features                                    m_audioCaps;
+
+  /*! Settings control selection data */
+  CStdString                                  m_InputChannels;
+  CStdString                                  m_InputChannelNames;
+  CStdString                                  m_InputSamplerate;
+  CStdString                                  m_OutputChannels;
+  CStdString                                  m_OutputChannelNames;
+  CStdString                                  m_OutputSamplerate;
+  CStdString                                  m_CPUUsage;
+  float                                       m_volume;
 };

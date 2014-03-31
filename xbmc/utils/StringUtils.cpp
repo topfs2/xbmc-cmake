@@ -983,6 +983,11 @@ bool StringUtils::ContainsKeyword(const CStdString &str, const CStdStringArray &
   return false;
 }
 
+CStdString StringUtils::FormatPercent(float value, float minimum)
+{
+  return StringUtils::Format("%.2f %%", value);
+}
+
 CStdString StringUtils::FormatPercentAsDecibel(float value, float interval)
 {
   static const float db_range = 60.0f;

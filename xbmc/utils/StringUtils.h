@@ -163,6 +163,7 @@ public:
   static double CompareFuzzy(const CStdString &left, const CStdString &right);
   static int FindBestMatch(const CStdString &str, const CStdStringArray &strings, double &matchscore);
   static bool ContainsKeyword(const CStdString &str, const CStdStringArray &keywords);
+  static CStdString FormatPercent(float value, float minimum);
   static CStdString FormatPercentAsDecibel(float value, float minimum);
   static CStdString FormatDelay(float value, float minimum);
   static CStdString FormatDecibel(float value, float minimum);

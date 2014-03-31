@@ -25,7 +25,7 @@
 #include "xbmc_adsp_types.h"
 
 /*!
- * Functions that the Audio DSP client add-on must implement, but some can be empty.
+ * Functions that the Audio DSP add-on must implement, but some can be empty.
  *
  * The 'remarks' field indicates which methods should be implemented, and which ones are optional.
  */
@@ -199,6 +199,7 @@ extern "C"
    * for the next added packet to be heard from the speakers.
    * @param id The stream id
    * @return the delay in seconds
+   * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
    */
   float InputResampleGetDelay(AE_DSP_STREAM_ID id);
   //@}
@@ -225,6 +226,7 @@ extern "C"
    * @param mode_id The mode inside add-on which must be performed on call. Id is set from add-on by iModeNumber on AE_DSP_MODE structure during RegisterMode callback,
    * and can be defined from add-on as a structure pointer or anything else what is needed to find it.
    * @return the delay in seconds
+   * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
    */
   float PreProcessGetDelay(AE_DSP_STREAM_ID id, unsigned int mode_id);
 
@@ -272,6 +274,7 @@ extern "C"
    * for the next added packet to be heard from the speakers.
    * @param id The stream id
    * @return the delay in seconds
+   * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
    */
   float MasterProcessGetDelay(AE_DSP_STREAM_ID id);
 
@@ -291,7 +294,7 @@ extern "C"
   /*!
    * Used to get a information string about the processed work to show on skin
    * @return A string to show
-   * @remarks Valid implementation required.
+   * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
    */
   const char *MasterProcessGetStreamInfoString(AE_DSP_STREAM_ID id);
   //@}
@@ -318,6 +321,7 @@ extern "C"
    * @param mode_id The mode inside add-on which must be performed on call. Id is set from add-on by iModeNumber on AE_DSP_MODE structure during RegisterMode callback,
    * and can be defined from add-on as a structure pointer or anything else what is needed to find it.
    * @return the delay in seconds
+   * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
    */
   float PostProcessGetDelay(AE_DSP_STREAM_ID id, unsigned int mode_id);
 
@@ -376,6 +380,7 @@ extern "C"
    * for the next added packet to be heard from the speakers.
    * @param id The stream id
    * @return the delay in seconds
+   * @remarks Optional. Is set by AE_DSP_ADDON_CAPABILITIES and asked with GetAddonCapabilities
    */
   float OutputResampleGetDelay(AE_DSP_STREAM_ID id);
   //@}

@@ -212,6 +212,12 @@ void CGUIDialogSettings::UpdateSetting(unsigned int id)
     CGUIButtonControl *pControl = (CGUIButtonControl *)GetControl(controlID);
     if (pControl && setting.data) pControl->SetLabel2(*(CStdString *)setting.data);
   }
+  else if (setting.type == SettingInfo::BUTTON)
+  {
+    SET_CONTROL_LABEL(controlID,setting.name);
+    CGUIButtonControl *pControl = (CGUIButtonControl *)GetControl(controlID);
+    if (pControl && setting.data) pControl->SetLabel2(setting.formatFunction.standard(*(float *)setting.data, setting.interval));
+  }
   else if (setting.type == SettingInfo::EDIT)
   {
     SET_CONTROL_LABEL(controlID, setting.name);
@@ -327,7 +333,7 @@ void CGUIDialogSettings::OnClick(int iID)
     if (setting.formatFunction.standard)
       SET_CONTROL_LABEL2(iID, setting.formatFunction.standard(*(float *)setting.data, setting.interval));
   }
-  else if (setting.type == SettingInfo::STRING)
+  else if (setting.type == SettingInfo::STRING && setting.allowPopup)
   {
     CGUIKeyboardFactory::ShowAndGetInput(*(CStdString *) setting.data, true);
     string strNewValue = string(*(CStdString *)setting.data);
@@ -566,7 +572,7 @@ void CGUIDialogSettings::AddButton(unsigned int id, CStdString label, CStdString
   m_settings.push_back(setting);
 }
 
-void CGUIDialogSettings::AddString(unsigned int id, int label, CStdString *current)
+void CGUIDialogSettings::AddString(unsigned int id, int label, CStdString *current, bool allowPopup)
 {
   SettingInfo setting;
   setting.id = id;
@@ -574,6 +580,7 @@ void CGUIDialogSettings::AddString(unsigned int id, int label, CStdString *curre
   setting.type = SettingInfo::STRING;
   setting.data = current;
   setting.enabled = true;
+  setting.allowPopup = allowPopup;
   m_settings.push_back(setting);
 }
 

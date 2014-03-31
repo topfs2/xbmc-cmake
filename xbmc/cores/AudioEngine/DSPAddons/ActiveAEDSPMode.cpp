@@ -61,6 +61,8 @@ CActiveAEDSPMode::CActiveAEDSPMode()
   m_bChanged                = false;
   m_bHasSettingsDialog      = false;
 
+  m_fCPUUsage               = 0.0f;
+
   m_iAddonId                = -1;
   m_iAddonModeNumber        = -1;
   m_strAddonModeName        = StringUtils::EmptyString;
@@ -89,6 +91,8 @@ CActiveAEDSPMode::CActiveAEDSPMode(const AE_DSP_BASETYPE baseType)
   m_bChanged                = false;
   m_bHasSettingsDialog      = false;
 
+  m_fCPUUsage               = 0.0f;
+
   m_iAddonId                = -1;
   m_iAddonModeNumber        = -1;
   m_strAddonModeName        = StringUtils::EmptyString;
@@ -113,6 +117,8 @@ CActiveAEDSPMode::CActiveAEDSPMode(const AE_DSP_MODES::AE_DSP_MODE &mode, int iA
   m_strAddonModeName        = mode.strModeName;
   m_bHasSettingsDialog      = mode.bHasSettingsDialog;
   m_bChanged                = false;
+
+  m_fCPUUsage               = 0.0f;
 
   if (m_strAddonModeName.empty())
     m_strAddonModeName = StringUtils::Format("%s %d", g_localizeStrings.Get(15023).c_str(), m_iModeId);
@@ -142,6 +148,7 @@ CActiveAEDSPMode &CActiveAEDSPMode::operator=(const CActiveAEDSPMode &mode)
   m_strAddonModeName        = mode.m_strAddonModeName;
   m_bChanged                = mode.m_bChanged;
   m_bHasSettingsDialog      = mode.m_bHasSettingsDialog;
+  m_fCPUUsage               = mode.m_fCPUUsage;
 
   return *this;
 }
@@ -485,6 +492,12 @@ bool CActiveAEDSPMode::SetAddonModeName(const CStdString &strAddonModeName)
   return false;
 }
 
+void CActiveAEDSPMode::SetCPUUsage(float percent)
+{
+  CSingleLock lock(m_critSection);
+  m_fCPUUsage = percent;
+}
+
 AE_DSP_MODE_TYPE CActiveAEDSPMode::ModeType(void) const
 {
   CSingleLock lock(m_critSection);
@@ -594,4 +607,10 @@ CStdString CActiveAEDSPMode::AddonModeName(void) const
   CSingleLock lock(m_critSection);
   CStdString strReturn(m_strAddonModeName);
   return strReturn;
+}
+
+float CActiveAEDSPMode::CPUUsage(void) const
+{
+  CSingleLock lock(m_critSection);
+  return m_fCPUUsage;
 }

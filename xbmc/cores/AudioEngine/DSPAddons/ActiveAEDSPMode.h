@@ -97,6 +97,8 @@ namespace ActiveAE
     bool SetAddonModeNumber(unsigned int iAddonModeNumber);
     CStdString AddonModeName(void) const;
     bool SetAddonModeName(const CStdString &strAddonModeName);
+    float CPUUsage(void) const;
+    void SetCPUUsage(float percent);
 
   private:
     /*! @name XBMC related mode data
@@ -116,6 +118,12 @@ namespace ActiveAE
     int               m_iModeHelp;               /*!< the help id for this mode used by XBMC */
     bool              m_bChanged;                /*!< true if anything in this entry was changed that needs to be persisted */
     bool              m_bHasSettingsDialog;      /*!< the mode have a own settings dialog */
+    //@}
+
+    /*! @name Dynamic processing related data
+     */
+    //@{
+    float             m_fCPUUsage;
     //@}
 
     /*! @name Audio dsp add-on related mode data

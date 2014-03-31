@@ -46,6 +46,7 @@ public:
     data = NULL;
     type = NONE;
     enabled = true;
+    allowPopup = true;
     min = 0;
     max = 0;
     interval = 0;
@@ -65,6 +66,7 @@ public:
   } formatFunction;
   std::vector<std::pair<int, CStdString> > entry;
   bool enabled;
+  bool allowPopup;
 };
 
 class CGUIDialogSettings :
@@ -100,7 +102,7 @@ protected:
   void AddButton(unsigned int it, CStdString label, CStdString *str, bool bOn=true);
   void AddBool(unsigned int id, int label, bool *on, bool enabled = true);
   void AddSpin(unsigned int id, int label, int *current, unsigned int max, const SETTINGSTRINGS &entries);
-  void AddString(unsigned int id, int label, CStdString *current);
+  void AddString(unsigned int id, int label, CStdString *current, bool allowPopup = true);
   void AddLabel(unsigned int id, int label);
   void AddSpin(unsigned int id, int label, int *current, unsigned int max, const int *entries);
   void AddSpin(unsigned int id, int label, int *current, unsigned int min, unsigned int max, const char* minLabel = NULL);

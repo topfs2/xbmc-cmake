@@ -30,6 +30,7 @@ public:
   CGUIDialogAudioDSPSettings(void);
   virtual ~CGUIDialogAudioDSPSettings(void);
 
+  virtual bool OnMessage(CGUIMessage &message);
   virtual bool OnBack(int actionID);
   virtual void FrameMove();
 

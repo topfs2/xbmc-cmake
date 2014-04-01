@@ -413,6 +413,7 @@ void CActiveAEDSP::DestroyDSPs(unsigned int streamId)
   CActiveAEDSPProcessPtr emptyProc;
   if (m_usedProcesses[streamId] != NULL)
   {
+    m_usedProcesses[streamId]->Destroy();
     m_usedProcesses[streamId] = emptyProc;
     m_usedProcessesCnt--;
   }

@@ -233,6 +233,7 @@ namespace ActiveAE
 
     protected:
       friend class CActiveAEBufferPoolResample;
+      friend class CActiveAEDSP;
 
       /*!>
        * Master processing

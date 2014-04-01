@@ -109,6 +109,17 @@ CGUIDialogAudioDSPSettings::~CGUIDialogAudioDSPSettings(void)
 {
 }
 
+bool CGUIDialogAudioDSPSettings::OnMessage(CGUIMessage &message)
+{
+  if (message.GetMessage() == GUI_MSG_WINDOW_DEINIT)
+  {
+    CActiveAEDSPProcessPtr emptyProcess;
+    m_ActiveStreamProcess = emptyProcess;
+    m_CurrentMenu = MENU_MAIN;
+  }
+  return CGUIDialogSettings::OnMessage(message);
+}
+
 bool CGUIDialogAudioDSPSettings::OnBack(int actionID)
 {
   int oldMenu = m_CurrentMenu;

@@ -93,8 +93,6 @@ CActiveAEDSPProcess::~CActiveAEDSPProcess()
 
 void CActiveAEDSPProcess::ResetStreamFunctionsSelection()
 {
-  Destroy();
-
   m_NewMasterMode         = AE_DSP_MASTER_MODE_ID_INVALID;
   m_NewStreamType         = AE_DSP_ASTREAM_INVALID;
   m_Addon_InputResample.Clear();
@@ -580,8 +578,6 @@ void CActiveAEDSPProcess::Destroy()
 {
   CSingleLock lock(m_restartSection);
 
-  //ResetStreamFunctionsSelection();
-
   if (!CActiveAEDSP::Get().IsActivated())
     return;
 
@@ -589,6 +585,8 @@ void CActiveAEDSPProcess::Destroy()
   {
     itr->second->StreamDestroy(m_StreamId);
   }
+
+  ResetStreamFunctionsSelection();
 }
 
 void CActiveAEDSPProcess::ForceReinit()

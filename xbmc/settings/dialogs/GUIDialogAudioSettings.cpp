@@ -157,9 +157,11 @@ void CGUIDialogAudioDSPSettings::CreateSettings()
   // clear out any old settings
   m_settings.clear();
 
-  unsigned int processingAmount = CActiveAEDSP::Get().GetProcessingStreamsAmount();
-  if (processingAmount == 0)
+  m_ActiveStreamId      = CActiveAEDSP::Get().GetActiveStreamId();
+  m_ActiveStreamProcess = CActiveAEDSP::Get().GetDSPProcess(m_ActiveStreamId);
+  if (m_ActiveStreamId == (unsigned int)-1 || !m_ActiveStreamProcess)
   {
+    m_CurrentMenu = MENU_MAIN;
     Close(true);
     return;
   }
@@ -168,13 +170,7 @@ void CGUIDialogAudioDSPSettings::CreateSettings()
   SET_CONTROL_HIDDEN(CONTROL_OVERRIDE_IMAGE);
 
   int modeUniqueId;
-  if (!CActiveAEDSP::Get().GetMasterModeTypeInformation(m_ActiveStreamId, m_streamTypeUsed, m_baseTypeUsed, modeUniqueId))
-  {
-    Close(true);
-    return;
-  }
-
-  m_ActiveStreamProcess = CActiveAEDSP::Get().GetDSPProcess(m_ActiveStreamId);
+  m_ActiveStreamProcess->GetMasterModeTypeInformation(m_streamTypeUsed, m_baseTypeUsed, modeUniqueId);
 
   // create our settings
   if (m_CurrentMenu == MENU_MAIN)
@@ -591,40 +587,47 @@ void CGUIDialogAudioDSPSettings::FrameMove()
 
   if (g_application.m_pPlayer->HasPlayer())
   {
+    bool forceReload = false;
+    unsigned int  streamId = CActiveAEDSP::Get().GetActiveStreamId();
+    if (m_ActiveStreamId != streamId)
+    {
+      m_ActiveStreamId      = streamId;
+      m_ActiveStreamProcess = CActiveAEDSP::Get().GetDSPProcess(m_ActiveStreamId);
+      if (m_ActiveStreamId == (unsigned int)-1 || !m_ActiveStreamProcess)
+      {
+        Close(true);
+        return;
+      }
+      forceReload = true;
+    }
 
-    unsigned int      streamId;
     int               modeUniqueId;
     AE_DSP_BASETYPE   usedBaseType;
     AE_DSP_STREAMTYPE streamTypeUsed;
-    bool              active = CActiveAEDSP::Get().GetMasterModeTypeInformation(streamId, streamTypeUsed, usedBaseType, modeUniqueId);
-    if (active)
+    m_ActiveStreamProcess->GetMasterModeTypeInformation(streamTypeUsed, usedBaseType, modeUniqueId);
+    if (forceReload || m_baseTypeUsed != usedBaseType || m_streamTypeUsed != streamTypeUsed)
     {
-      if (m_ActiveStreamId != streamId || m_baseTypeUsed != usedBaseType || m_streamTypeUsed != streamTypeUsed)
-      {
-        m_baseTypeUsed        = usedBaseType;
-        m_streamTypeUsed      = streamTypeUsed;
-        m_ActiveStreamId      = streamId;
-        m_ActiveStreamProcess = CActiveAEDSP::Get().GetDSPProcess(m_ActiveStreamId);
+      m_baseTypeUsed        = usedBaseType;
+      m_streamTypeUsed      = streamTypeUsed;
 
-        /*!
-        * Update settings
-        */
-        int selType = CMediaSettings::Get().GetCurrentAudioSettings().m_MasterStreamTypeSel;
-        CMediaSettings::Get().GetCurrentAudioSettings().m_MasterModes[streamTypeUsed][usedBaseType] = modeUniqueId;
-        CMediaSettings::Get().GetCurrentAudioSettings().m_MasterModes[selType][usedBaseType]        = modeUniqueId;
-        CMediaSettings::Get().GetCurrentAudioSettings().m_MasterStreamBase                          = usedBaseType;
-        CMediaSettings::Get().GetCurrentAudioSettings().m_MasterStreamType                          = streamTypeUsed;
+      /*!
+      * Update settings
+      */
+      int selType = CMediaSettings::Get().GetCurrentAudioSettings().m_MasterStreamTypeSel;
+      CMediaSettings::Get().GetCurrentAudioSettings().m_MasterModes[streamTypeUsed][usedBaseType] = modeUniqueId;
+      CMediaSettings::Get().GetCurrentAudioSettings().m_MasterModes[selType][usedBaseType]        = modeUniqueId;
+      CMediaSettings::Get().GetCurrentAudioSettings().m_MasterStreamBase                          = usedBaseType;
+      CMediaSettings::Get().GetCurrentAudioSettings().m_MasterStreamType                          = streamTypeUsed;
 
-        FreeControls();
-        OnInitWindow();
-      }
-
-      // these settings can change on the fly
-      CStdString strInfo;
-      m_ActiveStreamProcess->GetMasterModeStreamInfoString(strInfo);
-      SET_CONTROL_LABEL(CONTROL_ADDON_STREAM_INFO, strInfo);
-      SET_CONTROL_LABEL(CONTROL_TYPE_LABEL, g_localizeStrings.Get(m_ActiveStreamProcess->GetDetectedStreamType()+INPUT_TYPE_LABEL_START));
+      FreeControls();
+      OnInitWindow();
     }
+
+    // these settings can change on the fly
+    CStdString strInfo;
+    m_ActiveStreamProcess->GetMasterModeStreamInfoString(strInfo);
+    SET_CONTROL_LABEL(CONTROL_ADDON_STREAM_INFO, strInfo);
+    SET_CONTROL_LABEL(CONTROL_TYPE_LABEL, g_localizeStrings.Get(m_ActiveStreamProcess->GetDetectedStreamType()+INPUT_TYPE_LABEL_START));
 
     if (m_CurrentMenu == AUDIO_BUTTON_AUDIO_INFORMATION)
     {
@@ -739,7 +742,10 @@ void CGUIDialogAudioDSPSettings::OpenAudioDSPMenu(AE_DSP_MENUHOOK_CAT category, 
   OnMessage(msg);
 
   if (!m_windowLoaded)
+  {
+    m_CurrentMenu = MENU_MAIN;
     Close(true);
+  }
 
   lock.Leave();
 }

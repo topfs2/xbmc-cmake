@@ -274,35 +274,16 @@ namespace ActiveAE
     CActiveAEDSPProcessPtr GetDSPProcess(unsigned int streamId);
 
     /*!>
-     * Change master mode with the individual identification code given from dsp database
-     * @param streamId The id of this stream
-     * @param iMasterModeID The identification code
-     * @param bSwitchStreamType If set to true also the stream type is changed
-     * @return True if the mode is allowed can can be become changed
-     * @note The change is not directly performed in this function, is changed on next processing
-     * calls and must be observed that it becomes changed.
-     */
-    bool SetMasterMode(unsigned int streamId, AE_DSP_STREAMTYPE streamType, int iMasterModeID, bool bSwitchStreamType = false);
-
-    /*!>
      * Get the amount of used dsp process stream handlers
      * @return Returns amount of processes
      */
     unsigned int GetProcessingStreamsAmount(void);
 
-    unsigned int GetInputChannels(unsigned int streamId);
-    std::string GetInputChannelNames(unsigned int streamId);
-    unsigned int GetInputSamplerate(unsigned int streamId);
-    unsigned int GetProcessSamplerate(unsigned int streamId);
-    unsigned int GetOutputChannels(unsigned int streamId);
-    std::string GetOutputChannelNames(unsigned int streamId);
-    float GetCPUUsage(unsigned int streamId) const;
-
     /*!>
-     * Get the used output samplerate for this class
-     * @return The current used output samplerate
+     * Get the currently active processing stream id
+     * @return Stream id, or max unsigned int value (-1) if not active
      */
-    unsigned int GetOutputSamplerate(unsigned int streamId);
+    unsigned int GetActiveStreamId(void);
 
     /*!>
      * Used to get all available modes on currently enabled add-ons
@@ -312,59 +293,6 @@ namespace ActiveAE
      * @return modes Pointer to a buffer array where all available modes of type written in
      */
     const AE_DSP_MODELIST &GetAvailableModes(AE_DSP_MODE_TYPE modeType);
-
-    /*!>
-     * Used to get all active modes of type on given stream id
-     * @param streamId The id of this stream
-     * @param modes The type to get
-     */
-    void GetActiveModes(unsigned int streamId, std::vector<CActiveAEDSPModePtr> &modes);
-
-    /*!>
-     * Used check that asked addon with his mode id is used on given stream identfier
-     * @param streamId The id of this stream
-     * @param category The type to get
-     * @param iAddonId The ID of the addon to get the menu entries for it
-     * @param iAddonModeId From addon defined identifier of the mode
-     * @return true if in use
-     */
-    bool IsModeActive(unsigned int streamId, AE_DSP_MENUHOOK_CAT category, int iAddonId, unsigned int iAddonModeId);
-
-    /*!>
-     * Used to get all available Master mode on current stream and base type.
-     * It is used to get informations about selectable modes and can be used as information
-     * for the gui to make the mode selection available.
-     * @param streamId The id of this stream
-     * @retval modes Pointer to a buffer array where all available master mode written in
-     */
-    void GetAvailableMasterModes(unsigned int streamId, AE_DSP_STREAMTYPE streamType, std::vector<CActiveAEDSPModePtr> &modes);
-
-    /*!>
-     * Get all dsp addon relavant information to detect a processing mode type and base values of master mode.
-     * @param streamId The id of this stream
-     * @retval streamTypeUsed The type of really used stream type, relevant if it becomes changed by Auto mode or from dsp addon
-     * @retval baseType The current base type of processed by addon
-     * @retval iMasterModeID The unique id of this mode inside dsp database
-     * @return Returns false if no master processing is enabled
-     */
-    bool GetMasterModeTypeInformation(unsigned int &streamId, AE_DSP_STREAMTYPE &streamTypeUsed, AE_DSP_BASETYPE &baseType, int &iMasterModeID);
-
-    /*!>
-     * Read a description string from currently processed audio dsp master mode.
-     * It can be used to show additional stream information as string on the skin.
-     * The addon can have more stream information.
-     * @param streamId The id of this stream
-     * @retval strInfo Pointer to a string where it is written in
-     * @return Returns false if no master processing is enabled
-     */
-    bool GetMasterModeStreamInfoString(unsigned int streamId, CStdString &strInfo);
-
-    /*!
-     * @brief Get the detected stream type identifier which becomes detected on startup of process
-     * @param streamId Which stream to ask
-     * @return The stream type was found, if unknown it returns AE_DSP_ASTREAM_BASIC
-     */
-    AE_DSP_STREAMTYPE GetDetectedStreamType(unsigned int iStreamId);
 
     /*!
      * @brief Persist the current audio settings in the database.

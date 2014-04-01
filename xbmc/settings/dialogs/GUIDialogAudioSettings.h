@@ -40,7 +40,7 @@ protected:
 
   typedef struct
   {
-    int              clientId;
+    int              addonId;
     AE_DSP_MENUHOOK  hook;
   } MenuHookMember;
 
@@ -49,7 +49,7 @@ protected:
   void UpdateModeIcons();
   void AddAddonButtons();
   void GetAudioDSPMenus(AE_DSP_MENUHOOK_CAT category, std::vector<MenuHookMember> &menus);
-  void OpenAudioDSPMenu(AE_DSP_MENUHOOK_CAT category, ActiveAE::AE_DSP_ADDON client, unsigned int iHookId, unsigned int iLocalizedStringId);
+  void OpenAudioDSPMenu(AE_DSP_MENUHOOK_CAT category, ActiveAE::AE_DSP_ADDON addon, unsigned int iHookId, unsigned int iLocalizedStringId);
 
   AE_DSP_STREAM_ID                            m_ActiveStreamId;
   ActiveAE::CActiveAEDSPProcessPtr            m_ActiveStreamProcess;
@@ -61,6 +61,7 @@ protected:
   std::vector<float>                          m_ActiveModesCPUUsage;                    /*!< CPU usauge of the modes in previous vector, used seperate vector to have CActiveAEDSP::GetActiveModes call with a constant vector table value */
   std::vector<ActiveAE::CActiveAEDSPModePtr>  m_MasterModes[AE_DSP_ASTREAM_MAX];        /*!< table about selectable and usable master processing modes */
   int                                         m_CurrentMenu;
+  int                                         m_LastMenu;
   std::vector<MenuHookMember>                 m_Menus;
   Features                                    m_audioCaps;
 

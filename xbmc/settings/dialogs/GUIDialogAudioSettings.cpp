@@ -55,9 +55,6 @@ using namespace ActiveAE;
 
 /*! Menu types */
 #define MENU_MAIN                               0
-#define MENU_MASTER_MODE_SETUP                  1
-#define MENU_SPEAKER_OUTPUT_SETUP               2
-#define MENU_AUDIO_INFORMATION                  3
 
 /*! Control id's */
 #define AUDIO_SETTING_CONTENT_TYPE              1
@@ -103,6 +100,7 @@ CGUIDialogAudioDSPSettings::CGUIDialogAudioDSPSettings(void)
 {
   m_ActiveStreamId  = 0;
   m_CurrentMenu     = MENU_MAIN;
+  m_LastMenu        = MENU_MAIN;
 }
 
 CGUIDialogAudioDSPSettings::~CGUIDialogAudioDSPSettings(void)
@@ -115,7 +113,8 @@ bool CGUIDialogAudioDSPSettings::OnMessage(CGUIMessage &message)
   {
     CActiveAEDSPProcessPtr emptyProcess;
     m_ActiveStreamProcess = emptyProcess;
-    m_CurrentMenu = MENU_MAIN;
+    m_CurrentMenu         = m_LastMenu;
+    m_LastMenu            = MENU_MAIN;
   }
   return CGUIDialogSettings::OnMessage(message);
 }
@@ -230,14 +229,14 @@ void CGUIDialogAudioDSPSettings::CreateSettings()
     {
       if (m_MasterModes[m_streamTypeUsed][i])
       {
-        AE_DSP_ADDON client;
+        AE_DSP_ADDON addon;
         if (m_MasterModes[m_streamTypeUsed][i]->ModeID() == AE_DSP_MASTER_MODE_ID_PASSOVER)
         {
           entries.push_back(pair<int, CStdString>(AE_DSP_MASTER_MODE_ID_PASSOVER, g_localizeStrings.Get(m_MasterModes[m_streamTypeUsed][i]->ModeName())));
         }
-        else if (CActiveAEDSP::Get().GetAudioDSPAddon(m_MasterModes[m_streamTypeUsed][i]->AddonID(), client))
+        else if (CActiveAEDSP::Get().GetAudioDSPAddon(m_MasterModes[m_streamTypeUsed][i]->AddonID(), addon))
         {
-          entries.push_back(pair<int, CStdString>(m_MasterModes[m_streamTypeUsed][i]->ModeID(), client->GetString(m_MasterModes[m_streamTypeUsed][i]->ModeName())));
+          entries.push_back(pair<int, CStdString>(m_MasterModes[m_streamTypeUsed][i]->ModeID(), addon->GetString(m_MasterModes[m_streamTypeUsed][i]->ModeName())));
           if (!m_AddonMasterModeSetupPresent)
             m_AddonMasterModeSetupPresent = m_MasterModes[m_streamTypeUsed][i]->HasSettingsDialog();
         }
@@ -283,11 +282,11 @@ void CGUIDialogAudioDSPSettings::CreateSettings()
 
     for (unsigned int i = 0; i < m_MasterModes[m_streamTypeUsed].size(); i++)
     {
-      AE_DSP_ADDON client;
-      if (CActiveAEDSP::Get().GetAudioDSPAddon(m_MasterModes[m_streamTypeUsed][i]->AddonID(), client))
+      AE_DSP_ADDON addon;
+      if (CActiveAEDSP::Get().GetAudioDSPAddon(m_MasterModes[m_streamTypeUsed][i]->AddonID(), addon))
       {
         if (m_MasterModes[m_streamTypeUsed][i]->HasSettingsDialog())
-          AddButton(AUDIO_SETTINGS_MENUS+i, client->GetString(m_MasterModes[m_streamTypeUsed][i]->ModeSetupName()));
+          AddButton(AUDIO_SETTINGS_MENUS+i, addon->GetString(m_MasterModes[m_streamTypeUsed][i]->ModeSetupName()));
       }
     }
   }
@@ -366,8 +365,8 @@ void CGUIDialogAudioDSPSettings::CreateSettings()
     bool foundPreProcess, foundPostProcess = false;
     for (unsigned int i = 0; i < m_ActiveModes.size(); i++)
     {
-      AE_DSP_ADDON client;
-      if (CActiveAEDSP::Get().GetAudioDSPAddon(m_ActiveModes[i]->AddonID(), client))
+      AE_DSP_ADDON addon;
+      if (CActiveAEDSP::Get().GetAudioDSPAddon(m_ActiveModes[i]->AddonID(), addon))
       {
         CStdString label;
         switch (m_ActiveModes[i]->ModeType())
@@ -382,7 +381,7 @@ void CGUIDialogAudioDSPSettings::CreateSettings()
             break;
           case AE_DSP_MODE_TYPE_MASTER_PROCESS:
             AddLabel(AUDIO_SETTING_CONTENT_TYPE_MASTER, 15084);
-            label = client->GetString(m_ActiveModes[i]->ModeName());
+            label = addon->GetString(m_ActiveModes[i]->ModeName());
             break;
           case AE_DSP_MODE_TYPE_PRE_PROCESS:
             if (!foundPreProcess)
@@ -390,7 +389,7 @@ void CGUIDialogAudioDSPSettings::CreateSettings()
               foundPreProcess = true;
               AddLabel(AUDIO_SETTING_CONTENT_TYPE_PREPROC, 15085);
             }
-            label = client->GetString(m_ActiveModes[i]->ModeName());
+            label = addon->GetString(m_ActiveModes[i]->ModeName());
             break;
           case AE_DSP_MODE_TYPE_POST_PROCESS:
             if (!foundPostProcess)
@@ -398,20 +397,20 @@ void CGUIDialogAudioDSPSettings::CreateSettings()
               foundPostProcess = true;
               AddLabel(AUDIO_SETTING_CONTENT_TYPE_POSTPROC, 15086);
             }
-            label = client->GetString(m_ActiveModes[i]->ModeName());
+            label = addon->GetString(m_ActiveModes[i]->ModeName());
             break;
           default:
           {
-            label += client->GetString(m_ActiveModes[i]->ModeName());
+            label += addon->GetString(m_ActiveModes[i]->ModeName());
             label += " - ";
-            label += client->GetFriendlyName();
+            label += addon->GetFriendlyName();
           }
         };
         m_ActiveModesCPUUsage[i] = m_ActiveModes[i]->CPUUsage();
         AddButton(AUDIO_SETTINGS_MENUS+i, label, &m_ActiveModesCPUUsage[i], 0.0f, 1.0f, 100.0f, StringUtils::FormatPercent);
 
         MenuHookMember menu;
-        menu.clientId = -1;
+        menu.addonId = -1;
 
         AE_DSP_MENUHOOKS hooks;
         if (CActiveAEDSP::Get().GetMenuHooks(m_ActiveModes[i]->AddonID(), AE_DSP_MENUHOOK_INFORMATION, hooks))
@@ -421,7 +420,7 @@ void CGUIDialogAudioDSPSettings::CreateSettings()
             if (hooks[j].iRelevantModeId != m_ActiveModes[i]->AddonModeNumber())
               continue;
 
-            menu.clientId                 = m_ActiveModes[i]->AddonID();
+            menu.addonId                  = m_ActiveModes[i]->AddonID();
             menu.hook.category            = hooks[j].category;
             menu.hook.iHookId             = hooks[j].iHookId;
             menu.hook.iLocalizedStringId  = hooks[j].iLocalizedStringId;
@@ -522,9 +521,9 @@ void CGUIDialogAudioDSPSettings::OnSettingChanged(SettingInfo &setting)
     unsigned int setupEntry = setting.id-AUDIO_SETTINGS_MENUS;
     if (setting.id >= AUDIO_SETTINGS_MENUS && setting.id <= AUDIO_SETTINGS_MENUS_END && setupEntry < m_MasterModes[m_streamTypeUsed].size())
     {
-      AE_DSP_ADDON client;
-      if (m_MasterModes[m_streamTypeUsed][setupEntry]->HasSettingsDialog() && CActiveAEDSP::Get().GetAudioDSPAddon(m_MasterModes[m_streamTypeUsed][setupEntry]->AddonID(), client))
-        OpenAudioDSPMenu(AE_DSP_MENUHOOK_MASTER_PROCESS, client, m_MasterModes[m_streamTypeUsed][setupEntry]->AddonModeNumber(), m_MasterModes[m_streamTypeUsed][setupEntry]->ModeName());
+      AE_DSP_ADDON addon;
+      if (m_MasterModes[m_streamTypeUsed][setupEntry]->HasSettingsDialog() && CActiveAEDSP::Get().GetAudioDSPAddon(m_MasterModes[m_streamTypeUsed][setupEntry]->AddonID(), addon))
+        OpenAudioDSPMenu(AE_DSP_MENUHOOK_MASTER_PROCESS, addon, m_MasterModes[m_streamTypeUsed][setupEntry]->AddonModeNumber(), m_MasterModes[m_streamTypeUsed][setupEntry]->ModeName());
     }
   }
   else if (m_CurrentMenu == AUDIO_BUTTON_SPEAKER_OUTPUT_SETUP)
@@ -532,9 +531,9 @@ void CGUIDialogAudioDSPSettings::OnSettingChanged(SettingInfo &setting)
     unsigned int setupEntry = setting.id-AUDIO_SETTINGS_MENUS;
     if (setting.id >= AUDIO_SETTINGS_MENUS && setting.id <= AUDIO_SETTINGS_MENUS_END && setupEntry < m_Menus.size())
     {
-      AE_DSP_ADDON client;
-      if (CActiveAEDSP::Get().GetAudioDSPAddon(m_Menus[setupEntry].clientId, client))
-        OpenAudioDSPMenu(AE_DSP_MENUHOOK_POST_PROCESS, client, m_Menus[setupEntry].hook.iHookId, m_Menus[setupEntry].hook.iLocalizedStringId);
+      AE_DSP_ADDON addon;
+      if (CActiveAEDSP::Get().GetAudioDSPAddon(m_Menus[setupEntry].addonId, addon))
+        OpenAudioDSPMenu(AE_DSP_MENUHOOK_POST_PROCESS, addon, m_Menus[setupEntry].hook.iHookId, m_Menus[setupEntry].hook.iLocalizedStringId);
     }
     else if (setting.id == AUDIO_SETTINGS_DELAY)
       g_application.m_pPlayer->SetAVDelay(CMediaSettings::Get().GetCurrentVideoSettings().m_AudioDelay);
@@ -544,9 +543,9 @@ void CGUIDialogAudioDSPSettings::OnSettingChanged(SettingInfo &setting)
     unsigned int setupEntry = setting.id-AUDIO_SETTINGS_MENUS;
     if (setting.id >= AUDIO_SETTINGS_MENUS && setting.id <= AUDIO_SETTINGS_MENUS_END && setupEntry < m_Menus.size())
     {
-      AE_DSP_ADDON client;
-      if (CActiveAEDSP::Get().GetAudioDSPAddon(m_Menus[setupEntry].clientId, client))
-        OpenAudioDSPMenu(m_Menus[setupEntry].hook.category, client, m_Menus[setupEntry].hook.iHookId, m_Menus[setupEntry].hook.iLocalizedStringId);
+      AE_DSP_ADDON addon;
+      if (CActiveAEDSP::Get().GetAudioDSPAddon(m_Menus[setupEntry].addonId, addon))
+        OpenAudioDSPMenu(m_Menus[setupEntry].hook.category, addon, m_Menus[setupEntry].hook.iHookId, m_Menus[setupEntry].hook.iLocalizedStringId);
     }
   }
   else if (m_CurrentMenu == AUDIO_BUTTON_PRE_PROCESS_SETUP)
@@ -554,9 +553,9 @@ void CGUIDialogAudioDSPSettings::OnSettingChanged(SettingInfo &setting)
     unsigned int setupEntry = setting.id-AUDIO_SETTINGS_MENUS;
     if (setting.id >= AUDIO_SETTINGS_MENUS && setting.id <= AUDIO_SETTINGS_MENUS_END && setupEntry < m_Menus.size())
     {
-      AE_DSP_ADDON client;
-      if (CActiveAEDSP::Get().GetAudioDSPAddon(m_Menus[setupEntry].clientId, client))
-        OpenAudioDSPMenu(AE_DSP_MENUHOOK_PRE_PROCESS, client, m_Menus[setupEntry].hook.iHookId, m_Menus[setupEntry].hook.iLocalizedStringId);
+      AE_DSP_ADDON addon;
+      if (CActiveAEDSP::Get().GetAudioDSPAddon(m_Menus[setupEntry].addonId, addon))
+        OpenAudioDSPMenu(AE_DSP_MENUHOOK_PRE_PROCESS, addon, m_Menus[setupEntry].hook.iHookId, m_Menus[setupEntry].hook.iLocalizedStringId);
     }
   }
   else if (m_CurrentMenu == AUDIO_BUTTON_MISC_SETUP)
@@ -564,9 +563,9 @@ void CGUIDialogAudioDSPSettings::OnSettingChanged(SettingInfo &setting)
     unsigned int setupEntry = setting.id-AUDIO_SETTINGS_MENUS;
     if (setting.id >= AUDIO_SETTINGS_MENUS && setting.id <= AUDIO_SETTINGS_MENUS_END && setupEntry < m_Menus.size())
     {
-      AE_DSP_ADDON client;
-      if (CActiveAEDSP::Get().GetAudioDSPAddon(m_Menus[setupEntry].clientId, client))
-        OpenAudioDSPMenu(AE_DSP_MENUHOOK_MISCELLANEOUS, client, m_Menus[setupEntry].hook.iHookId, m_Menus[setupEntry].hook.iLocalizedStringId);
+      AE_DSP_ADDON addon;
+      if (CActiveAEDSP::Get().GetAudioDSPAddon(m_Menus[setupEntry].addonId, addon))
+        OpenAudioDSPMenu(AE_DSP_MENUHOOK_MISCELLANEOUS, addon, m_Menus[setupEntry].hook.iHookId, m_Menus[setupEntry].hook.iLocalizedStringId);
     }
   }
   else if (m_CurrentMenu == AUDIO_BUTTON_AUDIO_INFORMATION)
@@ -574,10 +573,10 @@ void CGUIDialogAudioDSPSettings::OnSettingChanged(SettingInfo &setting)
     unsigned int setupEntry = setting.id-AUDIO_SETTINGS_MENUS;
     if (setting.id >= AUDIO_SETTINGS_MENUS && setting.id <= AUDIO_SETTINGS_MENUS_END && setupEntry < m_Menus.size())
     {
-      AE_DSP_ADDON client;
-      if (m_Menus[setupEntry].clientId != -1 && CActiveAEDSP::Get().GetAudioDSPAddon(m_Menus[setupEntry].clientId, client))
+      AE_DSP_ADDON addon;
+      if (m_Menus[setupEntry].addonId != -1 && CActiveAEDSP::Get().GetAudioDSPAddon(m_Menus[setupEntry].addonId, addon))
       {
-        OpenAudioDSPMenu(AE_DSP_MENUHOOK_INFORMATION, client, m_Menus[setupEntry].hook.iHookId, m_Menus[setupEntry].hook.iLocalizedStringId);
+        OpenAudioDSPMenu(AE_DSP_MENUHOOK_INFORMATION, addon, m_Menus[setupEntry].hook.iHookId, m_Menus[setupEntry].hook.iLocalizedStringId);
         return;
       }
       CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Info, g_localizeStrings.Get(15031), g_localizeStrings.Get(15095));
@@ -671,21 +670,21 @@ void CGUIDialogAudioDSPSettings::AddAddonButtons()
 {
   for (unsigned int i = 0; i < m_Menus.size(); i++)
   {
-    AE_DSP_ADDON client;
-    if (CActiveAEDSP::Get().GetAudioDSPAddon(m_Menus[i].clientId, client))
+    AE_DSP_ADDON addon;
+    if (CActiveAEDSP::Get().GetAudioDSPAddon(m_Menus[i].addonId, addon))
     {
       if (m_Menus[i].hook.iLocalizedStringId > 0)
-        AddButton(AUDIO_SETTINGS_MENUS+i, client->GetString(m_Menus[i].hook.iLocalizedStringId));
+        AddButton(AUDIO_SETTINGS_MENUS+i, addon->GetString(m_Menus[i].hook.iLocalizedStringId));
     }
   }
 }
 
 void CGUIDialogAudioDSPSettings::GetAudioDSPMenus(AE_DSP_MENUHOOK_CAT category, std::vector<MenuHookMember> &menus)
 {
-  AE_DSP_ADDONMAP clientMap;
-  if (CActiveAEDSP::Get().GetEnabledAudioDSPAddons(clientMap) > 0)
+  AE_DSP_ADDONMAP addonMap;
+  if (CActiveAEDSP::Get().GetEnabledAudioDSPAddons(addonMap) > 0)
   {
-    for (AE_DSP_ADDONMAP_ITR itr = clientMap.begin(); itr != clientMap.end(); itr++)
+    for (AE_DSP_ADDONMAP_ITR itr = addonMap.begin(); itr != addonMap.end(); itr++)
     {
       AE_DSP_MENUHOOKS hooks;
       if (CActiveAEDSP::Get().GetMenuHooks(itr->second->GetID(), category, hooks))
@@ -696,7 +695,7 @@ void CGUIDialogAudioDSPSettings::GetAudioDSPMenus(AE_DSP_MENUHOOK_CAT category, 
             continue;
 
           MenuHookMember menu;
-          menu.clientId                 = itr->second->GetID();
+          menu.addonId                  = itr->second->GetID();
           menu.hook.category            = hooks[i].category;
           menu.hook.iHookId             = hooks[i].iHookId;
           menu.hook.iLocalizedStringId  = hooks[i].iLocalizedStringId;
@@ -708,7 +707,7 @@ void CGUIDialogAudioDSPSettings::GetAudioDSPMenus(AE_DSP_MENUHOOK_CAT category, 
   }
 }
 
-void CGUIDialogAudioDSPSettings::OpenAudioDSPMenu(AE_DSP_MENUHOOK_CAT category, AE_DSP_ADDON client, unsigned int iHookId, unsigned int iLocalizedStringId)
+void CGUIDialogAudioDSPSettings::OpenAudioDSPMenu(AE_DSP_MENUHOOK_CAT category, AE_DSP_ADDON addon, unsigned int iHookId, unsigned int iLocalizedStringId)
 {
   AE_DSP_MENUHOOK       hook;
   AE_DSP_MENUHOOK_DATA  hookData;
@@ -729,15 +728,19 @@ void CGUIDialogAudioDSPSettings::OpenAudioDSPMenu(AE_DSP_MENUHOOK_CAT category, 
       break;
   }
 
+  m_LastMenu = m_CurrentMenu;
   Close();
-  client->CallMenuHook(hook, hookData);
+  addon->CallMenuHook(hook, hookData);
 
   //Lock graphic context here as it is sometimes called from non rendering threads
   //maybe we should have a critical section per window instead??
   CSingleLock lock(g_graphicsContext);
 
-  if (!g_windowManager.Initialized())
+  if (CActiveAEDSP::Get().GetProcessingStreamsAmount() == 0 || !g_windowManager.Initialized())
+  {
+    m_CurrentMenu = MENU_MAIN;
     return; // don't do anything
+  }
 
   m_closing = false;
   m_bModal = true;

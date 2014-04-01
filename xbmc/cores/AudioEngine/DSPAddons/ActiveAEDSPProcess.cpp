@@ -262,32 +262,39 @@ bool CActiveAEDSPProcess::Create(AEAudioFormat inputFormat, AEAudioFormat output
       /// For resample only one call is allowed. Use first one and ignore everything else.
       CActiveAEDSPModePtr pMode = listInputResample[i].first;
       AE_DSP_ADDON        addon = listInputResample[i].second;
-      if (addon->Enabled() && addon->SupportsInputResample() && pMode->IsEnabled() &&
-          addon->StreamIsModeSupported(m_StreamId, pMode->ModeType(), pMode->AddonModeNumber(), pMode->ModeID()))
+      if (addon->Enabled() && addon->SupportsInputResample() && pMode->IsEnabled())
       {
         AE_DSP_ERROR err = addon->StreamCreate(&m_AddonSettings, &m_AddonStreamProperties);
         if (err == AE_DSP_ERROR_NO_ERROR)
         {
-          int processSamplerate = addon->InputResampleSampleRate(m_StreamId);
-          if (processSamplerate > 0)
+          if (addon->StreamIsModeSupported(m_StreamId, pMode->ModeType(), pMode->AddonModeNumber(), pMode->ModeID()))
           {
-            CLog::Log(LOGDEBUG, "  | - %s with resampling from %i to %i", addon->GetAudioDSPName().c_str(), m_InputFormat.m_sampleRate, processSamplerate);
+            int processSamplerate = addon->InputResampleSampleRate(m_StreamId);
+            if (processSamplerate == m_InputFormat.m_sampleRate)
+            {
+              CLog::Log(LOGDEBUG, "  | - input resample addon %s ignored, input sample rate %i the same as process rate", addon->GetFriendlyName().c_str(), m_InputFormat.m_sampleRate);
+              foundInputResamplerId = addon->GetID();
+            }
+            else if (processSamplerate > 0)
+            {
+              CLog::Log(LOGDEBUG, "  | - %s with resampling from %i to %i", addon->GetAudioDSPName().c_str(), m_InputFormat.m_sampleRate, processSamplerate);
 
-            m_OutputSamplerate                      = processSamplerate;                  /*!< overwrite output sample rate with the new rate */
-            m_AddonSettings.iProcessSamplerate      = processSamplerate;                  /*!< the processing sample rate required for all behind called processes */
-            m_AddonSettings.iProcessFrames          = (int) ceil((1.0 * m_AddonSettings.iProcessSamplerate) / m_AddonSettings.iInSamplerate * m_AddonSettings.iInFrames);
-            m_AddonSettings.bInputResamplingActive  = true;
+              m_OutputSamplerate                      = processSamplerate;                  /*!< overwrite output sample rate with the new rate */
+              m_AddonSettings.iProcessSamplerate      = processSamplerate;                  /*!< the processing sample rate required for all behind called processes */
+              m_AddonSettings.iProcessFrames          = (int) ceil((1.0 * m_AddonSettings.iProcessSamplerate) / m_AddonSettings.iInSamplerate * m_AddonSettings.iInFrames);
+              m_AddonSettings.bInputResamplingActive  = true;
 
-            m_Addon_InputResample.iAddonModeNumber  = pMode->AddonModeNumber();
-            m_Addon_InputResample.pMode             = pMode;
-            m_Addon_InputResample.pFunctions        = addon->GetAudioDSPFunctionStruct();
-            m_Addon_InputResample.pAddon            = addon;
-            foundInputResamplerId                   = addon->GetID();
-            m_usedMap.insert(std::make_pair(addon->GetID(), addon));
-          }
-          else
-          {
-            CLog::Log(LOGERROR, "ActiveAE DSP - %s - input resample addon %s return invalid samplerate and becomes disabled", __FUNCTION__, addon->GetFriendlyName().c_str());
+              m_Addon_InputResample.iAddonModeNumber  = pMode->AddonModeNumber();
+              m_Addon_InputResample.pMode             = pMode;
+              m_Addon_InputResample.pFunctions        = addon->GetAudioDSPFunctionStruct();
+              m_Addon_InputResample.pAddon            = addon;
+              foundInputResamplerId                   = addon->GetID();
+              m_usedMap.insert(std::make_pair(addon->GetID(), addon));
+            }
+            else
+            {
+              CLog::Log(LOGERROR, "ActiveAE DSP - %s - input resample addon %s return invalid samplerate and becomes disabled", __FUNCTION__, addon->GetFriendlyName().c_str());
+            }
           }
         }
         else if (err != AE_DSP_ERROR_IGNORE_ME)

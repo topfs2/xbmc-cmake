@@ -233,7 +233,6 @@ namespace ActiveAE
 
     protected:
       friend class CActiveAEBufferPoolResample;
-      friend class CActiveAEDSP;
 
       /*!>
        * Master processing
@@ -252,7 +251,6 @@ namespace ActiveAE
       float GetDelay();
     //@}
     private:
-      friend class CActiveAEDSPDatabase;                            /*!< Need access for write back to m_MasterModes */
     //@{
       /*!
        * Helper functions

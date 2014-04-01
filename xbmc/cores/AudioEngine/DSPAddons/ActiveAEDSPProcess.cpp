@@ -270,7 +270,7 @@ bool CActiveAEDSPProcess::Create(AEAudioFormat inputFormat, AEAudioFormat output
           if (addon->StreamIsModeSupported(m_StreamId, pMode->ModeType(), pMode->AddonModeNumber(), pMode->ModeID()))
           {
             int processSamplerate = addon->InputResampleSampleRate(m_StreamId);
-            if (processSamplerate == m_InputFormat.m_sampleRate)
+            if (processSamplerate == (int)m_InputFormat.m_sampleRate)
             {
               CLog::Log(LOGDEBUG, "  | - input resample addon %s ignored, input sample rate %i the same as process rate", addon->GetFriendlyName().c_str(), m_InputFormat.m_sampleRate);
               foundInputResamplerId = addon->GetID();

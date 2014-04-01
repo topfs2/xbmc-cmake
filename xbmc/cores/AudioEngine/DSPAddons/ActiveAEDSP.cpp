@@ -422,6 +422,17 @@ void CActiveAEDSP::DestroyDSPs(unsigned int streamId)
   }
 }
 
+CActiveAEDSPProcessPtr CActiveAEDSP::GetDSPProcess(unsigned int streamId)
+{
+  CSingleLock lock(m_critSection);
+
+  CActiveAEDSPProcessPtr emptyProc;
+
+  if (m_usedProcesses[streamId])
+    return m_usedProcesses[streamId];
+  return emptyProc;
+}
+
 unsigned int CActiveAEDSP::GetProcessingStreamsAmount(void)
 {
   CSingleLock lock(m_critSection);

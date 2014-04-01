@@ -174,6 +174,8 @@ void CGUIDialogAudioDSPSettings::CreateSettings()
     return;
   }
 
+  m_ActiveStreamProcess = CActiveAEDSP::Get().GetDSPProcess(m_ActiveStreamId);
+
   // create our settings
   if (m_CurrentMenu == MENU_MAIN)
   {
@@ -183,7 +185,7 @@ void CGUIDialogAudioDSPSettings::CreateSettings()
     for (int i = 0; i < AE_DSP_ASTREAM_AUTO; i++)
     {
       m_MasterModes[i].clear();
-      CActiveAEDSP::Get().GetAvailableMasterModes(m_ActiveStreamId, (AE_DSP_STREAMTYPE)i, m_MasterModes[i]);
+      m_ActiveStreamProcess->GetAvailableMasterModes((AE_DSP_STREAMTYPE)i, m_MasterModes[i]);
       if (!m_MasterModes[i].empty()) modesAvailable++;
     }
 
@@ -212,7 +214,7 @@ void CGUIDialogAudioDSPSettings::CreateSettings()
     }
 
     CMediaSettings::Get().GetCurrentAudioSettings().m_MasterStreamType = m_streamTypeUsed;
-    SET_CONTROL_LABEL(CONTROL_TYPE_LABEL, g_localizeStrings.Get(CActiveAEDSP::Get().GetDetectedStreamType(m_ActiveStreamId)+INPUT_TYPE_LABEL_START));
+    SET_CONTROL_LABEL(CONTROL_TYPE_LABEL, g_localizeStrings.Get(m_ActiveStreamProcess->GetDetectedStreamType()+INPUT_TYPE_LABEL_START));
 
     m_AddonMasterModeSetupPresent = false;
 
@@ -327,31 +329,31 @@ void CGUIDialogAudioDSPSettings::CreateSettings()
 
     m_ActiveModes.clear();
     m_Menus.clear();
-    CActiveAEDSP::Get().GetActiveModes(m_ActiveStreamId, m_ActiveModes);
+    m_ActiveStreamProcess->GetActiveModes(m_ActiveModes);
     m_ActiveModesCPUUsage.resize(m_ActiveModes.size());
 
     AddLabel(AUDIO_SETTING_CONTENT_LABEL, 15089);
-    m_InputChannels = StringUtils::Format("%i", CActiveAEDSP::Get().GetInputChannels(m_ActiveStreamId));
+    m_InputChannels = StringUtils::Format("%i", m_ActiveStreamProcess->GetInputChannels());
     AddString(AUDIO_SETTING_CONTENT_INPUT_CHANNELS, 15091, &m_InputChannels, false);
-    m_InputChannelNames = CActiveAEDSP::Get().GetInputChannelNames(m_ActiveStreamId);
+    m_InputChannelNames = m_ActiveStreamProcess->GetInputChannelNames();
     AddString(AUDIO_SETTING_CONTENT_INPUT_CHANNEL_NAMES, 15093, &m_InputChannelNames, false);
-    m_InputSamplerate = StringUtils::Format("%i Hz", (int)CActiveAEDSP::Get().GetInputSamplerate(m_ActiveStreamId));
+    m_InputSamplerate = StringUtils::Format("%i Hz", (int)m_ActiveStreamProcess->GetInputSamplerate());
     AddString(AUDIO_SETTING_CONTENT_INPUT_SAMPLERATE, 15092, &m_InputSamplerate, false);
 
     AddSeparator(AUDIO_SEPERATOR_1);
 
     AddLabel(AUDIO_SETTING_CONTENT_LABEL, 15090);
-    m_OutputChannels = StringUtils::Format("%i", CActiveAEDSP::Get().GetOutputChannels(m_ActiveStreamId));
+    m_OutputChannels = StringUtils::Format("%i", m_ActiveStreamProcess->GetOutputChannels());
     AddString(AUDIO_SETTING_CONTENT_OUTPUT_CHANNELS, 15091, &m_OutputChannels, false);
-    m_OutputChannelNames = CActiveAEDSP::Get().GetOutputChannelNames(m_ActiveStreamId);
+    m_OutputChannelNames = m_ActiveStreamProcess->GetOutputChannelNames();
     AddString(AUDIO_SETTING_CONTENT_OUTPUT_CHANNEL_NAMES, 15093, &m_OutputChannelNames, false);
-    m_OutputSamplerate = StringUtils::Format("%i Hz", (int)CActiveAEDSP::Get().GetOutputSamplerate(m_ActiveStreamId));
+    m_OutputSamplerate = StringUtils::Format("%i Hz", (int)m_ActiveStreamProcess->GetOutputSamplerate());
     AddString(AUDIO_SETTING_CONTENT_OUTPUT_SAMPLERATE, 15092, &m_OutputSamplerate, false);
 
     AddSeparator(AUDIO_SEPERATOR_2);
 
     AddLabel(AUDIO_SETTING_CONTENT_LABEL, 15081);
-    m_CPUUsage = StringUtils::Format("%.02f %%", CActiveAEDSP::Get().GetCPUUsage(m_ActiveStreamId));
+    m_CPUUsage = StringUtils::Format("%.02f %%", m_ActiveStreamProcess->GetCPUUsage());
     AddString(AUDIO_SETTING_CONTENT_CPU_USAGE, 15094, &m_CPUUsage, false);
 
     bool foundPreProcess, foundPostProcess = false;
@@ -365,11 +367,11 @@ void CGUIDialogAudioDSPSettings::CreateSettings()
         {
           case AE_DSP_MODE_TYPE_INPUT_RESAMPLE:
             AddLabel(AUDIO_SETTING_CONTENT_TYPE_INPUT, 15087);
-            label = StringUtils::Format(g_localizeStrings.Get(15082), CActiveAEDSP::Get().GetProcessSamplerate(m_ActiveStreamId));
+            label = StringUtils::Format(g_localizeStrings.Get(15082), m_ActiveStreamProcess->GetProcessSamplerate());
             break;
           case AE_DSP_MODE_TYPE_OUTPUT_RESAMPLE:
             AddLabel(AUDIO_SETTING_CONTENT_TYPE_OUTPUT, 15088);
-            label = StringUtils::Format(g_localizeStrings.Get(15083), CActiveAEDSP::Get().GetOutputSamplerate(m_ActiveStreamId));
+            label = StringUtils::Format(g_localizeStrings.Get(15083), m_ActiveStreamProcess->GetOutputSamplerate());
             break;
           case AE_DSP_MODE_TYPE_MASTER_PROCESS:
             AddLabel(AUDIO_SETTING_CONTENT_TYPE_MASTER, 15084);
@@ -459,7 +461,7 @@ void CGUIDialogAudioDSPSettings::OnSettingChanged(SettingInfo &setting)
     {
       int type = CMediaSettings::Get().GetCurrentAudioSettings().m_MasterStreamTypeSel;
       if (type == AE_DSP_ASTREAM_AUTO)
-        type = CActiveAEDSP::Get().GetDetectedStreamType(m_ActiveStreamId);
+        type = m_ActiveStreamProcess->GetDetectedStreamType();
 
       CMediaSettings::Get().GetCurrentAudioSettings().m_MasterStreamType = type;
 
@@ -471,10 +473,9 @@ void CGUIDialogAudioDSPSettings::OnSettingChanged(SettingInfo &setting)
           CMediaSettings::Get().GetCurrentAudioSettings().m_MasterModes[type][m_baseTypeUsed] = m_MasterModes[type][0]->ModeID();
 
         /* Switch now the master mode and stream type for audio dsp processing */
-        CActiveAEDSP::Get().SetMasterMode(m_ActiveStreamId,
-                                          (AE_DSP_STREAMTYPE)type,
-                                          CMediaSettings::Get().GetCurrentAudioSettings().m_MasterModes[type][m_baseTypeUsed],
-                                          true);
+        m_ActiveStreamProcess->SetMasterMode((AE_DSP_STREAMTYPE)type,
+                                             CMediaSettings::Get().GetCurrentAudioSettings().m_MasterModes[type][m_baseTypeUsed],
+                                             true);
 
         UpdateModeIcons();
       }
@@ -490,9 +491,8 @@ void CGUIDialogAudioDSPSettings::OnSettingChanged(SettingInfo &setting)
     }
     else if (setting.id == AUDIO_SELECT_MASTER_MODE)
     {
-      CActiveAEDSP::Get().SetMasterMode(m_ActiveStreamId,
-                                        m_streamTypeUsed,
-                                        CMediaSettings::Get().GetCurrentAudioSettings().m_MasterModes[m_streamTypeUsed][m_baseTypeUsed]);
+      m_ActiveStreamProcess->SetMasterMode(m_streamTypeUsed,
+                                           CMediaSettings::Get().GetCurrentAudioSettings().m_MasterModes[m_streamTypeUsed][m_baseTypeUsed]);
       UpdateModeIcons();
     }
     else if (setting.id == AUDIO_SETTINGS_VOLUME)
@@ -601,9 +601,10 @@ void CGUIDialogAudioDSPSettings::FrameMove()
     {
       if (m_ActiveStreamId != streamId || m_baseTypeUsed != usedBaseType || m_streamTypeUsed != streamTypeUsed)
       {
-        m_baseTypeUsed    = usedBaseType;
-        m_streamTypeUsed  = streamTypeUsed;
-        m_ActiveStreamId  = streamId;
+        m_baseTypeUsed        = usedBaseType;
+        m_streamTypeUsed      = streamTypeUsed;
+        m_ActiveStreamId      = streamId;
+        m_ActiveStreamProcess = CActiveAEDSP::Get().GetDSPProcess(m_ActiveStreamId);
 
         /*!
         * Update settings
@@ -620,14 +621,14 @@ void CGUIDialogAudioDSPSettings::FrameMove()
 
       // these settings can change on the fly
       CStdString strInfo;
-      CActiveAEDSP::Get().GetMasterModeStreamInfoString(m_ActiveStreamId, strInfo);
+      m_ActiveStreamProcess->GetMasterModeStreamInfoString(strInfo);
       SET_CONTROL_LABEL(CONTROL_ADDON_STREAM_INFO, strInfo);
-      SET_CONTROL_LABEL(CONTROL_TYPE_LABEL, g_localizeStrings.Get(CActiveAEDSP::Get().GetDetectedStreamType(m_ActiveStreamId)+INPUT_TYPE_LABEL_START));
+      SET_CONTROL_LABEL(CONTROL_TYPE_LABEL, g_localizeStrings.Get(m_ActiveStreamProcess->GetDetectedStreamType()+INPUT_TYPE_LABEL_START));
     }
 
     if (m_CurrentMenu == AUDIO_BUTTON_AUDIO_INFORMATION)
     {
-      m_CPUUsage = StringUtils::Format("%.02f %%", CActiveAEDSP::Get().GetCPUUsage(m_ActiveStreamId));
+      m_CPUUsage = StringUtils::Format("%.02f %%", m_ActiveStreamProcess->GetCPUUsage());
       UpdateSetting(AUDIO_SETTING_CONTENT_CPU_USAGE);
 
       for (unsigned int i = 0; i < m_ActiveModes.size(); i++)
@@ -677,7 +678,7 @@ void CGUIDialogAudioDSPSettings::GetAudioDSPMenus(AE_DSP_MENUHOOK_CAT category, 
       {
         for (unsigned int i = 0; i < hooks.size(); i++)
         {
-          if (!CActiveAEDSP::Get().IsModeActive(m_ActiveStreamId, hooks[i].category, itr->second->GetID(), hooks[i].iRelevantModeId))
+          if (!m_ActiveStreamProcess->IsModeActive(hooks[i].category, itr->second->GetID(), hooks[i].iRelevantModeId))
             continue;
 
           MenuHookMember menu;

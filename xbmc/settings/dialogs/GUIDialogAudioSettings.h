@@ -19,7 +19,7 @@
  *
  */
 
-#include "cores/AudioEngine/DSPAddons/ActiveAEDSP.h"
+#include "cores/AudioEngine/DSPAddons/ActiveAEDSPProcess.h"
 #include "settings/dialogs/GUIDialogSettings.h"
 
 typedef std::vector<int> Features;
@@ -51,6 +51,7 @@ protected:
   void OpenAudioDSPMenu(AE_DSP_MENUHOOK_CAT category, ActiveAE::AE_DSP_ADDON client, unsigned int iHookId, unsigned int iLocalizedStringId);
 
   AE_DSP_STREAM_ID                            m_ActiveStreamId;
+  ActiveAE::CActiveAEDSPProcessPtr            m_ActiveStreamProcess;
   bool                                        m_AddonMasterModeSetupPresent;             /* If any addon have a own settings dialog for a master mode it is set to true */
   bool                                        m_streamTypeReset;
   AE_DSP_STREAMTYPE                           m_streamTypeUsed;

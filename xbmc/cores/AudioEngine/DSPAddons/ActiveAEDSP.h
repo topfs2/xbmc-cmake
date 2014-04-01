@@ -268,6 +268,12 @@ namespace ActiveAE
     void DestroyDSPs(unsigned int streamId);
 
     /*!>
+     * Get the dsp processing class of given stream id
+     * @param streamId The id of this stream
+     */
+    CActiveAEDSPProcessPtr GetDSPProcess(unsigned int streamId);
+
+    /*!>
      * Change master mode with the individual identification code given from dsp database
      * @param streamId The id of this stream
      * @param iMasterModeID The identification code

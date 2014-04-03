@@ -31,7 +31,6 @@
 #endif
 #include <vector>
 #include "DllAvCodec.h"
-#include "addons/DllAudioDSP.h"
 
 struct AVStream;
 
@@ -54,7 +53,6 @@ typedef struct stDVDAudioFrame
   int               sample_rate;
   int               encoded_sample_rate;
   bool              passthrough;
-  unsigned int      profile;
 } DVDAudioFrame;
 
 class CDVDAudioCodec
@@ -102,7 +100,6 @@ public:
     frame.sample_rate           = GetSampleRate();
     frame.encoded_sample_rate   = GetEncodedSampleRate();
     frame.passthrough           = NeedPassthrough();
-    frame.profile               = GetStreamProfile();
     frame.pts                   = DVD_NOPTS_VALUE;
     // compute duration.
     int n = (frame.channel_count * frame.bits_per_sample * frame.sample_rate)>>3;
@@ -131,11 +128,6 @@ public:
    * returns the channel mapping
    */
   virtual CAEChannelInfo GetChannelMap() = 0;
-
-  /*
-   * returns the dsp relevant stream properties
-   */
-  virtual unsigned int GetStreamProfile() { return 0; }
 
   /*
    * returns the samplerate for the decoded audio stream

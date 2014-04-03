@@ -63,10 +63,10 @@
 #define AE_DSP_STREAM_MAX_MODES                 32
 
 /* current Audio DSP API version */
-#define XBMC_AE_DSP_API_VERSION                 "0.1.0"
+#define XBMC_AE_DSP_API_VERSION                 "0.1.1"
 
 /* min. Audio DSP API version */
-#define XBMC_AE_DSP_MIN_API_VERSION             "0.1.0"
+#define XBMC_AE_DSP_MIN_API_VERSION             "0.1.1"
 
 #ifdef __cplusplus
 extern "C" {
@@ -311,42 +311,52 @@ extern "C" {
   } ATTRIBUTE_PACKED AE_DSP_SETTINGS;
 
   /*!
-   * @brief AC3 stream profile properties
+   * @brief Stream profile properties
    * Can be used to detect best master processing mode and for post processing methods.
    */
-  #define AE_DSP_PROFILE_AC3_CHANNELMODE_UNDEFINED      0
-  #define AE_DSP_PROFILE_AC3_CHANNELMODE_CH1_CH2        1
-  #define AE_DSP_PROFILE_AC3_CHANNELMODE_C              2
-  #define AE_DSP_PROFILE_AC3_CHANNELMODE_L_R            3
-  #define AE_DSP_PROFILE_AC3_CHANNELMODE_L_C_R          4
-  #define AE_DSP_PROFILE_AC3_CHANNELMODE_L_R_S          5
-  #define AE_DSP_PROFILE_AC3_CHANNELMODE_L_C_R_S        6
-  #define AE_DSP_PROFILE_AC3_CHANNELMODE_L_R_SL_SR      7
-  #define AE_DSP_PROFILE_AC3_CHANNELMODE_L_C_R_SL_SR    8
-  #define AE_DSP_PROFILE_AC3_ROOM_UNDEFINED             0
-  #define AE_DSP_PROFILE_AC3_ROOM_LARGE                 1
-  #define AE_DSP_PROFILE_AC3_ROOM_SMALL                 2
-  typedef struct AE_DSP_PROFILE_AC3
+//@{
+  //! @brief AC3/EAC3 stream profile properties
+  //! @todo fix usage with newest ffmpeg handling (currently never becomes set)
+  typedef struct AE_DSP_PROFILE_AC3_EAC3
   {
-    unsigned int  iChannelMode;
-    bool          bWithLFE;
-    bool          bWithSurround;
-    bool          bWithDolbyDigitalEx;
-    bool          bWithDolbyHP;
-    unsigned int  iRoomType;
-  } ATTRIBUTE_PACKED AE_DSP_PROFILE_AC3;
+    unsigned int  undefined;
+  } ATTRIBUTE_PACKED AE_DSP_PROFILE_AC3_EAC3;
+
+  //! @brief DTS stream profile properties
+  //! @todo add handling for it (currently never becomes set)
+  typedef struct AE_DSP_PROFILE_DTS
+  {
+    unsigned int  undefined;
+  } ATTRIBUTE_PACKED AE_DSP_PROFILE_DTS;
+
+  //! @brief DTS HD stream profile properties
+  //! @todo add handling for it (currently never becomes set)
+  typedef struct AE_DSP_PROFILE_DTS_HD
+  {
+    unsigned int  undefined;
+  } ATTRIBUTE_PACKED AE_DSP_PROFILE_DTS_HD;
+
+  //! @brief MLP/Dolby TrueHD stream profile properties
+  //! @todo add handling for it (currently never becomes set)
+  typedef struct AE_DSP_PROFILE_MLP_TRUEHD
+  {
+    unsigned int  undefined;
+  } ATTRIBUTE_PACKED AE_DSP_PROFILE_MLP_TRUEHD;
+
+  union AE_DSP_PROFILE
+  {
+    AE_DSP_PROFILE_AC3_EAC3   ac3_eac3;
+    AE_DSP_PROFILE_DTS        dts;
+    AE_DSP_PROFILE_DTS_HD     dtshd;
+    AE_DSP_PROFILE_MLP_TRUEHD mlp_truehd;
+  };
+  //@}
 
   /*!
    * @brief Audio DSP stream properties
    * Used to check for the DSP add-on that the stream is supported,
    * as example Dolby Digital Ex processing is only required on Dolby Digital with 5.1 layout
    */
-  union AE_DSP_PROFILE
-  {
-    AE_DSP_PROFILE_AC3      ac3;
-    /// TODO: add other profiles
-  };
-
   typedef struct AE_DSP_STREAM_PROPERTIES
   {
     AE_DSP_STREAM_ID  iStreamID;                  /*!< @brief stream id of the audio stream packets */

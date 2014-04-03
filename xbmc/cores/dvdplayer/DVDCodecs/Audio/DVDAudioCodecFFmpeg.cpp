@@ -44,7 +44,6 @@ CDVDAudioCodecFFmpeg::CDVDAudioCodecFFmpeg() : CDVDAudioCodec()
 
   m_channels = 0;
   m_layout = 0;
-  m_Profile = 0;
   
   m_pFrame1 = NULL;
   m_iSampleFormat = AV_SAMPLE_FMT_NONE;
@@ -81,7 +80,6 @@ bool CDVDAudioCodecFFmpeg::Open(CDVDStreamInfo &hints, CDVDCodecOptions &options
     m_pCodecContext->flags |= CODEC_FLAG_TRUNCATED;
 
   m_channels = 0;
-  m_Profile = 0;
   m_pCodecContext->channels = hints.channels;
   m_pCodecContext->sample_rate = hints.samplerate;
   m_pCodecContext->block_align = hints.blockalign;
@@ -375,11 +373,6 @@ void CDVDAudioCodecFFmpeg::BuildChannelMap()
   if (layout & AV_CH_TOP_BACK_RIGHT       ) m_channelLayout += AE_CH_BR  ;
 
   m_channels = m_pCodecContext->channels;
-}
-
-unsigned int CDVDAudioCodecFFmpeg::GetStreamProfile()
-{
-  return m_pCodecContext->profile;
 }
 
 CAEChannelInfo CDVDAudioCodecFFmpeg::GetChannelMap()

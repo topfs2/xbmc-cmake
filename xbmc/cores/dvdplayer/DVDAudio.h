@@ -96,7 +96,6 @@ protected:
   double m_SecondsPerByte;
   bool m_bPassthrough;
   CAEChannelInfo m_channelLayout;
-  unsigned int m_iProfile;
   bool m_bPaused;
 
   volatile bool& m_bStop;

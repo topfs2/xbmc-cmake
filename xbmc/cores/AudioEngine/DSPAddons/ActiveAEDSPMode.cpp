@@ -153,126 +153,24 @@ CActiveAEDSPMode &CActiveAEDSPMode::operator=(const CActiveAEDSPMode &mode)
   return *this;
 }
 
-/********** XBMC related mode methods **********/
+/********** General mode related functions **********/
 
-bool CActiveAEDSPMode::Delete(void)
+bool CActiveAEDSPMode::IsNew(void) const
 {
-  bool bReturn = false;
-
-  CActiveAEDSPDatabase *database = CActiveAEDSP::Get().GetADSPDatabase();
-  if (!database || !database->IsOpen())
-  {
-    CLog::Log(LOGERROR, "ActiveAE DSP - failed to open the database");
-    return bReturn;
-  }
-
-  bReturn = database->DeleteMode(*this);
-  return bReturn;
-}
-
-int CActiveAEDSPMode::AddUpdate(bool force)
-{
-  if (!force)
-  {
-    // not changed
-    CSingleLock lock(m_critSection);
-    if (!m_bChanged && m_iModeId > 0)
-      return m_iModeId;
-  }
-
-  CActiveAEDSPDatabase *database = CActiveAEDSP::Get().GetADSPDatabase();
-  if (!database || !database->IsOpen())
-  {
-    CLog::Log(LOGERROR, "ActiveAE DSP - failed to open the database");
-    return -1;
-  }
-
-  database->AddUpdateMode(*this);
-  m_iModeId = database->GetModeId(*this);
-
-  return m_iModeId;
-}
-
-bool CActiveAEDSPMode::IsKnown(void)
-{
-  CActiveAEDSPDatabase *database = CActiveAEDSP::Get().GetADSPDatabase();
-  if (!database || !database->IsOpen())
-  {
-    CLog::Log(LOGERROR, "ActiveAE DSP - failed to open the database");
-    return -1;
-  }
-
-  return database->GetModeId(*this) > 0;
-}
-
-bool CActiveAEDSPMode::UpdateFromAddon(const CActiveAEDSPMode &mode)
-{
-  SetAddonID(mode.AddonID());
-  SetAddonModeNumber(mode.AddonModeNumber());
-  SetAddonModeName(mode.AddonModeName());
-  SetBaseType(mode.BaseType());
-  SetStreamTypeFlags(mode.StreamTypeFlags());
-  SetModeSetupName(mode.ModeSetupName());
-  SetModeName(mode.ModeName());
-  SetModeHelp(mode.ModeHelp());
-  SetModeDescription(mode.ModeDescription());
-
   CSingleLock lock(m_critSection);
+  return m_iModeId <= 0;
+}
 
-  if (m_strOwnIconPath.empty() || !m_strOwnIconPath.Equals(mode.IconOwnModePath()))
-    SetIconOwnModePath(mode.IconOwnModePath());
-  if (m_strOverrideIconPath.empty() || !m_strOverrideIconPath.Equals(mode.IconOverrideModePath()))
-    SetIconOverrideModePath(mode.IconOverrideModePath());
-
+bool CActiveAEDSPMode::IsChanged(void) const
+{
+  CSingleLock lock(m_critSection);
   return m_bChanged;
 }
 
-bool CActiveAEDSPMode::SetModeType(AE_DSP_MODE_TYPE iModeType)
+bool CActiveAEDSPMode::IsEnabled(void) const
 {
   CSingleLock lock(m_critSection);
-  if (m_iModeType != iModeType)
-  {
-    /* update the type */
-    m_iModeType = iModeType;
-    SetChanged();
-    m_bChanged = true;
-
-    return true;
-  }
-
-  return false;
-}
-
-bool CActiveAEDSPMode::SetModePosition(int iModePosition)
-{
-  CSingleLock lock(m_critSection);
-  if (m_iModePosition != iModePosition)
-  {
-    /* update the type */
-    m_iModePosition = iModePosition;
-    SetChanged();
-    m_bChanged = true;
-
-    return true;
-  }
-
-  return false;
-}
-
-bool CActiveAEDSPMode::SetModeID(int iModeId)
-{
-  CSingleLock lock(m_critSection);
-  if (m_iModeId != iModeId)
-  {
-    /* update the id */
-    m_iModeId = iModeId;
-    SetChanged();
-    m_bChanged = true;
-
-    return true;
-  }
-
-  return false;
+  return m_bIsEnabled;
 }
 
 bool CActiveAEDSPMode::SetEnabled(bool bIsEnabled)
@@ -292,79 +190,19 @@ bool CActiveAEDSPMode::SetEnabled(bool bIsEnabled)
   return false;
 }
 
-bool CActiveAEDSPMode::SetIconOwnModePath(const CStdString &strIconPath)
+int CActiveAEDSPMode::ModePosition(void) const
 {
   CSingleLock lock(m_critSection);
-
-  if (m_strOwnIconPath != strIconPath)
-  {
-    /* update the path */
-    m_strOwnIconPath = StringUtils::Format("%s", strIconPath.c_str());
-    SetChanged();
-    m_bChanged = true;
-
-    return true;
-  }
-
-  return false;
+  return m_iModePosition;
 }
 
-bool CActiveAEDSPMode::SetIconOverrideModePath(const CStdString &strIconPath)
+bool CActiveAEDSPMode::SetModePosition(int iModePosition)
 {
   CSingleLock lock(m_critSection);
-
-  if (m_strOverrideIconPath != strIconPath)
+  if (m_iModePosition != iModePosition)
   {
-    /* update the path */
-    m_strOverrideIconPath = StringUtils::Format("%s", strIconPath.c_str());
-    SetChanged();
-    m_bChanged = true;
-
-    return true;
-  }
-
-  return false;
-}
-
-bool CActiveAEDSPMode::SetModeName(int iModeName)
-{
-  CSingleLock lock(m_critSection);
-  if (m_iModeName != iModeName)
-  {
-    /* update the mode name */
-    m_iModeName = iModeName;
-    SetChanged();
-    m_bChanged = true;
-
-    return true;
-  }
-
-  return false;
-}
-
-bool CActiveAEDSPMode::SetModeSetupName(int iModeSetupName)
-{
-  CSingleLock lock(m_critSection);
-  if (m_iModeSetupName != iModeSetupName)
-  {
-    /* update the mode name */
-    m_iModeSetupName = iModeSetupName;
-    SetChanged();
-    m_bChanged = true;
-
-    return true;
-  }
-
-  return false;
-}
-
-bool CActiveAEDSPMode::SetBaseType(AE_DSP_BASETYPE baseType)
-{
-  CSingleLock lock(m_critSection);
-  if (m_iBaseType != baseType)
-  {
-    /* update the mode base */
-    m_iBaseType = baseType;
+    /* update the type */
+    m_iModePosition = iModePosition;
     SetChanged();
     m_bChanged = true;
 
@@ -391,13 +229,21 @@ bool CActiveAEDSPMode::SupportStreamType(AE_DSP_STREAMTYPE streamType)
   return SupportStreamType(streamType, m_iStreamTypeFlags);
 }
 
-bool CActiveAEDSPMode::SetStreamTypeFlags(unsigned int streamTypeFlags)
+/********** Mode user interface related data functions **********/
+
+int CActiveAEDSPMode::ModeName(void) const
 {
   CSingleLock lock(m_critSection);
-  if (m_iStreamTypeFlags != streamTypeFlags)
+  return m_iModeName;
+}
+
+bool CActiveAEDSPMode::SetModeName(int iModeName)
+{
+  CSingleLock lock(m_critSection);
+  if (m_iModeName != iModeName)
   {
-    /* update the mode type */
-    m_iStreamTypeFlags = streamTypeFlags;
+    /* update the mode name */
+    m_iModeName = iModeName;
     SetChanged();
     m_bChanged = true;
 
@@ -405,6 +251,34 @@ bool CActiveAEDSPMode::SetStreamTypeFlags(unsigned int streamTypeFlags)
   }
 
   return false;
+}
+
+int CActiveAEDSPMode::ModeSetupName(void) const
+{
+  CSingleLock lock(m_critSection);
+  return m_iModeSetupName;
+}
+
+bool CActiveAEDSPMode::SetModeSetupName(int iModeSetupName)
+{
+  CSingleLock lock(m_critSection);
+  if (m_iModeSetupName != iModeSetupName)
+  {
+    /* update the mode name */
+    m_iModeSetupName = iModeSetupName;
+    SetChanged();
+    m_bChanged = true;
+
+    return true;
+  }
+
+  return false;
+}
+
+int CActiveAEDSPMode::ModeDescription(void) const
+{
+  CSingleLock lock(m_critSection);
+  return m_iModeDescription;
 }
 
 bool CActiveAEDSPMode::SetModeDescription(int iModeDescription)
@@ -423,6 +297,12 @@ bool CActiveAEDSPMode::SetModeDescription(int iModeDescription)
   return false;
 }
 
+int CActiveAEDSPMode::ModeHelp(void) const
+{
+  CSingleLock lock(m_critSection);
+  return m_iModeHelp;
+}
+
 bool CActiveAEDSPMode::SetModeHelp(int iModeHelp)
 {
   CSingleLock lock(m_critSection);
@@ -439,100 +319,28 @@ bool CActiveAEDSPMode::SetModeHelp(int iModeHelp)
   return false;
 }
 
-/********** Addon related Mode methods **********/
-
-bool CActiveAEDSPMode::SetAddonID(int iAddonId)
-{
-  CSingleLock lock(m_critSection);
-
-  if (m_iAddonId != iAddonId)
-  {
-    /* update the Addon ID */
-    m_iAddonId = iAddonId;
-    SetChanged();
-    m_bChanged = true;
-
-    return true;
-  }
-
-  return false;
-}
-
-bool CActiveAEDSPMode::SetAddonModeNumber(unsigned int iAddonModeNumber)
-{
-  CSingleLock lock(m_critSection);
-
-  if (m_iAddonModeNumber != iAddonModeNumber)
-  {
-    /* update the Addon Mode number */
-    m_iAddonModeNumber = iAddonModeNumber;
-    SetChanged();
-    m_bChanged = true;
-
-    return true;
-  }
-
-  return false;
-}
-
-bool CActiveAEDSPMode::SetAddonModeName(const CStdString &strAddonModeName)
-{
-  CSingleLock lock(m_critSection);
-
-  if (m_strAddonModeName != strAddonModeName)
-  {
-    /* update the Addon Mode name */
-    m_strAddonModeName = StringUtils::Format("%s", strAddonModeName.c_str());
-    SetChanged();
-    // this is not persisted, so don't update m_bChanged
-
-    return true;
-  }
-
-  return false;
-}
-
-void CActiveAEDSPMode::SetCPUUsage(float percent)
-{
-  CSingleLock lock(m_critSection);
-  m_fCPUUsage = percent;
-}
-
-AE_DSP_MODE_TYPE CActiveAEDSPMode::ModeType(void) const
-{
-  CSingleLock lock(m_critSection);
-  return m_iModeType;
-}
-
-int CActiveAEDSPMode::ModePosition(void) const
-{
-  CSingleLock lock(m_critSection);
-  return m_iModePosition;
-}
-
-int CActiveAEDSPMode::ModeID(void) const
-{
-  CSingleLock lock(m_critSection);
-  return m_iModeId;
-}
-
-bool CActiveAEDSPMode::IsNew(void) const
-{
-  CSingleLock lock(m_critSection);
-  return m_iModeId <= 0;
-}
-
-bool CActiveAEDSPMode::IsEnabled(void) const
-{
-  CSingleLock lock(m_critSection);
-  return m_bIsEnabled;
-}
-
 CStdString CActiveAEDSPMode::IconOwnModePath(void) const
 {
   CSingleLock lock(m_critSection);
   CStdString strReturn(m_strOwnIconPath);
   return strReturn;
+}
+
+bool CActiveAEDSPMode::SetIconOwnModePath(const CStdString &strIconPath)
+{
+  CSingleLock lock(m_critSection);
+
+  if (m_strOwnIconPath != strIconPath)
+  {
+    /* update the path */
+    m_strOwnIconPath = StringUtils::Format("%s", strIconPath.c_str());
+    SetChanged();
+    m_bChanged = true;
+
+    return true;
+  }
+
+  return false;
 }
 
 CStdString CActiveAEDSPMode::IconOverrideModePath(void) const
@@ -542,16 +350,40 @@ CStdString CActiveAEDSPMode::IconOverrideModePath(void) const
   return strReturn;
 }
 
-int CActiveAEDSPMode::ModeName(void) const
+bool CActiveAEDSPMode::SetIconOverrideModePath(const CStdString &strIconPath)
 {
   CSingleLock lock(m_critSection);
-  return m_iModeName;
+
+  if (m_strOverrideIconPath != strIconPath)
+  {
+    /* update the path */
+    m_strOverrideIconPath = StringUtils::Format("%s", strIconPath.c_str());
+    SetChanged();
+    m_bChanged = true;
+
+    return true;
+  }
+
+  return false;
 }
 
-int CActiveAEDSPMode::ModeSetupName(void) const
+
+/********** Master mode type related functions **********/
+
+bool CActiveAEDSPMode::SetBaseType(AE_DSP_BASETYPE baseType)
 {
   CSingleLock lock(m_critSection);
-  return m_iModeSetupName;
+  if (m_iBaseType != baseType)
+  {
+    /* update the mode base */
+    m_iBaseType = baseType;
+    SetChanged();
+    m_bChanged = true;
+
+    return true;
+  }
+
+  return false;
 }
 
 AE_DSP_BASETYPE CActiveAEDSPMode::BaseType(void) const
@@ -560,35 +392,82 @@ AE_DSP_BASETYPE CActiveAEDSPMode::BaseType(void) const
   return m_iBaseType;
 }
 
-unsigned int CActiveAEDSPMode::StreamTypeFlags(void) const
+
+/********** Audio DSP database related functions **********/
+
+int CActiveAEDSPMode::ModeID(void) const
 {
   CSingleLock lock(m_critSection);
-  return m_iStreamTypeFlags;
+  return m_iModeId;
 }
 
-int CActiveAEDSPMode::ModeDescription(void) const
+int CActiveAEDSPMode::AddUpdate(bool force)
 {
-  CSingleLock lock(m_critSection);
-  return m_iModeDescription;
+  if (!force)
+  {
+    // not changed
+    CSingleLock lock(m_critSection);
+    if (!m_bChanged && m_iModeId > 0)
+      return m_iModeId;
+  }
+
+  CActiveAEDSPDatabase *database = CActiveAEDSP::Get().GetADSPDatabase();
+  if (!database || !database->IsOpen())
+  {
+    CLog::Log(LOGERROR, "ActiveAE DSP - failed to open the database");
+    return -1;
+  }
+
+  database->AddUpdateMode(*this);
+  m_iModeId = database->GetModeId(*this);
+
+  return m_iModeId;
 }
 
-int CActiveAEDSPMode::ModeHelp(void) const
+bool CActiveAEDSPMode::Delete(void)
 {
-  CSingleLock lock(m_critSection);
-  return m_iModeHelp;
+  bool bReturn = false;
+
+  CActiveAEDSPDatabase *database = CActiveAEDSP::Get().GetADSPDatabase();
+  if (!database || !database->IsOpen())
+  {
+    CLog::Log(LOGERROR, "ActiveAE DSP - failed to open the database");
+    return bReturn;
+  }
+
+  bReturn = database->DeleteMode(*this);
+  return bReturn;
 }
 
-bool CActiveAEDSPMode::HasSettingsDialog(void) const
+bool CActiveAEDSPMode::IsKnown(void)
 {
-  CSingleLock lock(m_critSection);
-  return m_bHasSettingsDialog;
+  CActiveAEDSPDatabase *database = CActiveAEDSP::Get().GetADSPDatabase();
+  if (!database || !database->IsOpen())
+  {
+    CLog::Log(LOGERROR, "ActiveAE DSP - failed to open the database");
+    return false;
+  }
+
+  return database->GetModeId(*this) > 0;
 }
 
-bool CActiveAEDSPMode::IsChanged(void) const
+
+/********** Dynamic processing related data methods **********/
+
+void CActiveAEDSPMode::SetCPUUsage(float percent)
 {
   CSingleLock lock(m_critSection);
-  return m_bChanged;
+  m_fCPUUsage = percent;
 }
+
+float CActiveAEDSPMode::CPUUsage(void) const
+{
+  CSingleLock lock(m_critSection);
+  return m_fCPUUsage;
+}
+
+
+/********** Fixed addon related Mode methods **********/
 
 int CActiveAEDSPMode::AddonID(void) const
 {
@@ -602,6 +481,12 @@ unsigned int CActiveAEDSPMode::AddonModeNumber(void) const
   return m_iAddonModeNumber;
 }
 
+AE_DSP_MODE_TYPE CActiveAEDSPMode::ModeType(void) const
+{
+  CSingleLock lock(m_critSection);
+  return m_iModeType;
+}
+
 CStdString CActiveAEDSPMode::AddonModeName(void) const
 {
   CSingleLock lock(m_critSection);
@@ -609,8 +494,15 @@ CStdString CActiveAEDSPMode::AddonModeName(void) const
   return strReturn;
 }
 
-float CActiveAEDSPMode::CPUUsage(void) const
+bool CActiveAEDSPMode::HasSettingsDialog(void) const
 {
   CSingleLock lock(m_critSection);
-  return m_fCPUUsage;
+  return m_bHasSettingsDialog;
 }
+
+unsigned int CActiveAEDSPMode::StreamTypeFlags(void) const
+{
+  CSingleLock lock(m_critSection);
+  return m_iStreamTypeFlags;
+}
+

@@ -45,69 +45,288 @@ namespace ActiveAE
   //@{
   class CActiveAEDSPMode : public Observable
   {
-    friend class CActiveAEDSPDatabase;
-
   public:
     /*! @brief Create a new mode */
     CActiveAEDSPMode();
+
+    /*!
+     * @brief Create the class about given stream type
+     * @param baseType the used base of this internal mode
+     * @note this creation is only used to get a internal bypass mode (no addon call process mode)
+     */
     CActiveAEDSPMode(const AE_DSP_BASETYPE baseType);
+
+    /*!
+     * @brief Create the class about from addon given values
+     * @param mode the from addon set identification structure
+     * @param iAddonId the addon identification of the given data
+     */
     CActiveAEDSPMode(const AE_DSP_MODES::AE_DSP_MODE &mode, int iAddonId);
+
+    /*!
+     * @brief Create a new class about given class
+     * @param mode the parent mode to copy data from
+     */
     CActiveAEDSPMode(const CActiveAEDSPMode &mode);
 
     bool operator ==(const CActiveAEDSPMode &right) const;
     bool operator !=(const CActiveAEDSPMode &right) const;
     CActiveAEDSPMode &operator=(const CActiveAEDSPMode &mode);
 
-    bool Delete(void);
-    int AddUpdate(bool force = false);
-    bool UpdateFromAddon(const CActiveAEDSPMode &mode);
+    /*! @name General mode related functions
+     *  @note changes are not written inside database and must be performed with AddUpdate call
+     */
+    //@{
+    /*!
+     * @brief Check this mode as known or new one
+     * @return true if this mode is new and not stored inside database
+     */
     bool IsNew(void) const;
-    bool IsKnown(void);
+
+    /*!
+     * @brief Check this mode about data changes
+     * @return true if anything becomes changed on the mode data
+     */
     bool IsChanged(void) const;
-    int ModeID(void) const;
-    AE_DSP_MODE_TYPE ModeType(void) const;
-    bool SetModeType(AE_DSP_MODE_TYPE iType);
-    int ModePosition(void) const;
-    bool SetModePosition(int iModePosition);
+
+    /*!
+     * @brief Check this mode is enabled for usage
+     * @return true if enabled
+     */
     bool IsEnabled(void) const;
+
+    /*!
+     * @brief Enable or disable the usage of this mode
+     * @param bIsEnabled true to enable
+     * @return true if set was successful
+     */
     bool SetEnabled(bool bIsEnabled);
-    CStdString IconOwnModePath(void) const;
-    bool SetIconOwnModePath(const CStdString &strIconPath);
-    CStdString IconOverrideModePath(void) const;
-    bool SetIconOverrideModePath(const CStdString &strIconPath);
-    bool SetModeID(int iDatabaseId);
-    AE_DSP_BASETYPE BaseType(void) const;
-    bool SetBaseType(AE_DSP_BASETYPE baseType);
+
+    /*!
+     * @brief Get the mode process chain position inside his mode type
+     * @return the mode process position or -1 not set
+     */
+    int ModePosition(void) const;
+
+    /*!
+     * @brief Set the mode process chain position inside his mode type
+     * @param iModePosition the process chain position
+     * @return true if the position becomes set and a database update becomes required
+     */
+    bool SetModePosition(int iModePosition);
+
+    /*!
+     * @brief Ask about stream type to given flags
+     * @param streamType the type to ask
+     * @param flags the stream types flags to check in accordance with AE_DSP_ASTREAM_PRESENT
+     * @return true if the mode is set as enabled under the flags
+     */
     static bool SupportStreamType(AE_DSP_STREAMTYPE streamType, unsigned int flags);
+
+    /*!
+     * @brief Ask this mode about stream type
+     * @param streamType the type to ask
+     * @return true if the mode is set as enabled of this mode
+     */
     bool SupportStreamType(AE_DSP_STREAMTYPE streamType);
-    unsigned int StreamTypeFlags(void) const;
-    bool SetStreamTypeFlags(unsigned int streamTypeFlags);
+    //@}
+
+    /*! @name Mode user interface related data functions
+     *  @note changes are not written inside database and must be performed with AddUpdate call
+     */
+    //@{
+    /*!
+     * @brief Get the mode name string identification code
+     * @return the identifier code on addon strings or -1 if unset
+     */
     int ModeName(void) const;
+
+    /*!
+     * @brief Set the mode name string identification code
+     * @param iModeName the identifier code on addon strings or xbmc strings or -1 if unset
+     * @return true if the value becomes set and a database update becomes required
+     */
     bool SetModeName(int iModeName);
+
+    /*!
+     * @brief Get the mode name string identification code used on setup entries
+     * @return the identifier code on addon strings or -1 if unset
+     */
     int ModeSetupName(void) const;
+
+    /*!
+     * @brief Set the mode name string identification code used on setup entries
+     * @param iModeSetupName the identifier code on addon strings or xbmc strings or -1 if unset
+     * @return true if the value becomes set and a database update becomes required
+     */
     bool SetModeSetupName(int iModeSetupName);
+
+    /*!
+     * @brief Get the mode help string identification code used as help text on dsp manager helper dialog
+     * @return the identifier code on addon strings or -1 if unset
+     */
     int ModeHelp(void) const;
+
+    /*!
+     * @brief Set the mode help string identification code used as help text on dsp manager helper dialog
+     * @param iModeHelp the identifier code on addon strings or xbmc strings or -1 if unset
+     * @return true if the value becomes set and a database update becomes required
+     */
     bool SetModeHelp(int iModeHelp);
+
+    /*!
+     * @brief Get the mode description string identification code used as small help text on dsp manager dialog
+     * @return the identifier code on addon strings or -1 if unset
+     */
     int ModeDescription(void) const;
+
+    /*!
+     * @brief Set the mode description string identification code used as small help text on dsp manager dialog
+     * @param iModeDescription the identifier code on addon strings or xbmc strings or -1 if unset
+     * @return true if the value becomes set and a database update becomes required
+     */
     bool SetModeDescription(int iModeDescription);
-    bool HasSettingsDialog(void) const;
-    int AddonID(void) const;
-    bool SetAddonID(int iAddonId);
-    unsigned int AddonModeNumber(void) const;
-    bool SetAddonModeNumber(unsigned int iAddonModeNumber);
-    CStdString AddonModeName(void) const;
-    bool SetAddonModeName(const CStdString &strAddonModeName);
+
+    /*!
+     * @brief Get the path to a from addon set mode identification image
+     * @return the path to the image or empty if not present
+     */
+    CStdString IconOwnModePath(void) const;
+
+    /*!
+     * @brief Set the path to a from addon set mode identification image
+     * @param strIconPath the path to the image or empty for disable show of it
+     * @return true if the image becomes set and a database update becomes required
+     */
+    bool SetIconOwnModePath(const CStdString &strIconPath);
+
+    /*!
+     * @brief Get the path to a from addon set mode identification image to overirde the from XBMC used one, e.g. Dolby Digital with Dolby Digital EX
+     * @return the path to the image or empty if not present
+     */
+    CStdString IconOverrideModePath(void) const;
+
+    /*!
+     * @brief Set the path to a from addon set mode identification image to overirde the from XBMC used one
+     * @param strIconPath the path to the image or empty for disable show of it
+     * @return true if the image becomes set and a database update becomes required
+     */
+    bool SetIconOverrideModePath(const CStdString &strIconPath);
+    //@}
+
+    /*! @name Master mode type related functions
+     */
+    //@{
+    /*!
+     * @brief Get the used base type of this mode
+     * @return the base type
+     */
+    AE_DSP_BASETYPE BaseType(void) const;
+
+    /*!
+     * @brief Set the used base type of this mode
+     * @return baseType the base type to set
+     * @return true if the position becomes set and a database update becomes required
+     */
+    bool SetBaseType(AE_DSP_BASETYPE baseType);
+    //@}
+
+    /*! @name Audio DSP database related functions
+     */
+    //@{
+    /*!
+     * @brief Get the identifier of this mode used on database
+     * @return the mode identifier or -1 if unknown and not safed to database
+     */
+    int ModeID(void) const;
+
+    /*!
+     * @brief Add or update this mode to the audio DSP database
+     * @param force if it is false it write only to the database on uknown id or if a change was inside the mode
+     * @return the database identifier of this mode, or -1 if a error was occurred
+     */
+    int AddUpdate(bool force = false);
+
+    /*!
+     * @brief Delete this mode from the audio dsp database
+     * @return true if deletion was successful
+     */
+    bool Delete(void);
+
+    /*!
+     * @brief Ask database about this mode that it is alread known
+     * @return true if present inside database
+     */
+    bool IsKnown(void);
+    //@}
+
+    /*! @name Dynamic processing related functions
+     */
+    //@{
+    /*!
+     * @brief Get the cpu usage of this mode
+     * @return percent The percent value (0.0 - 100.0)
+     * @note only be usable if mode is active in process chain
+     */
     float CPUUsage(void) const;
+
+    /*!
+     * @brief Set the cpu usage of this mode if active and in process list
+     * @param percent The percent value (0.0 - 100.0)
+     */
     void SetCPUUsage(float percent);
+    //@}
+
+    /*! @name Fixed audio dsp add-on related mode functions
+     */
+    //@{
+    /*!
+     * @brief Get the addon identifier
+     * @return returns the inside addon database used identifier of this mode based addon
+     */
+    int AddonID(void) const;
+
+    /*!
+     * @brief Get the addon processing mode identifier
+     * @return returns the from addon itself set identifier of this mode
+     */
+    unsigned int AddonModeNumber(void) const;
+
+    /*!
+     * @brief The processing mode type identifier of this mode
+     * @return returns the mode type, it should be never AE_DSP_MODE_TYPE_UNDEFINED
+     */
+    AE_DSP_MODE_TYPE ModeType(void) const;
+
+    /*!
+     * @brief Get the addon mode name
+     * @return returns the from addon set name of this mode, used for log messages
+     */
+    CStdString AddonModeName(void) const;
+
+    /*!
+     * @brief Have this mode settings dialogs
+     * @return returns true if one or more dialogs are available to this mode
+     * @note if it is true the addon menu hook database can be checked with the addon mode identifier
+     */
+    bool HasSettingsDialog(void) const;
+
+    /*!
+     * @brief Get the from addon mode supported stream type flags
+     * @return returns the flags in accordance with AE_DSP_ASTREAM_PRESENT
+     */
+    unsigned int StreamTypeFlags(void) const;
+    //@}
 
   private:
+    friend class CActiveAEDSPDatabase;
+
     /*! @name XBMC related mode data
      */
     //@{
     AE_DSP_MODE_TYPE  m_iModeType;               /*!< the processing mode type */
     int               m_iModePosition;           /*!< the processing mode position */
     int               m_iModeId;                 /*!< the identifier given to this mode by the DSP database */
-    unsigned int      m_iStreamTypeFlags;        /*!< The stream content type flags */
     AE_DSP_BASETYPE   m_iBaseType;               /*!< The stream source coding format */
     bool              m_bIsEnabled;              /*!< true if this mode is enabled, false if not */
     CStdString        m_strOwnIconPath;          /*!< the path to the icon for this mode */
@@ -117,13 +336,12 @@ namespace ActiveAE
     int               m_iModeDescription;        /*!< the description id for this mode used by XBMC */
     int               m_iModeHelp;               /*!< the help id for this mode used by XBMC */
     bool              m_bChanged;                /*!< true if anything in this entry was changed that needs to be persisted */
-    bool              m_bHasSettingsDialog;      /*!< the mode have a own settings dialog */
     //@}
 
     /*! @name Dynamic processing related data
      */
     //@{
-    float             m_fCPUUsage;
+    float             m_fCPUUsage;               /*!< if mode is active the used cpu force in percent is set here */
     //@}
 
     /*! @name Audio dsp add-on related mode data
@@ -132,6 +350,8 @@ namespace ActiveAE
     int               m_iAddonId;                /*!< the identifier of the Addon that serves this mode */
     unsigned int      m_iAddonModeNumber;        /*!< the mode number on the Addon */
     CStdString        m_strAddonModeName;        /*!< the name of this mode on the Addon */
+    bool              m_bHasSettingsDialog;      /*!< the mode have a own settings dialog */
+    unsigned int      m_iStreamTypeFlags;        /*!< The stream content type flags in accordance with AE_DSP_ASTREAM_PRESENT */
     //@}
 
     CCriticalSection m_critSection;

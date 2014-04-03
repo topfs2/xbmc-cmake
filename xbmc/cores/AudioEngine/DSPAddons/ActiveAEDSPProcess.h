@@ -209,14 +209,6 @@ namespace ActiveAE
       void GetAvailableMasterModes(AE_DSP_STREAMTYPE streamType, std::vector<CActiveAEDSPModePtr> &modes);
 
       /*!>
-       * Get the mode information class by add-on id and add-on mode number
-       * @param iAddonID The database dsp add-on id
-       * @param iModeNumber the from add-on used identifier for this mode
-       * @return pointer to the info class, or unitialized class if no master processing present
-       */
-      CActiveAEDSPModePtr GetMasterModeByAddon(int iAddonID, unsigned int iModeNumber) const;
-
-      /*!>
        * Returns the information class from the currently used dsp addon
        * @return pointer to the info class, or unitialized class if no master processing present
        */
@@ -318,15 +310,8 @@ namespace ActiveAE
       /*!>
        * Process arrays
        */
-      float                            *m_AudioInArray[AE_DSP_CH_MAX];
-      unsigned int                      m_AudioInArraySize;
-      float                            *m_InputResampleArray[AE_DSP_CH_MAX];
-      unsigned int                      m_InputResampleArraySize;
       float                            *m_ProcessArray[2][AE_DSP_CH_MAX];
       unsigned int                      m_ProcessArraySize;
-      unsigned int                      m_ProcessArrayTogglePtr;
-      float                            *m_OutputResampleArray[AE_DSP_CH_MAX];
-      unsigned int                      m_OutputResampleArraySize;
       uint64_t                          m_iLastProcessTime;
       uint64_t                          m_iLastProcessUsage;
       float                             m_fLastProcessUsage;

@@ -50,7 +50,6 @@ static const uint8_t surround_levels[4] = { 4, 6, 7, 6 };
 int avpriv_ac3_parse_header(GetBitContext *gbc, AC3HeaderInfo *hdr)
 {
     int frame_size_code;
-    int tmp;
 
     memset(hdr, 0, sizeof(*hdr));
 
@@ -84,10 +83,9 @@ int avpriv_ac3_parse_header(GetBitContext *gbc, AC3HeaderInfo *hdr)
 
         hdr->bitstream_mode = get_bits(gbc, 3);
         hdr->channel_mode = get_bits(gbc, 3);
-        hdr->profile = hdr->channel_mode;
 
-        if((hdr->channel_mode == AC3_CHMODE_STEREO && get_bits(gbc, 2) == 2)) {
-            hdr->profile |= FF_PROFILE_AC3_WITH_SURROUND; // dsurmod
+        if(hdr->channel_mode == AC3_CHMODE_STEREO) {
+            skip_bits(gbc, 2); // skip dsurmod
         } else {
             if((hdr->channel_mode & 1) && hdr->channel_mode != AC3_CHMODE_MONO)
                 hdr->  center_mix_level =   center_levels[get_bits(gbc, 2)];
@@ -95,66 +93,6 @@ int avpriv_ac3_parse_header(GetBitContext *gbc, AC3HeaderInfo *hdr)
                 hdr->surround_mix_level = surround_levels[get_bits(gbc, 2)];
         }
         hdr->lfe_on = get_bits1(gbc);
-        if (hdr->lfe_on)
-          hdr->profile |= FF_PROFILE_AC3_WITH_LFE;
-
-        skip_bits(gbc, 5);        // dialnorm
-        if (get_bits1(gbc)) {     // compre
-          skip_bits(gbc, 8);      // compr
-        }
-        if (get_bits1(gbc)) {     // langcode
-          skip_bits(gbc, 8);      // langcod
-        }
-        if (get_bits1(gbc)) {     // audprodie
-          skip_bits(gbc, 5);      // mixlevel
-          tmp = get_bits(gbc, 2); // roomtyp
-          tmp = 0;
-          if (tmp & 1)
-            hdr->profile |= FF_PROFILE_AC3_WITH_LARGE_ROOM;
-          else if (tmp & 2)
-            hdr->profile |= FF_PROFILE_AC3_WITH_SMALL_ROOM;
-        }
-
-        if (hdr->channel_mode == AC3_CHMODE_DUALMONO) {
-          skip_bits(gbc, 5);        // dialnorm2
-          if (get_bits1(gbc)) {     // compre2
-            skip_bits(gbc, 8);      // compr2
-          }
-          if (get_bits1(gbc)) {     // langcode2
-            skip_bits(gbc, 8);      // langcod2
-          }
-          if (get_bits1(gbc)) {     // audprodie2
-            skip_bits(gbc, 5);      // mixlevel2
-            skip_bits(gbc, 2);      // roomtyp2
-          }
-        }
-
-        skip_bits(gbc, 2);        // copyrightb + origbs
-
-        if (hdr->bitstream_id == 8) {
-          if (get_bits1(gbc))     // timecod1
-            skip_bits(gbc, 14);   // timecod1
-          if (get_bits1(gbc))     // timecod2
-            skip_bits(gbc, 14);   // timecod2
-        }
-        else if (hdr->bitstream_id == 6) {
-          if (get_bits1(gbc)) {   // xbsi1
-            skip_bits(gbc, 2);    // dmixmod
-            skip_bits(gbc, 3);    // ltrtcmixlev
-            skip_bits(gbc, 3);    // ltrtsurmixlev
-            skip_bits(gbc, 3);    // lorocmixlev
-            skip_bits(gbc, 3);    // lorosurmixlev
-          }
-          if (get_bits1(gbc)) {   // xbsi2e
-            if (get_bits(gbc, 2) == 0x02)   // dsurexmod
-              hdr->profile |= FF_PROFILE_AC3_WITH_DD_EX;
-            if (get_bits(gbc, 2) == 0x02)   // dheadphonemod
-              hdr->profile |= FF_PROFILE_AC3_WITH_DOLBY_HP;
-            skip_bits(gbc, 1);    // adconvtyp
-            skip_bits(gbc, 8);    // xbsi2
-            skip_bits(gbc, 1);    // encinfo
-          }
-        }
 
         hdr->sr_shift = FFMAX(hdr->bitstream_id, 8) - 8;
         hdr->sample_rate = ff_ac3_sample_rate_tab[hdr->sr_code] >> hdr->sr_shift;
@@ -214,7 +152,7 @@ static int ac3_sync(uint64_t state, AACAC3ParseContext *hdr_info,
     AC3HeaderInfo hdr;
     GetBitContext gbc;
 
-    init_get_bits(&gbc, tmp.u8+8-AC3_HEADER_SIZE, 82);
+    init_get_bits(&gbc, tmp.u8+8-AC3_HEADER_SIZE, 54);
     err = avpriv_ac3_parse_header(&gbc, &hdr);
 
     if(err < 0)

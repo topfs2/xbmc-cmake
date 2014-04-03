@@ -38,7 +38,6 @@ public:
   virtual void Reset();
   virtual int GetChannels();
   virtual CAEChannelInfo GetChannelMap();
-  virtual unsigned int GetStreamProfile();
   virtual int GetSampleRate();
   virtual int GetEncodedSampleRate();
   virtual enum AEDataFormat GetDataFormat();
@@ -63,7 +62,6 @@ protected:
 
   int      m_channels;
   uint64_t m_layout;
-  int      m_Profile;
 
   DllAvCodec m_dllAvCodec;
   DllAvUtil m_dllAvUtil;

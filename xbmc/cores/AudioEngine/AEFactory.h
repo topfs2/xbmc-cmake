@@ -66,7 +66,7 @@ public:
   static void SetVolume(const float volume);
   static void Shutdown();
   static IAEStream *MakeStream(enum AEDataFormat dataFormat, unsigned int sampleRate, 
-    unsigned int encodedSampleRate, CAEChannelInfo channelLayout, unsigned int profile, unsigned int options = 0);
+    unsigned int encodedSampleRate, CAEChannelInfo channelLayout, unsigned int options = 0);
   static IAEStream *FreeStream(IAEStream *stream);
   static void GarbageCollect();
 

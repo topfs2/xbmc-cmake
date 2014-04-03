@@ -403,7 +403,7 @@ bool CActiveAEDSPProcess::Create(AEAudioFormat inputFormat, AEAudioFormat output
     }
 
     /*!
-     * Setup the one allowed master processing addon and inform addon about selected mode
+     * Setup the one allowed master processing addon and inform about selected mode
      */
     if (m_Addons_MasterProc[m_ActiveMode].pFunctions)
     {
@@ -552,32 +552,6 @@ bool CActiveAEDSPProcess::Create(AEAudioFormat inputFormat, AEAudioFormat output
 
 bool CActiveAEDSPProcess::CreateStreamProfile()
 {
-#ifdef FF_PROFILE_AC3
-  /* use profile to determine the AC3 type */
-  if (m_AddonStreamProperties.iBaseType == AE_DSP_ABASE_AC3)
-  {
-    m_AddonStreamProperties.Profile.ac3.iChannelMode = m_InputFormat.m_profile & 0xf;
-
-    if (m_InputFormat.m_profile & FF_PROFILE_AC3_WITH_SURROUND)
-      m_AddonStreamProperties.Profile.ac3.bWithSurround = true;
-    else
-      m_AddonStreamProperties.Profile.ac3.bWithSurround = false;
-
-    if (m_InputFormat.m_profile & FF_PROFILE_AC3_WITH_DD_EX)
-      m_AddonStreamProperties.Profile.ac3.bWithDolbyDigitalEx = true;
-    else
-      m_AddonStreamProperties.Profile.ac3.bWithDolbyDigitalEx = false;
-
-    if (m_InputFormat.m_profile & FF_PROFILE_AC3_WITH_LARGE_ROOM)
-      m_AddonStreamProperties.Profile.ac3.iRoomType = AE_DSP_PROFILE_AC3_ROOM_LARGE;
-    else if (m_InputFormat.m_profile & FF_PROFILE_AC3_WITH_SMALL_ROOM)
-      m_AddonStreamProperties.Profile.ac3.iRoomType = AE_DSP_PROFILE_AC3_ROOM_SMALL;
-    else
-      m_AddonStreamProperties.Profile.ac3.iRoomType = AE_DSP_PROFILE_AC3_ROOM_UNDEFINED;
-
-    return true;
-  }
-#endif
   return false;
 }
 

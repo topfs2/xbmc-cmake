@@ -1078,7 +1078,7 @@ bool CActiveAEDSPProcess::Process(CSampleBuffer *in, CSampleBuffer *out, CActive
       if (frames == 0)
         return false;
 
-      m_Addon_InputResample.iLastTime += 1000.f * 10000.f * (CurrentHostCounter() - startTime) / hostFrequency;
+      m_Addon_InputResample.iLastTime += 1000 * 10000 * (CurrentHostCounter() - startTime) / hostFrequency;
 
       lastOutArray = m_ProcessArray[togglePtr];
       togglePtr ^= 1;
@@ -1112,7 +1112,7 @@ bool CActiveAEDSPProcess::Process(CSampleBuffer *in, CSampleBuffer *out, CActive
       if (frames == 0)
         return false;
 
-      m_Addons_PreProc[i].iLastTime += 1000.f * 10000.f * (CurrentHostCounter() - startTime) / hostFrequency;
+      m_Addons_PreProc[i].iLastTime += 1000 * 10000 * (CurrentHostCounter() - startTime) / hostFrequency;
 
       lastOutArray = m_ProcessArray[togglePtr];
       togglePtr ^= 1;
@@ -1148,7 +1148,7 @@ bool CActiveAEDSPProcess::Process(CSampleBuffer *in, CSampleBuffer *out, CActive
       if (frames == 0)
         return false;
 
-      m_Addons_MasterProc[m_ActiveMode].iLastTime += 1000.f * 10000.f * (CurrentHostCounter() - startTime) / hostFrequency;
+      m_Addons_MasterProc[m_ActiveMode].iLastTime += 1000 * 10000 * (CurrentHostCounter() - startTime) / hostFrequency;
 
       lastOutArray = m_ProcessArray[togglePtr];
       togglePtr ^= 1;
@@ -1185,7 +1185,7 @@ bool CActiveAEDSPProcess::Process(CSampleBuffer *in, CSampleBuffer *out, CActive
       if (frames == 0)
         return false;
 
-      m_Addons_PostProc[i].iLastTime += 1000.f * 10000.f * (CurrentHostCounter() - startTime) / hostFrequency;
+      m_Addons_PostProc[i].iLastTime += 1000 * 10000 * (CurrentHostCounter() - startTime) / hostFrequency;
 
       lastOutArray = m_ProcessArray[togglePtr];
       togglePtr ^= 1;
@@ -1221,7 +1221,7 @@ bool CActiveAEDSPProcess::Process(CSampleBuffer *in, CSampleBuffer *out, CActive
       if (frames == 0)
         return false;
 
-      m_Addon_OutputResample.iLastTime += 1000.f * 10000.f * (CurrentHostCounter() - startTime) / hostFrequency;
+      m_Addon_OutputResample.iLastTime += 1000 * 10000 * (CurrentHostCounter() - startTime) / hostFrequency;
 
       lastOutArray = m_ProcessArray[togglePtr];
       togglePtr ^= 1;

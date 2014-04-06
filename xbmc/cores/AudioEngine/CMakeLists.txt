@@ -11,7 +11,12 @@ set(SOURCES AEFactory.cpp
             Utils/AEELDParser.cpp
             Utils/AEDeviceInfo.cpp
             Utils/AELimiter.cpp
-            Encoders/AEEncoderFFmpeg.cpp)
+            Encoders/AEEncoderFFmpeg.cpp
+            DSPAddons/ActiveAEDSP.cpp
+            DSPAddons/ActiveAEDSPAddon.cpp
+            DSPAddons/ActiveAEDSPMode.cpp
+            DSPAddons/ActiveAEDSPDatabase.cpp
+            DSPAddons/ActiveAEDSPProcess.cpp)
 
 if(APPLE)
   list(APPEND SOURCES Engines/CoreAudio/CoreAudioAE.cpp

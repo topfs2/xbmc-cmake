@@ -62,6 +62,7 @@ include(scripts/common/pathsetup.cmake)
 include(ExternalProject)
 
 set(INCLUDES ${CORE_SOURCE_DIR}/addons/library.xbmc.addon
+             ${CORE_SOURCE_DIR}/addons/library.xbmc.adsp
              ${CORE_SOURCE_DIR}/addons/library.xbmc.codec
              ${CORE_SOURCE_DIR}/addons/library.xbmc.gui
              ${CORE_SOURCE_DIR}/addons/library.xbmc.pvr
@@ -227,6 +228,7 @@ core_link_library(exif system/libexif)
 core_link_library(cmyth system/libcmyth "nowrap" ${MYSQLCLIENT_LIBRARIES})
 
 core_link_library(XBMC_addon addons/library.xbmc.addon/libXBMC_addon)
+core_link_library(XBMC_adsp  addons/library.xbmc.adsp/libXBMC_adsp)
 core_link_library(XBMC_codec addons/library.xbmc.codec/libXBMC_codec)
 core_link_library(XBMC_gui   addons/library.xbmc.gui/libXBMC_gui)
 core_link_library(XBMC_pvr   addons/library.xbmc.pvr/libXBMC_pvr)

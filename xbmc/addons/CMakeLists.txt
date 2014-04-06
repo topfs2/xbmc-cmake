@@ -1,5 +1,6 @@
 set(SOURCES AddonCallbacksAddon.cpp
             AddonCallbacksCodec.cpp
+            AddonCallbacksAudioDSP.cpp
             AddonCallbacks.cpp
             AddonCallbacksGUI.cpp
             AddonCallbacksPVR.cpp

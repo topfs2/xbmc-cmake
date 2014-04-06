@@ -1,4 +1,6 @@
-set(SOURCES GUIDialogContentSettings.cpp
+set(SOURCES GUIDialogAudioDSPManager.cpp
+            GUIDialogAudioSettings.cpp
+            GUIDialogContentSettings.cpp
             GUIDialogSettings.cpp)
 
 core_add_library(settings_dialogs)

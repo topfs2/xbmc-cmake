@@ -8,6 +8,7 @@ addons/xbmc.metadata/*
 addons/xbmc.pvr/*
 addons/xbmc.python/*
 addons/library.xbmc.addon/*
+addons/library.xbmc.adsp/*
 addons/library.xbmc.codec/*
 addons/library.xbmc.gui/*
 addons/library.xbmc.pvr/*

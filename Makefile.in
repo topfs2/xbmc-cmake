@@ -143,10 +143,16 @@ DIRECTORY_ARCHIVES += xbmc/network/linux/network_linux.a
 DIRECTORY_ARCHIVES += xbmc/powermanagement/osx/powermanagement.a
 DIRECTORY_ARCHIVES += xbmc/storage/osx/storage.a
 DIRECTORY_ARCHIVES += xbmc/windowing/osx/windowing_osx.a
+INSTALL_FILTER += .*repository\.adsp-android\.xbmc\.org.*
+INSTALL_FILTER += .*repository\.adsp-ios\.xbmc\.org.*
+INSTALL_FILTER += .*repository\.adsp-win32\.xbmc\.org.*
 INSTALL_FILTER += .*repository\.pvr-android\.xbmc\.org.*
 INSTALL_FILTER += .*repository\.pvr-ios\.xbmc\.org.*
 INSTALL_FILTER += .*repository\.pvr-win32\.xbmc\.org.*
 else
+INSTALL_FILTER += .*repository\.adsp-ios\.xbmc\.org.*
+INSTALL_FILTER += .*repository\.adsp-win32\.xbmc\.org.*
+INSTALL_FILTER += .*repository\.adsp-osx.*\.xbmc\.org.*
 INSTALL_FILTER += .*repository\.pvr-ios\.xbmc\.org.*
 INSTALL_FILTER += .*repository\.pvr-win32\.xbmc\.org.*
 INSTALL_FILTER += .*repository\.pvr-osx.*\.xbmc\.org.*
@@ -164,6 +170,7 @@ DIRECTORY_ARCHIVES += xbmc/network/linux/network_linux.a
 DIRECTORY_ARCHIVES += xbmc/powermanagement/linux/powermanagement_linux.a
 DIRECTORY_ARCHIVES += xbmc/storage/linux/storage_linux.a
 DIRECTORY_ARCHIVES += xbmc/windowing/X11/windowing_X11.a
+INSTALL_FILTER += .*repository\.adsp-android\.xbmc\.org.*
 INSTALL_FILTER += .*repository\.pvr-android\.xbmc\.org.*
 endif
 endif
@@ -255,6 +262,7 @@ endif
 
 LIBADDON_DIRS=\
 	lib/addons/library.xbmc.addon \
+	lib/addons/library.xbmc.adsp \
 	lib/addons/library.xbmc.codec \
 	lib/addons/library.xbmc.pvr \
 	lib/addons/library.xbmc.gui \
@@ -389,6 +397,7 @@ screensavers: $(SS_DIRS)
 
 libaddon: exports
 	$(MAKE) -C lib/addons/library.xbmc.addon
+	$(MAKE) -C lib/addons/library.xbmc.adsp
 	$(MAKE) -C lib/addons/library.xbmc.codec
 	$(MAKE) -C lib/addons/library.xbmc.gui
 	$(MAKE) -C lib/addons/library.xbmc.pvr
@@ -437,6 +446,11 @@ endif
 imagelib: dllloader
 	$(MAKE) -C lib/cximage-6.0
 
+adspaddons: exports
+ifeq (@USE_ADSP_ADDONS@,1)
+	$(MAKE) -C adsp-addons
+endif
+
 pvraddons: exports
 ifeq (@USE_PVR_ADDONS@,1)
 	$(MAKE) -C pvr-addons
@@ -446,7 +460,7 @@ codecs: papcodecs dvdpcodecs dvdpextcodecs
 
 libs: libhdhomerun imagelib libexif system/libcpluff-@ARCH@.so $(CMYTH)
 
-externals: codecs libs visualizations screensavers libaddon pvraddons
+externals: adspaddons codecs libs visualizations screensavers libaddon pvraddons
 
 xcode_depends: \
 	codecs libs visualizations screensavers eventclients skins libaddon \
@@ -510,6 +524,8 @@ $(NWAOBJSXBMC) $(DIRECTORY_ARCHIVES) $(MAINOBJS): force
 BINDINGS =xbmc/addons/include/xbmc_addon_cpp_dll.h
 BINDINGS+=xbmc/addons/include/xbmc_addon_dll.h
 BINDINGS+=xbmc/addons/include/xbmc_addon_types.h
+BINDINGS+=xbmc/addons/include/xbmc_adsp_dll.h
+BINDINGS+=xbmc/addons/include/xbmc_adsp_types.h
 BINDINGS+=xbmc/addons/include/xbmc_codec_types.h
 BINDINGS+=xbmc/addons/include/xbmc_epg_types.h
 BINDINGS+=xbmc/addons/include/xbmc_pvr_dll.h
@@ -520,6 +536,7 @@ BINDINGS+=xbmc/addons/include/xbmc_vis_dll.h
 BINDINGS+=xbmc/addons/include/xbmc_vis_types.h
 BINDINGS+=xbmc/addons/include/xbmc_stream_utils.hpp
 BINDINGS+=addons/library.xbmc.addon/libXBMC_addon.h
+BINDINGS+=addons/library.xbmc.adsp/libXBMC_adsp.h
 BINDINGS+=addons/library.xbmc.gui/libXBMC_gui.h
 BINDINGS+=addons/library.xbmc.pvr/libXBMC_pvr.h
 BINDINGS+=addons/library.xbmc.codec/libXBMC_codec.h
@@ -583,6 +600,9 @@ endif
 
 install-arch:
 	@# Arch dependent files
+ifeq (@USE_ADSP_ADDONS@,1)
+	$(MAKE) -C adsp-addons install
+endif
 ifeq (@USE_PVR_ADDONS@,1)
 	$(MAKE) -C pvr-addons install
 endif
@@ -602,7 +622,7 @@ ifeq ($(findstring Darwin,$(shell uname -s)),Darwin)
 		-exec install "{}" $(DESTDIR)$(libdir)/xbmc/"{}" \; \
 		-exec printf " -- %-75.75s\r" "{}" \;
 else
-	@find system addons -regextype posix-extended -type f -not -iregex ".*svn.*" -iregex ".*\.so|.*\.vis|.*\.xbs|.*\.pvr" -exec install -D "{}" $(DESTDIR)$(libdir)/xbmc/"{}" \; -printf " -- %-75.75f\r"
+	@find system addons -regextype posix-extended -type f -not -iregex ".*svn.*" -iregex ".*\.so|.*\.vis|.*\.xbs|.*\.pvr|.*\.adsp" -exec install -D "{}" $(DESTDIR)$(libdir)/xbmc/"{}" \; -printf " -- %-75.75f\r"
 endif
 endif
 
@@ -641,7 +661,7 @@ ifeq ($(findstring Darwin,$(shell uname -s)),Darwin)
 		-exec install -m 0644 "{}" $(DESTDIR)$(datarootdir)/xbmc/"{}" \; \
 		-exec printf " -- %-75.75s\r" "{}" \;
 else
-	@find addons language media sounds userdata system -regextype posix-extended -type f -not -iregex ".*@ARCH@.*|.*\.vis|.*\.xbs|.*svn.*|.*\.so|.*\.dll|.*\.pvr|$(subst ${space},|,$(INSTALL_FILTER))" -exec install -D -m 0644 "{}" $(DESTDIR)$(datarootdir)/xbmc/"{}" \; -printf " -- %-75.75f\r"
+	@find addons language media sounds userdata system -regextype posix-extended -type f -not -iregex ".*@ARCH@.*|.*\.vis|.*\.xbs|.*svn.*|.*\.so|.*\.dll|.*\.pvr|.*\adsp|$(subst ${space},|,$(INSTALL_FILTER))" -exec install -D -m 0644 "{}" $(DESTDIR)$(datarootdir)/xbmc/"{}" \; -printf " -- %-75.75f\r"
 endif
 endif
 	@# Icons and links
@@ -693,6 +713,10 @@ clean-visualisations:
 	for d in $(VIS_DIRS); do if test -f $$d/Makefile; then $(MAKE) -C $$d clean; fi; done
 clean-libaddons:
 	for d in $(LIBADDON_DIRS); do if test -f $$d/Makefile; then $(MAKE) -C $$d clean; fi; done
+clean-adspaddons:
+ifeq (@USE_ADSP_ADDONS@,1)
+	if test -f adsp-addons/Makefile; then $(MAKE) -C adsp-addons clean; fi;
+endif
 clean-pvraddons:
 ifeq (@USE_PVR_ADDONS@,1)
 	if test -f pvr-addons/Makefile; then $(MAKE) -C pvr-addons clean; fi;
@@ -701,7 +725,8 @@ endif
 clean-codecs: clean-dvdpcodecs clean-papcodecs
 
 clean-externals: clean-codecs clean-eventclients clean-xbmctex clean-libs \
-	clean-screensavers clean-visualisations clean-libaddons clean-pvraddons
+	clean-screensavers clean-visualisations clean-libaddons clean-pvraddons \
+	clean-adspaddons
 
 ifeq (1,@GTEST_CONFIGURED@)
 check: testsuite

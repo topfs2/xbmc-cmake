@@ -84,16 +84,16 @@ void CGUIDialogAudioSubtitleSettings::CreateSettings()
   m_settings.clear();
   // create our settings
   m_volume = g_application.GetVolume(false);
-  AddSlider(AUDIO_SETTINGS_VOLUME, 13376, &m_volume, VOLUME_MINIMUM, VOLUME_MAXIMUM / 100.0f, VOLUME_MAXIMUM, PercentAsDecibel, false);
+  AddSlider(AUDIO_SETTINGS_VOLUME, 13376, &m_volume, VOLUME_MINIMUM, VOLUME_MAXIMUM / 100.0f, VOLUME_MAXIMUM, StringUtils::FormatPercentAsDecibel, false);
   if (SupportsAudioFeature(IPC_AUD_AMP))
-    AddSlider(AUDIO_SETTINGS_VOLUME_AMPLIFICATION, 660, &CMediaSettings::Get().GetCurrentVideoSettings().m_VolumeAmplification, VOLUME_DRC_MINIMUM * 0.01f, (VOLUME_DRC_MAXIMUM - VOLUME_DRC_MINIMUM) / 6000.0f, VOLUME_DRC_MAXIMUM * 0.01f, FormatDecibel, false);
+    AddSlider(AUDIO_SETTINGS_VOLUME_AMPLIFICATION, 660, &CMediaSettings::Get().GetCurrentVideoSettings().m_VolumeAmplification, VOLUME_DRC_MINIMUM * 0.01f, (VOLUME_DRC_MAXIMUM - VOLUME_DRC_MINIMUM) / 6000.0f, VOLUME_DRC_MAXIMUM * 0.01f, StringUtils::FormatDecibel, false);
   if (g_application.m_pPlayer->IsPassthrough())
   {
     EnableSettings(AUDIO_SETTINGS_VOLUME,false);
     EnableSettings(AUDIO_SETTINGS_VOLUME_AMPLIFICATION,false);
   }
   if (SupportsAudioFeature(IPC_AUD_OFFSET))
-    AddSlider(AUDIO_SETTINGS_DELAY, 297, &CMediaSettings::Get().GetCurrentVideoSettings().m_AudioDelay, -g_advancedSettings.m_videoAudioDelayRange, .025f, g_advancedSettings.m_videoAudioDelayRange, FormatDelay);
+    AddSlider(AUDIO_SETTINGS_DELAY, 297, &CMediaSettings::Get().GetCurrentVideoSettings().m_AudioDelay, -g_advancedSettings.m_videoAudioDelayRange, .025f, g_advancedSettings.m_videoAudioDelayRange, StringUtils::FormatDelay);
   if (SupportsAudioFeature(IPC_AUD_SELECT_STREAM))
     AddAudioStreams(AUDIO_SETTINGS_STREAM);
 
@@ -109,7 +109,7 @@ void CGUIDialogAudioSubtitleSettings::CreateSettings()
   m_subtitleVisible = g_application.m_pPlayer->GetSubtitleVisible();
   AddBool(SUBTITLE_SETTINGS_ENABLE, 13397, &m_subtitleVisible);
   if (SupportsSubtitleFeature(IPC_SUBS_OFFSET))
-    AddSlider(SUBTITLE_SETTINGS_DELAY, 22006, &CMediaSettings::Get().GetCurrentVideoSettings().m_SubtitleDelay, -g_advancedSettings.m_videoSubsDelayRange, 0.1f, g_advancedSettings.m_videoSubsDelayRange, FormatDelay);
+    AddSlider(SUBTITLE_SETTINGS_DELAY, 22006, &CMediaSettings::Get().GetCurrentVideoSettings().m_SubtitleDelay, -g_advancedSettings.m_videoSubsDelayRange, 0.1f, g_advancedSettings.m_videoSubsDelayRange, StringUtils::FormatDelay);
   if (SupportsSubtitleFeature(IPC_SUBS_SELECT))
     AddSubtitleStreams(SUBTITLE_SETTINGS_STREAM);
   if (SupportsSubtitleFeature(IPC_SUBS_EXTERNAL))
@@ -379,28 +379,6 @@ void CGUIDialogAudioSubtitleSettings::FrameMove()
     UpdateSetting(SUBTITLE_SETTINGS_DELAY);
   }
   CGUIDialogSettings::FrameMove();
-}
-
-CStdString CGUIDialogAudioSubtitleSettings::PercentAsDecibel(float value, float interval)
-{
-  return StringUtils::Format("%2.1f dB", CAEUtil::PercentToGain(value));;
-}
-
-CStdString CGUIDialogAudioSubtitleSettings::FormatDecibel(float value, float interval)
-{
-  return StringUtils::Format("%2.1f dB", value);;
-}
-
-CStdString CGUIDialogAudioSubtitleSettings::FormatDelay(float value, float interval)
-{
-  CStdString text;
-  if (fabs(value) < 0.5f*interval)
-    text = StringUtils::Format(g_localizeStrings.Get(22003).c_str(), 0.0);
-  else if (value < 0)
-    text = StringUtils::Format(g_localizeStrings.Get(22004).c_str(), fabs(value));
-  else
-    text = StringUtils::Format(g_localizeStrings.Get(22005).c_str(), value);
-  return text;
 }
 
 bool CGUIDialogAudioSubtitleSettings::SupportsAudioFeature(int feature)

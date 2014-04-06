@@ -155,18 +155,25 @@ void CAddonStatusHandler::Process()
   /* A unknown event has occurred */
   else if (m_status == ADDON_STATUS_UNKNOWN)
   {
-    //CAddonMgr::Get().DisableAddon(m_addon->ID());
-    CGUIDialogOK* pDialog = (CGUIDialogOK*)g_windowManager.GetWindow(WINDOW_DIALOG_OK);
-    if (!pDialog) return;
+    if (m_addon->Type() == ADDON_ADSPDLL)
+    {
+      CGUIDialogKaiToast::QueueNotification(CGUIDialogKaiToast::Error, g_localizeStrings.Get(24070), g_localizeStrings.Get(24071), TOAST_DISPLAY_TIME*2, true, TOAST_MESSAGE_TIME*2);
+    }
+    else
+    {
+      //CAddonMgr::Get().DisableAddon(m_addon->ID());
+      CGUIDialogOK* pDialog = (CGUIDialogOK*)g_windowManager.GetWindow(WINDOW_DIALOG_OK);
+      if (!pDialog) return;
 
-    pDialog->SetHeading(heading);
-    pDialog->SetLine(1, 24070);
-    pDialog->SetLine(2, 24071);
-    pDialog->SetLine(3, m_message);
+      pDialog->SetHeading(heading);
+      pDialog->SetLine(1, 24070);
+      pDialog->SetLine(2, 24071);
+      pDialog->SetLine(3, m_message);
 
-    //send message and wait for user input
-    ThreadMessage tMsg = {TMSG_DIALOG_DOMODAL, WINDOW_DIALOG_OK, (unsigned int)g_windowManager.GetActiveWindow()};
-    CApplicationMessenger::Get().SendMessage(tMsg, true);
+      //send message and wait for user input
+      ThreadMessage tMsg = {TMSG_DIALOG_DOMODAL, WINDOW_DIALOG_OK, (unsigned int)g_windowManager.GetActiveWindow()};
+      CApplicationMessenger::Get().SendMessage(tMsg, true);
+    }
   }
 }
 

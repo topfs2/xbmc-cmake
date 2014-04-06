@@ -33,6 +33,7 @@
 #include "cores/IPlayer.h"
 #include "cores/dvdplayer/DVDFileInfo.h"
 #include "cores/AudioEngine/AEFactory.h"
+#include "cores/AudioEngine/DSPAddons/ActiveAEDSP.h"
 #include "cores/AudioEngine/Utils/AEUtil.h"
 #include "PlayListPlayer.h"
 #include "Autorun.h"
@@ -212,6 +213,8 @@
 #include "profiles/dialogs/GUIDialogProfileSettings.h"
 #include "profiles/dialogs/GUIDialogLockSettings.h"
 #include "settings/dialogs/GUIDialogContentSettings.h"
+#include "settings/dialogs/GUIDialogAudioSettings.h"
+#include "settings/dialogs/GUIDialogAudioDSPManager.h"
 #include "dialogs/GUIDialogBusy.h"
 #include "dialogs/GUIDialogKeyboardGeneric.h"
 #include "dialogs/GUIDialogYesNo.h"
@@ -359,6 +362,7 @@ using namespace ANNOUNCEMENT;
 using namespace PVR;
 using namespace EPG;
 using namespace PERIPHERALS;
+using namespace ActiveAE;
 
 using namespace XbmcThreads;
 
@@ -1371,6 +1375,8 @@ bool CApplication::Initialize()
     g_windowManager.Add(new CGUIDialogVisualisationPresetList);
     g_windowManager.Add(new CGUIDialogVideoSettings);
     g_windowManager.Add(new CGUIDialogAudioSubtitleSettings);
+    g_windowManager.Add(new CGUIDialogAudioDSPSettings);
+    g_windowManager.Add(new CGUIDialogAudioDSPManager);
     g_windowManager.Add(new CGUIDialogVideoBookmarks);
     // Don't add the filebrowser dialog - it's created and added when it's needed
     g_windowManager.Add(new CGUIDialogNetworkSetup);
@@ -1480,6 +1486,7 @@ bool CApplication::Initialize()
       }
 
       CStereoscopicsManager::Get().Initialize();
+      StartAudioDSPEngine();
     }
 
   }
@@ -1589,6 +1596,19 @@ void CApplication::StopPVRManager()
   g_EpgContainer.Stop();
 }
 
+void CApplication::StartAudioDSPEngine()
+{
+
+  if (CSettings::Get().GetBool("audiooutput.dspaddonsenabled"))
+    CActiveAEDSP::Get().Activate(false);
+}
+
+void CApplication::StopAudioDSPEngine()
+{
+  CLog::Log(LOGINFO, "stopping AudioDSPEngine");
+  CActiveAEDSP::Get().Deactivate();
+}
+
 void CApplication::StartServices()
 {
 #if !defined(TARGET_WINDOWS) && defined(HAS_DVD_DRIVE)
@@ -1675,6 +1695,16 @@ void CApplication::OnSettingChanged(const CSetting *setting)
     // if this is changed, audio stream has to be reopened
     else if (settingId == "audiooutput.passthrough")
     {
+      CApplicationMessenger::Get().MediaRestart(false);
+    }
+    else if (settingId == "audiooutput.dspaddonsenabled" && !CActiveAEDSP::Get().IsProcessing())
+    {
+      /*!
+       * About restart of dsp, if the dsp becomes enabled the media restart can be done
+       * from this place. Where dsp is not processing anything.
+       * If dsp is enabled, it must make the media restart from his side to prevent
+       * memory faults.
+       */
       CApplicationMessenger::Get().MediaRestart(false);
     }
   }
@@ -2718,6 +2748,10 @@ bool CApplication::OnAction(const CAction &action)
   if (g_PVRManager.OnAction(action))
     return true;
 
+  // forward action to CActiveAEDSP and break if it was able to handle it
+  if (CActiveAEDSP::Get().OnAction(action))
+    return true;
+
   // forward action to graphic context and see if it can handle it
   if (CStereoscopicsManager::Get().OnAction(action))
     return true;
@@ -3372,6 +3406,8 @@ bool CApplication::Cleanup()
     g_windowManager.Delete(WINDOW_DIALOG_MEDIA_SOURCE);
     g_windowManager.Delete(WINDOW_DIALOG_VIDEO_OSD_SETTINGS);
     g_windowManager.Delete(WINDOW_DIALOG_AUDIO_OSD_SETTINGS);
+    g_windowManager.Delete(WINDOW_DIALOG_AUDIO_DSP_OSD_SETTINGS);
+    g_windowManager.Delete(WINDOW_DIALOG_AUDIO_DSP_MANAGER);
     g_windowManager.Delete(WINDOW_DIALOG_VIDEO_BOOKMARKS);
     g_windowManager.Delete(WINDOW_DIALOG_CONTENT_SETTINGS);
     g_windowManager.Delete(WINDOW_DIALOG_FAVOURITES);
@@ -3553,6 +3589,8 @@ void CApplication::Stop(int exitCode)
     StopPVRManager();
     StopServices();
     //Sleep(5000);
+
+    StopAudioDSPEngine();
 
 #if HAS_FILESYTEM_DAAP
     CLog::Log(LOGNOTICE, "stop daap clients");
@@ -3844,6 +3882,7 @@ PlayBackRet CApplication::PlayFile(const CFileItem& item, bool bRestart)
     OutputDebugString("new file set audiostream:0\n");
     // Switch to default options
     CMediaSettings::Get().GetCurrentVideoSettings() = CMediaSettings::Get().GetDefaultVideoSettings();
+    CMediaSettings::Get().GetCurrentAudioSettings() = CMediaSettings::Get().GetDefaultAudioSettings();
     // see if we have saved options in the database
 
     m_pPlayer->SetPlaySpeed(1, g_application.m_muted);
@@ -4048,7 +4087,7 @@ PlayBackRet CApplication::PlayFile(const CFileItem& item, bool bRestart)
     CSingleLock lock(m_playStateMutex);
     // tell system we are starting a file
     m_bPlaybackStarting = true;
-    
+
     // for playing a new item, previous playing item's callback may already
     // pushed some delay message into the threadmessage list, they are not
     // expected be processed after or during the new item playback starting.
@@ -4463,6 +4502,8 @@ void CApplication::StopPlaying()
 
     if (g_PVRManager.IsPlayingTV() || g_PVRManager.IsPlayingRadio())
       g_PVRManager.SaveCurrentChannelSettings();
+    if (CActiveAEDSP::Get().IsProcessing())
+      CActiveAEDSP::Get().SaveCurrentAudioSettings();
 
     m_pPlayer->CloseFile();
 
@@ -5747,6 +5788,11 @@ void CApplication::SaveCurrentFileSettings()
   else if (m_itemCurrentFile->IsPVRChannel())
   {
     g_PVRManager.SaveCurrentChannelSettings();
+  }
+
+  if (CActiveAEDSP::Get().IsProcessing())
+  {
+    CActiveAEDSP::Get().SaveCurrentAudioSettings();
   }
 }
 

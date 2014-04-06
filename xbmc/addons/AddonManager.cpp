@@ -38,6 +38,10 @@
 #ifdef HAS_SCREENSAVER
 #include "ScreenSaver.h"
 #endif
+#ifdef HAS_ADSPADDONS
+#include "DllAudioDSP.h"
+#include "cores/AudioEngine/DSPAddons/ActiveAEDSP.h"
+#endif
 #ifdef HAS_PVRCLIENTS
 #include "DllPVRClient.h"
 #include "pvr/addons/PVRClient.h"
@@ -55,6 +59,7 @@
 
 using namespace std;
 using namespace PVR;
+using namespace ActiveAE;
 
 namespace ADDON
 {
@@ -120,6 +125,7 @@ AddonPtr CAddonMgr::Factory(const cp_extension_t *props)
     case ADDON_AUDIODECODER:
     case ADDON_AUDIOENCODER:
     case ADDON_VFS:
+    case ADDON_ADSPDLL:
       { // begin temporary platform handling for Dlls
         // ideally platforms issues will be handled by C-Pluff
         // this is not an attempt at a solution
@@ -168,6 +174,10 @@ AddonPtr CAddonMgr::Factory(const cp_extension_t *props)
           return AddonPtr(new CAudioEncoder(props));
         else if (type == ADDON_VFS)
           return AddonPtr(new CVFSEntry(props));
+        else if (type == ADDON_ADSPDLL)
+        {
+          return AddonPtr(new CActiveAEDSPAddon(props));
+        }
         else
           return AddonPtr(new CScreenSaver(props));
       }
@@ -453,6 +463,18 @@ bool CAddonMgr::GetAddons(const TYPE &type, VECADDONS &addons, bool enabled /* =
           continue;
         }
       }
+      // get a pointer to a running audio DSP if it's already started, or we won't be able to change settings
+      else if (TranslateType(props->ext_point_id) == ADDON_ADSPDLL &&
+          enabled &&
+          CActiveAEDSP::Get().IsActivated())
+      {
+        AddonPtr adspAddon;
+        if (CActiveAEDSP::Get().GetAudioDSPAddon(props->plugin->identifier, adspAddon))
+        {
+          addons.push_back(adspAddon);
+          continue;
+        }
+      }
 
       AddonPtr addon(Factory(props));
       if (addon)
@@ -484,6 +506,12 @@ bool CAddonMgr::GetAddon(const CStdString &str, AddonPtr &addon, const TYPE &typ
         AddonPtr pvrAddon;
         if (g_PVRClients->GetClient(addon->ID(), pvrAddon))
           addon = pvrAddon;
+      }
+      else if (addon->Type() == ADDON_ADSPDLL && CActiveAEDSP::Get().IsActivated())
+      {
+        AddonPtr adspAddon;
+        if (CActiveAEDSP::Get().GetAudioDSPAddon(addon->ID(), adspAddon))
+          addon = adspAddon;
       }
     }
     return NULL != addon.get();
@@ -681,6 +709,8 @@ AddonPtr CAddonMgr::AddonFromProps(AddonProps& addonProps)
       return AddonPtr(new CAudioEncoder(addonProps));
     case ADDON_VFS:
       return AddonPtr(new CVFSEntry(addonProps));
+    case ADDON_ADSPDLL:
+      return AddonPtr(new CActiveAEDSPAddon(addonProps));
     case ADDON_REPOSITORY:
       return AddonPtr(new CRepository(addonProps));
     default:

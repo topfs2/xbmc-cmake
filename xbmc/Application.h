@@ -148,6 +148,8 @@ public:
 
   void StartPVRManager(bool bOpenPVRWindow = false);
   void StopPVRManager();
+  void StartAudioDSPEngine();
+  void StopAudioDSPEngine();
   bool IsCurrentThread() const;
   void Stop(int exitCode);
   void RestartApp();

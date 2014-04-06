@@ -63,7 +63,7 @@ typedef struct AEAudioFormat{
    * The size of one frame in bytes
    */
   unsigned int m_frameSize;
- 
+
   AEAudioFormat()
   {
     m_dataFormat = AE_FMT_INVALID;

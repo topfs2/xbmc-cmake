@@ -20,6 +20,7 @@
  */
 
 #include "cores/dvdplayer/DVDDemuxers/DVDDemuxUtils.h"
+#include "addons/include/xbmc_adsp_types.h"
 #include "addons/include/xbmc_pvr_types.h"
 #include "addons/include/xbmc_codec_types.h"
 #include "../../addons/library.xbmc.addon/libXBMC_addon.h"
@@ -31,6 +32,7 @@ typedef void (*AddOnLogCallback)(void *addonData, const ADDON::addon_log_t logle
 typedef void (*AddOnQueueNotification)(void *addonData, const ADDON::queue_msg_t type, const char *msg);
 typedef bool (*AddOnWakeOnLan)(const char* mac);
 typedef bool (*AddOnGetSetting)(void *addonData, const char *settingName, void *settingValue);
+typedef bool (*AddOnSetSetting)(void *addonData, const char *settingName, void *settingValue);
 typedef char* (*AddOnUnknownToUTF8)(const char *sourceDest);
 typedef char* (*AddOnGetLocalizedString)(const void* addonData, long dwCode);
 typedef char* (*AddOnGetDVDMenuLanguage)(const void* addonData);
@@ -65,6 +67,7 @@ typedef struct CB_AddOn
   AddOnQueueNotification  QueueNotification;
   AddOnWakeOnLan          WakeOnLan;
   AddOnGetSetting         GetSetting;
+  AddOnSetSetting         SetSetting;
   AddOnUnknownToUTF8      UnknownToUTF8;
   AddOnGetLocalizedString GetLocalizedString;
   AddOnGetDVDMenuLanguage GetDVDMenuLanguage;
@@ -155,6 +158,37 @@ typedef float       (*GUIControl_Progress_GetPercentage)(void *addonData, GUIHAN
 typedef void        (*GUIControl_Progress_SetInfo)(void *addonData, GUIHANDLE handle, int iInfo);
 typedef int         (*GUIControl_Progress_GetInfo)(void *addonData, GUIHANDLE handle);
 typedef const char* (*GUIControl_Progress_GetDescription)(void *addonData, GUIHANDLE handle);
+
+typedef GUIHANDLE   (*GUIWindow_GetControl_Slider)(void *addonData, GUIHANDLE handle, int controlId);
+typedef void        (*GUIControl_Slider_SetVisible)(void *addonData, GUIHANDLE handle, bool yesNo);
+typedef void        (*GUIControl_Slider_SetInfo)(void *addonData, GUIHANDLE handle, int iInfo);
+typedef const char *(*GUIControl_Slider_GetDescription)(void *addonData, GUIHANDLE handle);
+typedef void        (*GUIControl_Slider_SetIntRange)(void *addonData, GUIHANDLE handle, int iStart, int iEnd);
+typedef void        (*GUIControl_Slider_SetIntValue)(void *addonData, GUIHANDLE handle, int iValue);
+typedef int         (*GUIControl_Slider_GetIntValue)(void *addonData, GUIHANDLE handle);
+typedef void        (*GUIControl_Slider_SetIntInterval)(void *addonData, GUIHANDLE handle, int iInterval);
+typedef void        (*GUIControl_Slider_SetPercentage)(void *addonData, GUIHANDLE handle, float fPercent);
+typedef float       (*GUIControl_Slider_GetPercentage)(void *addonData, GUIHANDLE handle);
+typedef void        (*GUIControl_Slider_SetFloatRange)(void *addonData, GUIHANDLE handle, float fStart, float fEnd);
+typedef void        (*GUIControl_Slider_SetFloatValue)(void *addonData, GUIHANDLE handle, float fValue);
+typedef float       (*GUIControl_Slider_GetFloatValue)(void *addonData, GUIHANDLE handle);
+typedef void        (*GUIControl_Slider_SetFloatInterval)(void *addonData, GUIHANDLE handle, float fInterval);
+
+typedef GUIHANDLE   (*GUIWindow_GetControl_SettingsSlider)(void *addonData, GUIHANDLE handle, int controlId);
+typedef void        (*GUIControl_SettingsSlider_SetVisible)(void *addonData, GUIHANDLE handle, bool yesNo);
+typedef void        (*GUIControl_SettingsSlider_SetText)(void *addonData, GUIHANDLE handle, const char *label);
+typedef const char *(*GUIControl_SettingsSlider_GetDescription)(void *addonData, GUIHANDLE handle);
+typedef void        (*GUIControl_SettingsSlider_SetIntRange)(void *addonData, GUIHANDLE handle, int iStart, int iEnd);
+typedef void        (*GUIControl_SettingsSlider_SetIntValue)(void *addonData, GUIHANDLE handle, int iValue);
+typedef int         (*GUIControl_SettingsSlider_GetIntValue)(void *addonData, GUIHANDLE handle);
+typedef void        (*GUIControl_SettingsSlider_SetIntInterval)(void *addonData, GUIHANDLE handle, int iInterval);
+typedef void        (*GUIControl_SettingsSlider_SetPercentage)(void *addonData, GUIHANDLE handle, float fPercent);
+typedef float       (*GUIControl_SettingsSlider_GetPercentage)(void *addonData, GUIHANDLE handle);
+typedef void        (*GUIControl_SettingsSlider_SetFloatRange)(void *addonData, GUIHANDLE handle, float fStart, float fEnd);
+typedef void        (*GUIControl_SettingsSlider_SetFloatValue)(void *addonData, GUIHANDLE handle, float fValue);
+typedef float       (*GUIControl_SettingsSlider_GetFloatValue)(void *addonData, GUIHANDLE handle);
+typedef void        (*GUIControl_SettingsSlider_SetFloatInterval)(void *addonData, GUIHANDLE handle, float fInterval);
+
 typedef GUIHANDLE   (*GUIListItem_Create)(void *addonData, const char *label, const char *label2, const char *iconImage, const char *thumbnailImage, const char *path);
 typedef const char* (*GUIListItem_GetLabel)(void *addonData, GUIHANDLE handle);
 typedef void        (*GUIListItem_SetLabel)(void *addonData, GUIHANDLE handle, const char *label);
@@ -240,7 +274,50 @@ typedef struct CB_GUILib
   GUIRenderAddon_SetCallbacks         RenderAddon_SetCallbacks;
   GUIRenderAddon_Delete               RenderAddon_Delete;
 
+  GUIWindow_GetControl_Slider                 Window_GetControl_Slider;
+  GUIControl_Slider_SetVisible                Control_Slider_SetVisible;
+  GUIControl_Slider_SetInfo                   Control_Slider_SetInfo;
+  GUIControl_Slider_GetDescription            Control_Slider_GetDescription;
+  GUIControl_Slider_SetIntRange               Control_Slider_SetIntRange;
+  GUIControl_Slider_SetIntValue               Control_Slider_SetIntValue;
+  GUIControl_Slider_GetIntValue               Control_Slider_GetIntValue;
+  GUIControl_Slider_SetIntInterval            Control_Slider_SetIntInterval;
+  GUIControl_Slider_SetPercentage             Control_Slider_SetPercentage;
+  GUIControl_Slider_GetPercentage             Control_Slider_GetPercentage;
+  GUIControl_Slider_SetFloatRange             Control_Slider_SetFloatRange;
+  GUIControl_Slider_SetFloatValue             Control_Slider_SetFloatValue;
+  GUIControl_Slider_GetFloatValue             Control_Slider_GetFloatValue;
+  GUIControl_Slider_SetFloatInterval          Control_Slider_SetFloatInterval;
+
+  GUIWindow_GetControl_SettingsSlider         Window_GetControl_SettingsSlider;
+  GUIControl_SettingsSlider_SetVisible        Control_SettingsSlider_SetVisible;
+  GUIControl_SettingsSlider_SetText           Control_SettingsSlider_SetText;
+  GUIControl_SettingsSlider_GetDescription    Control_SettingsSlider_GetDescription;
+  GUIControl_SettingsSlider_SetIntRange       Control_SettingsSlider_SetIntRange;
+  GUIControl_SettingsSlider_SetIntValue       Control_SettingsSlider_SetIntValue;
+  GUIControl_SettingsSlider_GetIntValue       Control_SettingsSlider_GetIntValue;
+  GUIControl_SettingsSlider_SetIntInterval    Control_SettingsSlider_SetIntInterval;
+  GUIControl_SettingsSlider_SetPercentage     Control_SettingsSlider_SetPercentage;
+  GUIControl_SettingsSlider_GetPercentage     Control_SettingsSlider_GetPercentage;
+  GUIControl_SettingsSlider_SetFloatRange     Control_SettingsSlider_SetFloatRange;
+  GUIControl_SettingsSlider_SetFloatValue     Control_SettingsSlider_SetFloatValue;
+  GUIControl_SettingsSlider_GetFloatValue     Control_SettingsSlider_GetFloatValue;
+  GUIControl_SettingsSlider_SetFloatInterval  Control_SettingsSlider_SetFloatInterval;
 } CB_GUILib;
+
+typedef void (*ADSPAddMenuHook)(void *addonData, AE_DSP_MENUHOOK *hook);
+typedef void (*ADSPRemoveMenuHook)(void *addonData, AE_DSP_MENUHOOK *hook);
+typedef void (*ADSPRegisterMode)(void *addonData, AE_DSP_MODES::AE_DSP_MODE *mode);
+typedef void (*ADSPUnregisterMode)(void *addonData, AE_DSP_MODES::AE_DSP_MODE *mode);
+
+typedef struct CB_ADSPLib
+{
+  ADSPAddMenuHook               AddMenuHook;
+  ADSPRemoveMenuHook            RemoveMenuHook;
+  ADSPRegisterMode              RegisterMode;
+  ADSPUnregisterMode            UnregisterMode;
+
+} CB_ADSPLib;
 
 typedef void (*PVRTransferEpgEntry)(void *userData, const ADDON_HANDLE handle, const EPG_TAG *epgentry);
 typedef void (*PVRTransferChannelEntry)(void *userData, const ADDON_HANDLE handle, const PVR_CHANNEL *chan);
@@ -283,6 +360,8 @@ typedef struct CB_PVRLib
 
 typedef CB_AddOnLib* (*XBMCAddOnLib_RegisterMe)(void *addonData);
 typedef void (*XBMCAddOnLib_UnRegisterMe)(void *addonData, CB_AddOnLib *cbTable);
+typedef CB_ADSPLib* (*XBMCADSPLib_RegisterMe)(void *addonData);
+typedef void (*XBMCADSPLib_UnRegisterMe)(void *addonData, CB_ADSPLib *cbTable);
 typedef CB_CODECLib* (*XBMCCODECLib_RegisterMe)(void *addonData);
 typedef void (*XBMCCODECLib_UnRegisterMe)(void *addonData, CB_CODECLib *cbTable);
 typedef CB_GUILib* (*XBMCGUILib_RegisterMe)(void *addonData);
@@ -302,6 +381,8 @@ typedef struct AddonCB
   XBMCGUILib_UnRegisterMe    GUILib_UnRegisterMe;
   XBMCPVRLib_RegisterMe      PVRLib_RegisterMe;
   XBMCPVRLib_UnRegisterMe    PVRLib_UnRegisterMe;
+  XBMCADSPLib_RegisterMe     ADSPLib_RegisterMe;
+  XBMCADSPLib_UnRegisterMe   ADSPLib_UnRegisterMe;
 } AddonCB;
 
 
@@ -310,6 +391,7 @@ namespace ADDON
 
 class CAddon;
 class CAddonCallbacksAddon;
+class CAddonCallbacksADSP;
 class CAddonCallbacksCodec;
 class CAddonCallbacksGUI;
 class CAddonCallbacksPVR;
@@ -323,6 +405,8 @@ public:
 
   static CB_AddOnLib* AddOnLib_RegisterMe(void *addonData);
   static void AddOnLib_UnRegisterMe(void *addonData, CB_AddOnLib *cbTable);
+  static CB_ADSPLib* ADSPLib_RegisterMe(void *addonData);
+  static void ADSPLib_UnRegisterMe(void *addonData, CB_ADSPLib *cbTable);
   static CB_CODECLib* CODECLib_RegisterMe(void *addonData);
   static void CODECLib_UnRegisterMe(void *addonData, CB_CODECLib *cbTable);
   static CB_GUILib* GUILib_RegisterMe(void *addonData);
@@ -331,6 +415,7 @@ public:
   static void PVRLib_UnRegisterMe(void *addonData, CB_PVRLib *cbTable);
 
   CAddonCallbacksAddon *GetHelperAddon() { return m_helperAddon; }
+  CAddonCallbacksADSP *GetHelperADSP() { return m_helperADSP; }
   CAddonCallbacksCodec *GetHelperCodec() { return m_helperCODEC; }
   CAddonCallbacksGUI *GetHelperGUI() { return m_helperGUI; }
   CAddonCallbacksPVR *GetHelperPVR() { return m_helperPVR; }
@@ -339,6 +424,7 @@ private:
   AddonCB             *m_callbacks;
   CAddon              *m_addon;
   CAddonCallbacksAddon *m_helperAddon;
+  CAddonCallbacksADSP  *m_helperADSP;
   CAddonCallbacksCodec *m_helperCODEC;
   CAddonCallbacksGUI   *m_helperGUI;
   CAddonCallbacksPVR   *m_helperPVR;

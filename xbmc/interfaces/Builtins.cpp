@@ -221,6 +221,8 @@ const BUILT_IN commands[] = {
   { "ToggleDebug",                false,  "Enables/disables debug mode" },
   { "StartPVRManager",            false,  "(Re)Starts the PVR manager" },
   { "StopPVRManager",             false,  "Stops the PVR manager" },
+  { "StartAudioDSPEngine",        false,  "(Re)Starts the audio DSP engine manager" },
+  { "StopAudioDSPEngine",         false,  "Stops the audio DSP engine manager" },
 #if defined(TARGET_ANDROID)
   { "StartAndroidActivity",       true,   "Launch an Android native app with the given package name.  Optional parms (in order): intent, dataType, dataURI." },
 #endif
@@ -1741,6 +1743,14 @@ int CBuiltins::Execute(const CStdString& execString)
   else if (execute.Equals("stoppvrmanager"))
   {
     g_application.StopPVRManager();
+  }
+  else if (execute.Equals("startaudiodspengine"))
+  {
+    g_application.StartAudioDSPEngine();
+  }
+  else if (execute.Equals("stopaudiodspengine"))
+  {
+    g_application.StopAudioDSPEngine();
   }
   else if (execute.Equals("StartAndroidActivity") && params.size() > 0)
   {

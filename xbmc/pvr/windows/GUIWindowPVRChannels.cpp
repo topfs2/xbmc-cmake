@@ -20,6 +20,7 @@
 
 #include "GUIWindowPVRChannels.h"
 
+#include "cores/AudioEngine/Engines/ActiveAE/ActiveAE.h"
 #include "dialogs/GUIDialogFileBrowser.h"
 #include "dialogs/GUIDialogNumeric.h"
 #include "dialogs/GUIDialogKaiToast.h"
@@ -112,6 +113,8 @@ void CGUIWindowPVRChannels::GetContextButtons(int itemNumber, CContextButtons &b
 
     buttons.Add(CONTEXT_BUTTON_FILTER, 19249);                                        /* filter channels */
     buttons.Add(CONTEXT_BUTTON_UPDATE_EPG, 19251);                                    /* update EPG information */
+    if (ActiveAE::CActiveAEDSP::Get().IsProcessing())
+      buttons.Add(CONTEXT_BUTTON_ACTIVE_ADSP_SETTINGS, 15047);                        /* if something is played and dsp is active, allow settings selection */
   }
 }
 

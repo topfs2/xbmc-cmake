@@ -136,6 +136,7 @@ namespace PVR
     virtual bool OnContextButtonSortByName(CFileItem *item, CONTEXT_BUTTON button);
     virtual bool OnContextButtonSortByChannel(CFileItem *item, CONTEXT_BUTTON button);
     virtual bool OnContextButtonFind(CFileItem *item, CONTEXT_BUTTON button);
+    virtual bool OnContextButtonActiveADSPSettings(CFileItem *item, CONTEXT_BUTTON button);
 
     virtual void BeforeUpdate(const CStdString &strDirectory) {}
     virtual void AfterUpdate(CFileItemList& items) {}

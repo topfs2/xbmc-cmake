@@ -240,7 +240,8 @@ LibraryLoader* DllLoaderContainer::LoadDll(const char* sName, bool bLoadSymbols)
   LibraryLoader* pLoader;
 #ifdef TARGET_POSIX
   if (strstr(sName, ".so") != NULL || strstr(sName, ".vis") != NULL || strstr(sName, ".xbs") != NULL
-      || strstr(sName, ".mvis") != NULL || strstr(sName, ".dylib") != NULL || strstr(sName, ".framework") != NULL || strstr(sName, ".pvr") != NULL)
+      || strstr(sName, ".mvis") != NULL || strstr(sName, ".dylib") != NULL || strstr(sName, ".framework") != NULL
+      || strstr(sName, ".pvr") != NULL || strstr(sName, ".adsp") != NULL)
     pLoader = new SoLoader(sName, bLoadSymbols);
   else
 #elif defined(TARGET_WINDOWS)

@@ -5545,6 +5545,34 @@ msgctxt "#14101"
 msgid "Acceleration"
 msgstr "Beschleunigung"
 
+msgctxt "#15001"
+msgid "Basic"
+msgstr "Basis"
+
+msgctxt "#15002"
+msgid "Music"
+msgstr "Musik"
+
+msgctxt "#15003"
+msgid "Video"
+msgstr "Video"
+
+msgctxt "#15004"
+msgid "Games"
+msgstr "Spiele"
+
+msgctxt "#15005"
+msgid "Application"
+msgstr "Anwendungen"
+
+msgctxt "#15006"
+msgid "Phone"
+msgstr "Telefon"
+
+msgctxt "#15007"
+msgid "Message"
+msgstr "Nachrichten"
+
 msgctxt "#15012"
 msgid "Unavailable source"
 msgstr "Quelle nicht verfügbar"
@@ -5569,9 +5597,277 @@ msgctxt "#15019"
 msgid "Add"
 msgstr "Hinzufügen"
 
+msgctxt "#15020"
+msgid "Audio DSP Manager"
+msgstr "Audioverarbeitungsverwaltung"
+
+msgctxt "#15021"
+msgid "Content type"
+msgstr "Inhaltstyp"
+
+msgctxt "#15022"
+msgid "Listening Mode"
+msgstr "Hörmodus"
+
+msgctxt "#15023"
+msgid "Master Mode"
+msgstr "Hauptverarbeitungsmodus"
+
+msgctxt "#15024"
+msgid "Pre process setup ..."
+msgstr "Vorbearbeitungseinstellungen ..."
+
+msgctxt "#15025"
+msgid "Listening mode setup ..."
+msgstr "Hörmoduseinstellungen ..."
+
+msgctxt "#15026"
+msgid "Speaker/Output setup ..."
+msgstr "Lautsprecher/Ausgangskonfiguration ..."
+
+msgctxt "#15027"
+msgid "Audio information ..."
+msgstr "Audioinformationen ..."
+
+msgctxt "#15028"
+msgid "Audio DSP settings - Main"
+msgstr "Audioeinstellungen - Übersicht"
+
+msgctxt "#15029"
+msgid "Audio DSP settings - Listening mode"
+msgstr "Audioeinstellungen - Hörmodus"
+
+msgctxt "#15030"
+msgid "Audio DSP settings - Speaker/Output"
+msgstr "Audioeinstellungen - Lautsprecher/Ausgangskonfiguration"
+
+msgctxt "#15031"
+msgid "Audio DSP settings - Audio information"
+msgstr "Audioeinstellungen - Audioinformationen"
+
+msgctxt "#15032"
+msgid "Set as default"
+msgstr "Als Standard festlegen"
+
+msgctxt "#15033"
+msgid "Resampler setup ..."
+msgstr "Umwandlungseinstellungen ..."
+
+msgctxt "#15034"
+msgid "Miscellaneous ..."
+msgstr "Verschiedenes"
+
+msgctxt "#15035"
+msgid "Audio DSP settings - Resampler"
+msgstr "Audioeinstellungen - "
+
+msgctxt "#15037"
+msgid "Audio DSP settings - Pre process"
+msgstr "Audioeinstellungen - "
+
+msgctxt "#15038"
+msgid "Audio DSP settings - Miscellaneous"
+msgstr "Audioeinstellungen - Verschiedenes"
+
+msgctxt "#15039"
+msgid "Content:"
+msgstr "Inhalt:"
+
+msgctxt "#15047"
+msgid "Audio DSP settings"
+msgstr "Audio DSP Einstellungen"
+
+msgctxt "#15048"
+msgid "No audio DSP Add-on enabled"
+msgstr "Kein Audiosignalverarbeitungs Add-On aktiviert"
+
+msgctxt "#15049"
+msgid "The audio DSP has been enabled without any"
+msgstr "Das Audioverarbeitungssystem ist aktiviert"
+
+msgctxt "#15050"
+msgid "enabled DSP Add-on. Enable at least one Add-on"
+msgstr "ohne ein Add-on. Aktiviere mindestens eines"
+
+msgctxt "#15051"
+msgid "in order to use the audio DSP functionality."
+msgstr "um die Verabeitung nutzen zu können."
+
 msgctxt "#15052"
 msgid "Password"
 msgstr "Passwort"
+
+msgctxt "#15053"
+msgid "Available"
+msgstr "Verfügbare"
+
+msgctxt "#15054"
+msgid "Active"
+msgstr "Aktivierte"
+
+msgctxt "#15055"
+msgid "Modes"
+msgstr "Verarbeitungen"
+
+msgctxt "#15056"
+msgid "Process type"
+msgstr "Verarbeitungsart"
+
+msgctxt "#15057"
+msgid "Input resampling"
+msgstr "Eingangssignalumwandlung (Resampling)"
+
+msgctxt "#15058"
+msgid "Preprocessing"
+msgstr "Eingangsverarbeitung"
+
+msgctxt "#15059"
+msgid "User selectable master processing"
+msgstr "Benutzerauswählbare Hauptverarbeitung"
+
+msgctxt "#15060"
+msgid "Postprocessing"
+msgstr "Nachbearbeitung"
+
+msgctxt "#15061"
+msgid "Output resampling"
+msgstr "Ausgangssignalumwandlung (Resampling)"
+
+msgctxt "#15062"
+msgid "Deactivate"
+msgstr "Deaktivieren"
+
+msgctxt "#15063"
+msgid "Activate"
+msgstr "Aktivieren"
+
+msgctxt "#15064"
+msgid "Help description"
+msgstr "Hilfsbeschreibung"
+
+msgctxt "#15065"
+msgid "No description available"
+msgstr "Keine Beschreibung vorhanden"
+
+msgctxt "#15066"
+msgid "Stereo"
+msgstr "Stereo"
+
+msgctxt "#15067"
+msgid "Multichannel"
+msgstr "Mehrkanal"
+
+msgctxt "#15068"
+msgid "Dolby Digital (AC3)"
+msgstr "Dolby Digital (AC3)"
+
+msgctxt "#15069"
+msgid "Dolby Digital+ (EAC3)"
+msgstr "Dolby Digital+ (EAC3)"
+
+msgctxt "#15070"
+msgid "DTS"
+msgstr "DTS"
+
+msgctxt "#15071"
+msgid "DTS HD (MA)"
+msgstr "DTS HD (MA)"
+
+msgctxt "#15072"
+msgid "DTS HD (HRA)"
+msgstr "DTS HD (HRA)"
+
+msgctxt "#15073"
+msgid "Dolby TrueHD"
+msgstr "Dolby TrueHD"
+
+msgctxt "#15074"
+msgid "MLP"
+msgstr "MLP"
+
+msgctxt "#15075"
+msgid "FLAC"
+msgstr "FLAC"
+
+msgctxt "#15076"
+msgid "Mono"
+msgstr "Mono"
+
+msgctxt "#15077"
+msgid "Mode settings"
+msgstr "Moduseinstellungen"
+
+msgctxt "#15078"
+msgid "Mode contains changes"
+msgstr "Modus enthält Änderungen"
+
+msgctxt "#15079"
+msgid "You want to save?"
+msgstr "Möchtest du diese speichern?"
+
+msgctxt "#15080"
+msgid "Change resampler"
+msgstr "Umwandler austauschen"
+
+msgctxt "#15081"
+msgid "Process Chain (with CPU usage)"
+msgstr "Verarbeitungskette (mit Prozessorlast)"
+
+msgctxt "#15082"
+msgid "Resampling to %i Hz"
+msgstr "Umwandlung zu %i Hz"
+
+msgctxt "#15083"
+msgid "Final Resampling to %i Hz"
+msgstr "Finale Umwandlung zu %i Hz"
+
+msgctxt "#15084"
+msgid " Master processing:"
+msgstr " Hauptverarbeitung:"
+
+msgctxt "#15085"
+msgid " Preprocess:"
+msgstr " Vorverarbeitung:"
+
+msgctxt "#15086"
+msgid " Post process:"
+msgstr " Nachbearbeitung:"
+
+msgctxt "#15087"
+msgid " Input:"
+msgstr " Eingang:"
+
+msgctxt "#15088"
+msgid " Output:"
+msgstr " Ausgang:"
+
+msgctxt "#15089"
+msgid "Input signal"
+msgstr "Eingangssignal"
+
+msgctxt "#15090"
+msgid "Output signal"
+msgstr "Ausgangssignal"
+
+msgctxt "#15091"
+msgid " Channels"
+msgstr " Kanäle"
+
+msgctxt "#15092"
+msgid " Samplerate"
+msgstr " Signalrate"
+
+msgctxt "#15093"
+msgid " Positions"
+msgstr " Positionen"
+
+msgctxt "#15094"
+msgid " CPU Usage for DSP"
+msgstr " Gesamtverbrauch für Signalverarbeitung"
+
+msgctxt "#15095"
+msgid " No information dialogue present for this mode"
+msgstr "Kein Dialog für Informationen des Modus verfügbar"
 
 msgctxt "#15100"
 msgid "Library"
@@ -10013,6 +10309,10 @@ msgctxt "#24024"
 msgid "Add-on disabled"
 msgstr "Addon deaktiviert"
 
+msgctxt "#24025"
+msgid "Audio DSP"
+msgstr "Audio-DSP"
+
 msgctxt "#24027"
 msgid "Weather"
 msgstr "Wetter"
@@ -12412,6 +12712,38 @@ msgstr "Legt fest wie die Videoverarbeitung beschleunigt werden soll. Dies schli
 msgctxt "#36431"
 msgid "Defines whether video decoding should be performed in software (requires more CPU) or with hardware acceleration where possible."
 msgstr "Legt fest ob die Videodekodierung mittels Software (benötigt mehr CPU-Leistung) oder mittels Harwarebeschleunigung ausgeführt werden soll, wenn die Möglichkeit besteht."
+
+msgctxt "#36432"
+msgid "Select to enable Add-ons audio signal processing of audio channels specified by the speaker configuration."
+msgstr "Auswählen zum aktivieren der Audiosignalverarbeitung über Add-On's zur angegebenen Lautsprechenkonfiguration"
+
+msgctxt "#36433"
+msgid "Clear your library about all audio dsp settings (files and addons) to initial condition"
+msgstr "Setzte deine Audiosignal-Verarbeitungsbibliothek (für Dateien und Add-On's) zu seiner Startkonfiguration"
+
+msgctxt "#36434"
+msgid "All data in the audio DSP database is being erased"
+msgstr "Alles in der Audiosignaldatenbank wird zurückgesetzt"
+
+msgctxt "#36435"
+msgid "Audio DSP Processing"
+msgstr "Audiosignalverarbeitung"
+
+msgctxt "#36436"
+msgid "Audio DSP client specific actions"
+msgstr "Audiosignalverarbeitung-Add-On spezifizierte Aktionen"
+
+msgctxt "#36437"
+msgid "No info available yet."
+msgstr "Noch keine Informationen vorhanden."
+
+msgctxt "#36438"
+msgid "Audio DSP settings"
+msgstr "Verarbeitungseinstellungen
+
+msgctxt "#36439"
+msgid "No info available yet."
+msgstr "Noch keine Informationen vorhanden."
 
 msgctxt "#36500"
 msgid "Stereoscopic mode (current)"

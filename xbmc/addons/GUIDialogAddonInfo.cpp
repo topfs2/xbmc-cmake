@@ -27,6 +27,7 @@
 #include "filesystem/Directory.h"
 #include "filesystem/SpecialProtocol.h"
 #include "GUIDialogAddonSettings.h"
+#include "cores/AudioEngine/DSPAddons/ActiveAEDSP.h"
 #include "dialogs/GUIDialogContextMenu.h"
 #include "dialogs/GUIDialogTextViewer.h"
 #include "GUIUserMessages.h"
@@ -153,7 +154,8 @@ void CGUIDialogAddonInfo::UpdateControls()
 
   // TODO: System addons should be able to be disabled
   bool isPVR = isInstalled && m_localAddon->Type() == ADDON_PVRDLL;
-  bool canDisable = isInstalled && (!isSystem || isPVR) && !m_localAddon->IsInUse();
+  bool isADSP = isInstalled && m_localAddon->Type() == ADDON_ADSPDLL;
+  bool canDisable = isInstalled && (!isSystem || isPVR || isADSP) && !m_localAddon->IsInUse();
   bool canInstall = !isInstalled && m_item->GetProperty("Addon.Broken").empty();
   bool isRepo = (isInstalled && m_localAddon->Type() == ADDON_REPOSITORY) || (m_addon && m_addon->Type() == ADDON_REPOSITORY);
 

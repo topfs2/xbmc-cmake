@@ -422,9 +422,9 @@ void CPlayerController::OnSliderChange(void *data, CGUISliderControl *slider)
     slider->SetTextValue(strValue);
   }
   else if (m_sliderAction == ACTION_VOLAMP_UP || m_sliderAction == ACTION_VOLAMP_DOWN)
-    slider->SetTextValue(CGUIDialogAudioSubtitleSettings::FormatDecibel(slider->GetFloatValue(), 1.0f));
+    slider->SetTextValue(StringUtils::FormatDecibel(slider->GetFloatValue(), 1.0f));
   else
-    slider->SetTextValue(CGUIDialogAudioSubtitleSettings::FormatDelay(slider->GetFloatValue(), 0.025f));
+    slider->SetTextValue(StringUtils::FormatDelay(slider->GetFloatValue(), 0.025f));
 
   if (g_application.m_pPlayer->HasPlayer())
   {

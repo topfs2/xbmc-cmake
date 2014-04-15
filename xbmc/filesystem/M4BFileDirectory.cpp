@@ -105,6 +105,8 @@ bool CM4BFileDirectory::GetDirectory(const CURL& url,
     items.Add(item);
   }
 
+  items.SetContent("chapters");
+
   return true;
 }
 

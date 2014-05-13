@@ -823,7 +823,12 @@ msgctxt "#199"
 msgid "Web interface"
 msgstr ""
 
-#empty strings from id 200 to 201
+#empty string with id 200
+
+#: xbmc/filesystem/AddonsDirectory.cpp
+msgctxt "#201"
+msgid "Audio decoders"
+msgstr ""
 
 #: xbmc/playlists/SmartPlaylist.cpp
 msgctxt "#202"

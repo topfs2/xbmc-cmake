@@ -22,6 +22,7 @@
 #include "CacheStrategy.h"
 #ifdef TARGET_POSIX
 #include "PlatformInclude.h"
+#include "ConvUtils.h"
 #endif
 #include "Util.h"
 #include "utils/log.h"

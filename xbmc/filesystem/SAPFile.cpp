@@ -27,6 +27,7 @@
 
 #include <sys/stat.h>
 #include <vector>
+#include <string.h>
 
 using namespace std;
 using namespace XFILE;

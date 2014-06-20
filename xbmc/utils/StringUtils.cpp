@@ -39,6 +39,7 @@
 #include <sstream>
 #include <time.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define FORMAT_BLOCK_SIZE 512 // # of bytes for initial allocation for printf
 

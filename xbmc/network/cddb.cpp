@@ -44,6 +44,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
+#include <string.h>
 
 using namespace std;
 using namespace MEDIA_DETECT;

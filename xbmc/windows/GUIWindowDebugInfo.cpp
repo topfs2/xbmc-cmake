@@ -34,6 +34,10 @@
 #include "utils/Variant.h"
 #include "utils/StringUtils.h"
 
+#ifdef TARGET_POSIX
+#include "linux/XMemUtils.h"
+#endif
+
 #include <climits>
 
 CGUIWindowDebugInfo::CGUIWindowDebugInfo(void)

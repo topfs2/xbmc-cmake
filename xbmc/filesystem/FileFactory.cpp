@@ -24,7 +24,6 @@
 #include "network/Network.h"
 #include "system.h"
 #include "FileFactory.h"
-#include "HDFile.h"
 #include "CurlFile.h"
 #include "HTTPFile.h"
 #include "DAVFile.h"
@@ -78,6 +77,11 @@
 #include "network/WakeOnAccess.h"
 #include "addons/VFSEntry.h"
 #include "addons/AddonManager.h"
+#ifdef TARGET_POSIX
+#include "posix/PosixFile.h"
+#elif defined(TARGET_WINDOWS)
+#include "HDFile.h"
+#endif
 
 using namespace ADDON;
 using namespace XFILE;
@@ -125,7 +129,11 @@ IFile* CFileFactory::CreateLoader(const CURL& url)
   else if (url.IsProtocol("special")) return new CSpecialProtocolFile();
   else if (url.IsProtocol("multipath")) return new CMultiPathFile();
   else if (url.IsProtocol("image")) return new CImageFile();
+#ifdef TARGET_POSIX
+  else if (url.IsProtocol("file") || url.GetProtocol().empty()) return new CPosixFile();
+#else
   else if (url.IsProtocol("file") || url.GetProtocol().empty()) return new CHDFile();
+#endif
   else if (url.IsProtocol("filereader")) return new CFileReaderFile();
 #if defined(HAS_FILESYSTEM_CDDA) && defined(HAS_DVD_DRIVE)
   else if (url.IsProtocol("cdda")) return new CFileCDDA();

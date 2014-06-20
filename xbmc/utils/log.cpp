@@ -32,6 +32,9 @@
 #elif defined(TARGET_WINDOWS)
 #include "win32/WIN32Util.h"
 #endif
+#ifdef TARGET_POSIX
+#include "linux/XTimeUtils.h"
+#endif
 
 #define critSec XBMC_GLOBAL_USE(CLog::CLogGlobals).critSec
 #define m_file XBMC_GLOBAL_USE(CLog::CLogGlobals).m_file

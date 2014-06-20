@@ -308,6 +308,7 @@
 
 #ifdef TARGET_POSIX
 #include "XHandle.h"
+#include "XTimeUtils.h"
 #endif
 
 #ifdef HAS_LIRC

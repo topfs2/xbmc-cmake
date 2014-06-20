@@ -52,6 +52,10 @@
   #include "settings/AdvancedSettings.h"
 #endif
 
+#ifdef TARGET_POSIX
+#include "linux/XTimeUtils.h"
+#endif
+
 using namespace std;
 
 #if defined(TARGET_WINDOWS) && defined(HAS_DX)

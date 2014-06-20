@@ -35,6 +35,7 @@
 #ifdef TARGET_POSIX
 #include "linux/PlatformInclude.h"
 #include "linux/XFileUtils.h"
+#include "linux/XTimeUtils.h"
 #define __except catch
 #endif
 

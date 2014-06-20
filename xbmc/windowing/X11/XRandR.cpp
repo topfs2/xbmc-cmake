@@ -36,6 +36,10 @@
 #include <sys/wait.h>
 #endif
 
+#ifdef TARGET_POSIX
+#include "linux/XTimeUtils.h"
+#endif
+
 using namespace std;
 
 CXRandR::CXRandR(bool query)

@@ -74,7 +74,7 @@ bool CArtist::Load(const TiXmlElement *artist, bool append, bool prioritise)
   XMLUtils::GetString(artist, "disbanded", strDisbanded);
 
   size_t iThumbCount = thumbURL.m_url.size();
-  CStdString xmlAdd = thumbURL.m_xml;
+  std::string xmlAdd = thumbURL.m_xml;
 
   const TiXmlElement* thumb = artist->FirstChildElement("thumb");
   while (thumb)
@@ -82,7 +82,7 @@ bool CArtist::Load(const TiXmlElement *artist, bool append, bool prioritise)
     thumbURL.ParseElement(thumb);
     if (prioritise)
     {
-      CStdString temp;
+      std::string temp;
       temp << *thumb;
       xmlAdd = temp+xmlAdd;
     }

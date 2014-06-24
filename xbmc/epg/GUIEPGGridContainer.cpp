@@ -30,6 +30,7 @@
 #include "utils/Variant.h"
 #include "threads/SystemClock.h"
 #include "GUIInfoManager.h"
+#include "utils/StringUtils.h"
 
 #include "epg/Epg.h"
 #include "pvr/channels/PVRChannel.h"

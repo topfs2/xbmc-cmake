@@ -31,6 +31,7 @@
 #include "utils/log.h"
 #include "utils/StringUtils.h"
 #include "utils/Variant.h"
+#include "utils/StringUtils.h"
 #include "addons/include/xbmc_pvr_types.h"
 
 using namespace std;
@@ -241,10 +242,10 @@ void CEpgInfoTag::Serialize(CVariant &value) const
   value["plot"] = m_strPlot;
   value["genre"] = m_genre;
   value["filenameandpath"] = m_strFileNameAndPath;
-  value["starttime"] = m_startTime.IsValid() ? m_startTime.GetAsDBDateTime() : StringUtils::Empty;
-  value["endtime"] = m_endTime.IsValid() ? m_endTime.GetAsDBDateTime() : StringUtils::Empty;
+  value["starttime"] = m_startTime.IsValid() ? m_startTime.GetAsDBDateTime() : "";
+  value["endtime"] = m_endTime.IsValid() ? m_endTime.GetAsDBDateTime() : "";
   value["runtime"] = StringUtils::Format("%d", GetDuration() / 60);
-  value["firstaired"] = m_firstAired.IsValid() ? m_firstAired.GetAsDBDate() : StringUtils::Empty;
+  value["firstaired"] = m_firstAired.IsValid() ? m_firstAired.GetAsDBDate() : "";
   value["progress"] = Progress();
   value["progresspercentage"] = ProgressPercentage();
   value["episodename"] = m_strEpisodeName;

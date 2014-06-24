@@ -24,6 +24,7 @@
 #include "utils/log.h"
 #include "utils/StringUtils.h"
 #include "addons/include/xbmc_pvr_types.h"
+#include "utils/StringUtils.h"
 
 #include "EpgDatabase.h"
 #include "EpgContainer.h"

@@ -160,7 +160,7 @@ bool CMultiPathDirectory::GetPaths(const CURL& url, vector<std::string>& vecPath
   return GetPaths(pathToUrl, vecPaths);
 }
 
-bool CMultiPathDirectory::GetPaths(const std::string& path, std::vector<std::string>& paths)
+bool CMultiPathDirectory::GetPaths(const std::string& path, vector<std::string>& paths)
 {
   paths.clear();
 

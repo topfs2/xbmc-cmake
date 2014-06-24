@@ -2040,14 +2040,14 @@ std::string CGUIWindowVideoBase::GetStartFolder(const std::string &dir)
   return CGUIMediaWindow::GetStartFolder(dir);
 }
 
-void CGUIWindowVideoBase::AppendAndClearSearchItems(CFileItemList &searchItems, const CStdString &prependLabel, CFileItemList &results)
+void CGUIWindowVideoBase::AppendAndClearSearchItems(CFileItemList &searchItems, const std::string &prependLabel, CFileItemList &results)
 {
   if (!searchItems.Size())
     return;
 
   searchItems.Sort(SortByLabel, SortOrderAscending, CSettings::Get().GetBool("filelists.ignorethewhensorting") ? SortAttributeIgnoreArticle : SortAttributeNone);
   for (int i = 0; i < searchItems.Size(); i++)
-    searchItems[i]->SetLabel(prependLabel + (CStdString)searchItems[i]->GetLabel());
+    searchItems[i]->SetLabel(CStdString(prependLabel) + searchItems[i]->GetLabel());
   results.Append(searchItems);
 
   searchItems.Clear();

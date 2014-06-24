@@ -29,6 +29,6 @@ namespace MUSIC_INFO
     CMusicInfoTagLoaderFFmpeg(void);
     virtual ~CMusicInfoTagLoaderFFmpeg();
 
-    virtual bool Load(const CStdString& strFileName, CMusicInfoTag& tag, EmbeddedArt *art = NULL);
+    virtual bool Load(const std::string& strFileName, CMusicInfoTag& tag, EmbeddedArt *art = NULL);
   };
 }

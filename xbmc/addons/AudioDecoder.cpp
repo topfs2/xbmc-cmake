@@ -81,7 +81,7 @@ void CAudioDecoder::DeInit()
   m_pStruct->DeInit(m_context);
 }
 
-bool CAudioDecoder::Load(const CStdString& fileName,
+bool CAudioDecoder::Load(const std::string& fileName,
                          MUSIC_INFO::CMusicInfoTag& tag,
                          MUSIC_INFO::EmbeddedArt* art)
 {
@@ -91,7 +91,7 @@ bool CAudioDecoder::Load(const CStdString& fileName,
   char title[256];
   char artist[256];
   int length;
-  if (m_pStruct->ReadTag(fileName, title, artist, &length))
+  if (m_pStruct->ReadTag(fileName.c_str(), title, artist, &length))
   {
     tag.SetTitle(title);
     tag.SetArtist(artist);

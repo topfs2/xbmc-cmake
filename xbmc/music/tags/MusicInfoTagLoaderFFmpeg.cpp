@@ -49,7 +49,7 @@ CMusicInfoTagLoaderFFmpeg::~CMusicInfoTagLoaderFFmpeg()
 {
 }
 
-bool CMusicInfoTagLoaderFFmpeg::Load(const CStdString& strFileName, CMusicInfoTag& tag, EmbeddedArt *art)
+bool CMusicInfoTagLoaderFFmpeg::Load(const std::string& strFileName, CMusicInfoTag& tag, EmbeddedArt *art)
 {
   tag.SetLoaded(false);
 

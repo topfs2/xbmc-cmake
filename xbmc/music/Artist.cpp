@@ -102,8 +102,8 @@ bool CArtist::Load(const TiXmlElement *artist, bool append, bool prioritise)
     const TiXmlNode* title = node->FirstChild("title");
     if (title && title->FirstChild())
     {
-      CStdString strTitle = title->FirstChild()->Value();
-      CStdString strYear;
+      std::string strTitle = title->FirstChild()->Value();
+      std::string strYear;
       const TiXmlNode* year = node->FirstChild("year");
       if (year && year->FirstChild())
         strYear = year->FirstChild()->Value();
@@ -131,7 +131,7 @@ bool CArtist::Load(const TiXmlElement *artist, bool append, bool prioritise)
   return true;
 }
 
-bool CArtist::Save(TiXmlNode *node, const CStdString &tag, const CStdString& strPath)
+bool CArtist::Save(TiXmlNode *node, const std::string &tag, const std::string& strPath)
 {
   if (!node) return false;
 
@@ -173,7 +173,7 @@ bool CArtist::Save(TiXmlNode *node, const CStdString &tag, const CStdString& str
   }
 
   // albums
-  for (vector< pair<CStdString,CStdString> >::const_iterator it = discography.begin(); it != discography.end(); ++it)
+  for (vector< pair<std::string,std::string> >::const_iterator it = discography.begin(); it != discography.end(); ++it)
   {
     // add a <album> tag
     TiXmlElement cast("album");

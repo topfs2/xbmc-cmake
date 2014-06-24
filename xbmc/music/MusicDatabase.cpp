@@ -1022,8 +1022,8 @@ bool CMusicDatabase::UpdateArtist(const CArtist& artist)
                artist.fanart.m_xml.c_str());
 
   DeleteArtistDiscography(artist.idArtist);
-  for (std::vector<std::pair<CStdString,CStdString> >::const_iterator disc = artist.discography.begin();
-                                                                      disc != artist.discography.end();
+  for (std::vector<std::pair<std::string,std::string> >::const_iterator disc = artist.discography.begin();
+                                                                       disc != artist.discography.end();
                                                                     ++disc)
   {
     AddArtistDiscography(artist.idArtist, disc->first, disc->second);

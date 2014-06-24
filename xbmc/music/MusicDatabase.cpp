@@ -5076,26 +5076,26 @@ void CMusicDatabase::ExportKaraokeInfo(const CStdString & outFile, bool asHTML)
       progress->ShowProgressBar(true);
     }
 
-    CStdString outdoc;
+    std::string outdoc;
     if ( asHTML )
     {
       outdoc = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></meta></head>\n"
           "<body>\n<table>\n";
 
-      file.Write( outdoc, outdoc.size() );
+      file.Write( outdoc.c_str(), outdoc.size() );
     }
 
     while (!m_pDS->eof())
     {
       CSong song = GetSongFromDataset();
-      CStdString songnum = StringUtils::Format("%06d", song.iKaraokeNumber);
+      std::string songnum = StringUtils::Format("%06d", song.iKaraokeNumber);
 
       if ( asHTML )
-        outdoc = "<tr><td>" + songnum + "</td><td>" + (CStdString)StringUtils::Join(song.artist, g_advancedSettings.m_musicItemSeparator) + "</td><td>" + song.strTitle + "</td></tr>\r\n";
+        outdoc = "<tr><td>" + songnum + "</td><td>" + StringUtils::Join(song.artist, g_advancedSettings.m_musicItemSeparator).c_str() + "</td><td>" + song.strTitle + "</td></tr>\r\n";
       else
-        outdoc = songnum + '\t' + (CStdString)StringUtils::Join(song.artist, g_advancedSettings.m_musicItemSeparator) + '\t' + song.strTitle + '\t' + song.strFileName + "\r\n";
+        outdoc = songnum + '\t' + StringUtils::Join(song.artist, g_advancedSettings.m_musicItemSeparator).c_str() + '\t' + song.strTitle + '\t' + song.strFileName + "\r\n";
 
-      file.Write( outdoc, outdoc.size() );
+      file.Write( outdoc.c_str(), outdoc.size() );
 
       if ((current % 50) == 0 && progress)
       {
@@ -5117,7 +5117,7 @@ void CMusicDatabase::ExportKaraokeInfo(const CStdString & outFile, bool asHTML)
     if ( asHTML )
     {
       outdoc = "</table>\n</body>\n</html>\n";
-      file.Write( outdoc, outdoc.size() );
+      file.Write( outdoc.c_str(), outdoc.size() );
     }
 
     file.Close();

@@ -2047,7 +2047,7 @@ void CGUIWindowVideoBase::AppendAndClearSearchItems(CFileItemList &searchItems, 
 
   searchItems.Sort(SortByLabel, SortOrderAscending, CSettings::Get().GetBool("filelists.ignorethewhensorting") ? SortAttributeIgnoreArticle : SortAttributeNone);
   for (int i = 0; i < searchItems.Size(); i++)
-    searchItems[i]->SetLabel(CStdString(prependLabel) + searchItems[i]->GetLabel());
+    searchItems[i]->SetLabel(prependLabel + searchItems[i]->GetLabel());
   results.Append(searchItems);
 
   searchItems.Clear();

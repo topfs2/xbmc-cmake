@@ -553,7 +553,7 @@ void CMusicInfoScanner::FileItemsToAlbums(CFileItemList& items, VECALBUMS& album
     {
       VECALBUMS::iterator it;
       for (it = albums.begin(); it != albums.end(); ++it)
-        if (it->strMusicBrainzAlbumID.Equals(tag.GetMusicBrainzAlbumID()))
+        if (StringUtils::EqualsNoCase(it->strMusicBrainzAlbumID, tag.GetMusicBrainzAlbumID()))
           break;
 
       if (it == albums.end())

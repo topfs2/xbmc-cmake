@@ -57,7 +57,7 @@ namespace ADDON
     bool Load(const std::string& strFileName,
               MUSIC_INFO::CMusicInfoTag& tag,
               MUSIC_INFO::EmbeddedArt *art = NULL);
-    int GetTrackCount(const CStdString& strPath);
+    int GetTrackCount(const std::string& strPath);
     virtual CAEChannelInfo GetChannelInfo();
 
     const std::string& GetExtensions() const { return m_extension; }

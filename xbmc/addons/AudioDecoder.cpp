@@ -102,7 +102,7 @@ bool CAudioDecoder::Load(const std::string& fileName,
   return false;
 }
 
-int CAudioDecoder::GetTrackCount(const CStdString& strPath)
+int CAudioDecoder::GetTrackCount(const std::string& strPath)
 {
   if (!Initialized())
     return 0;

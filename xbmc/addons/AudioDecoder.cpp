@@ -42,7 +42,7 @@ AddonPtr CAudioDecoder::Clone() const
   return AddonPtr(new CAudioDecoder(*this));
 }
 
-bool CAudioDecoder::Init(const CStdString& strFile, unsigned int filecache)
+bool CAudioDecoder::Init(const std::string& strFile, unsigned int filecache)
 {
   if (!Initialized())
     return false;

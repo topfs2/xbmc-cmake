@@ -48,7 +48,7 @@ namespace ADDON
     virtual AddonPtr Clone() const;
 
     // Things that MUST be supplied by the child classes
-    bool Init(const CStdString& strFile, unsigned int filecache);
+    bool Init(const std::string& strFile, unsigned int filecache);
     int ReadPCM(uint8_t* buffer, int size, int* actualsize);
     int64_t Seek(int64_t time);
     bool CanInit() { return true; }

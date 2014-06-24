@@ -29,6 +29,7 @@
 #include "utils/URIUtils.h"
 #include "utils/StringUtils.h"
 #include <string.h>
+#include "URL.h"
 
 namespace XFILE
 {

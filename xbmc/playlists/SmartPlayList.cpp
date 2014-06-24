@@ -691,7 +691,7 @@ std::string CSmartPlaylistRule::FormatParameter(const std::string &operatorStrin
 }
 
 std::string CSmartPlaylistRule::FormatWhereClause(const std::string &negate, const std::string &oper, const std::string &param,
-                                                 const CDatabase &db, const std::string &strType) const
+                                                  const CDatabase &db, const std::string &strType) const
 {
   std::string parameter = FormatParameter(oper, param, db, strType);
 

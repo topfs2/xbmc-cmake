@@ -992,7 +992,7 @@ INFO_RET CMusicInfoScanner::DownloadAlbumInfo(const CAlbum& album, const ADDON::
   if (m_handle)
   {
     m_handle->SetTitle(StringUtils::Format(g_localizeStrings.Get(20321).c_str(), info->Name().c_str()));
-    m_handle->SetText((CStdString)StringUtils::Join(album.artist, g_advancedSettings.m_musicItemSeparator) + " - " + album.strAlbum);
+    m_handle->SetText(StringUtils::Join(album.artist, g_advancedSettings.m_musicItemSeparator) + " - " + album.strAlbum);
   }
 
   // clear our scraper cache

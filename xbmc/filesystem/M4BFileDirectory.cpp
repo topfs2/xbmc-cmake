@@ -81,7 +81,7 @@ bool CM4BFileDirectory::GetDirectory(const CURL& url,
   for (size_t i=0;i<m_fctx->nb_chapters;++i)
   {
     tag=NULL;
-    std::string chaptitle = StringUtils::Format(g_localizeStrings.Get(25010), i+1);
+    std::string chaptitle = StringUtils::Format(g_localizeStrings.Get(25010).c_str(), i+1);
     std::string chapauthor;
     std::string chapalbum;
     while ((tag=av_dict_get(m_fctx->chapters[i]->metadata, "", tag, AV_DICT_IGNORE_SUFFIX)))

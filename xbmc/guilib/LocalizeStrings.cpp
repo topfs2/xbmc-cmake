@@ -161,7 +161,7 @@ bool CLocalizeStrings::LoadXML(const std::string &filename, std::string &encodin
 
   TiXmlElement* pRootElement = xmlDoc.RootElement();
   if (!pRootElement || pRootElement->NoChildren() ||
-       pRootElement->ValueStr()!="strings")
+       pRootElement->ValueStr()!= std::string("strings"))
   {
     CLog::Log(LOGERROR, "%s Doesn't contain <strings>", filename.c_str());
     return false;

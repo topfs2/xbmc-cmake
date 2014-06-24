@@ -237,7 +237,7 @@ void CGUIDialogVideoBookmarks::OnRefreshList()
     CStdString chapterName;
     g_application.m_pPlayer->GetChapterName(chapterName, i);
     if (chapterName.empty())
-      chapterName = StringUtils::Format(g_localizeStrings.Get(25010), i);
+      chapterName = StringUtils::Format(g_localizeStrings.Get(25010).c_str(), i);
     int64_t pos = g_application.m_pPlayer->GetChapterPos(i);
     std::string time = 
       StringUtils::SecondsToTimeString(pos, TIME_FORMAT_HH_MM_SS);

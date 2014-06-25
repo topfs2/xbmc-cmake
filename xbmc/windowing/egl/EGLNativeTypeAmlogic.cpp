@@ -53,7 +53,7 @@ bool CEGLNativeTypeAmlogic::CheckCompatibility()
   std::string modalias = "/sys/class/graphics/" + m_framebuffer_name + "/device/modalias";
 
   aml_get_sysfs_str(modalias.c_str(), name, 255);
-  CStdString strName = name;
+  std::string strName = name;
   StringUtils::Trim(strName);
   if (strName == "platform:mesonfb")
     return true;
@@ -216,7 +216,7 @@ bool CEGLNativeTypeAmlogic::ShowWindow(bool show)
 
 bool CEGLNativeTypeAmlogic::SetDisplayResolution(const char *resolution)
 {
-  CStdString modestr = resolution;
+  std::string modestr = resolution;
   // switch display resolution
   aml_set_sysfs_str("/sys/class/display/mode", modestr.c_str());
 
@@ -241,7 +241,7 @@ bool CEGLNativeTypeAmlogic::ModeToResolution(const char *mode, RESOLUTION_INFO *
   if(!mode)
     return false;
 
-  CStdString fromMode = mode;
+  std::string fromMode = mode;
   StringUtils::Trim(fromMode);
   // strips, for example, 720p* to 720p
   // the * indicate the 'native' mode of the display

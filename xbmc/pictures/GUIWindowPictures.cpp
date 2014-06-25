@@ -44,6 +44,7 @@
 #include "Autorun.h"
 #include "interfaces/AnnouncementManager.h"
 #include "utils/StringUtils.h"
+#include "URL.h"
 #ifdef TARGET_POSIX
 #include "linux/XTimeUtils.h"
 #endif

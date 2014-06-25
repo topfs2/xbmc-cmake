@@ -522,11 +522,10 @@ int CBuiltins::Execute(const std::string& execString)
 
     URIUtils::AddSlashAtEnd(strDestDirect);
 
-
     CFileItemList items;
     CFileItemPtr ptr(new CFileItem());
     CStdString archpath;
-    URIUtils::CreateArchivePath(archpath, URIUtils::GetExtension(archpath).substr(1), params[0], "");
+    archpath = URIUtils::CreateArchivePath(URIUtils::GetExtension(params[0]).substr(1), CURL(params[0]), "").Get();
     ptr->SetPath(archpath);
     ptr->Select(true);
     CFileOperationJob job(CFileOperationJob::ActionCopy, items, strDestDirect);

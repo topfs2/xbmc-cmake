@@ -2068,7 +2068,7 @@ int CUtil::ScanArchiveForSubtitles( const std::string& strArchivePath, const std
     // get _ALL_files in the rar, even those located in subdirectories because we set the bMask to false.
     // so now we dont have to find any subdirs anymore, all files in the rar is checked.
     CStdString strRarPath;
-    URIUtils::CreateArchivePath(strRarPath,"rar",strArchivePath,"");
+    strRarPath = URIUtils::CreateArchivePath("rar",CURL(strArchivePath),"").Get();
     GetRecursiveListing(strRarPath, ItemList, "", true);
   }
   for (int it= 0 ; it <ItemList.Size();++it)

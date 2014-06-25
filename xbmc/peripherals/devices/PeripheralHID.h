@@ -34,6 +34,6 @@ namespace PERIPHERALS
     virtual void OnSettingChanged(const std::string &strChangedSetting);
 
   protected:
-    CStdString m_strKeymap;
+    std::string m_strKeymap;
   };
 }

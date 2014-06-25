@@ -529,7 +529,7 @@ void CPeripheral::ClearSettings(void)
 
 bool CPeripheral::operator ==(const PeripheralScanResult& right) const
 {
-  return m_strLocation.Equals(right.m_strLocation);
+  return StringUtils::EqualsNoCase(m_strLocation, right.m_strLocation);
 }
 
 bool CPeripheral::operator !=(const PeripheralScanResult& right) const

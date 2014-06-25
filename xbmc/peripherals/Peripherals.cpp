@@ -114,8 +114,8 @@ void CPeripherals::Clear(void)
   /* delete mappings */
   for (unsigned int iMappingPtr = 0; iMappingPtr < m_mappings.size(); iMappingPtr++)
   {
-    map<CStdString, PeripheralDeviceSetting> settings = m_mappings.at(iMappingPtr).m_settings;
-    for (map<CStdString, PeripheralDeviceSetting>::iterator itr = settings.begin(); itr != settings.end(); ++itr)
+    map<std::string, PeripheralDeviceSetting> settings = m_mappings.at(iMappingPtr).m_settings;
+    for (map<std::string, PeripheralDeviceSetting>::iterator itr = settings.begin(); itr != settings.end(); ++itr)
       delete itr->second.m_setting;
     m_mappings.at(iMappingPtr).m_settings.clear();
   }
@@ -403,7 +403,7 @@ void CPeripherals::GetSettingsFromMapping(CPeripheral &peripheral) const
 
     if (bBusMatch && bProductMatch && bClassMatch)
     {
-      for (map<CStdString, PeripheralDeviceSetting>::const_iterator itr = mapping->m_settings.begin(); itr != mapping->m_settings.end(); ++itr)
+      for (map<std::string, PeripheralDeviceSetting>::const_iterator itr = mapping->m_settings.begin(); itr != mapping->m_settings.end(); ++itr)
         peripheral.AddSetting((*itr).first, (*itr).second.m_setting, (*itr).second.m_order);
     }
   }
@@ -464,7 +464,7 @@ bool CPeripherals::LoadMappings(void)
   return true;
 }
 
-void CPeripherals::GetSettingsFromMappingsFile(TiXmlElement *xmlNode, map<CStdString, PeripheralDeviceSetting> &settings)
+void CPeripherals::GetSettingsFromMappingsFile(TiXmlElement *xmlNode, map<std::string, PeripheralDeviceSetting> &settings)
 {
   TiXmlElement *currentNode = xmlNode->FirstChildElement("setting");
   int iMaxOrder = 0;
@@ -547,7 +547,7 @@ void CPeripherals::GetSettingsFromMappingsFile(TiXmlElement *xmlNode, map<CStdSt
   }
 
   /* add the settings without an order attribute or an invalid order attribute set at the end */
-  for (map<CStdString, PeripheralDeviceSetting>::iterator it = settings.begin(); it != settings.end(); ++it)
+  for (map<std::string, PeripheralDeviceSetting>::iterator it = settings.begin(); it != settings.end(); ++it)
   {
     if (it->second.m_order == 0)
       it->second.m_order = ++iMaxOrder;

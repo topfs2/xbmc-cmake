@@ -567,7 +567,7 @@ bool CVFSEntryIDirectoryWrapper::DoGetKeyboardInput(void* ctx,
 bool CVFSEntryIDirectoryWrapper::GetKeyboardInput2(const char* heading,
                                                    char** input)
 {
-  CStdString inp;
+  std::string inp;
   bool result;
   if ((result=GetKeyboardInput(CVariant(std::string(heading)), inp)))
     *input = strdup(inp.c_str());

@@ -311,7 +311,7 @@ void CWinSystemX11::UpdateResolutions()
       std::vector<XOutput> outputs = g_xrandr.GetModes();
       for (size_t i=0; i<outputs.size(); i++)
       {
-        if (outputs[i].name.Equals(m_userOutput.c_str()))
+        if (StringUtils::EqualsNoCase(outputs[i].name, m_userOutput))
           continue;
         g_xrandr.TurnOffOutput(outputs[i].name);
       }
@@ -406,7 +406,7 @@ bool CWinSystemX11::HasCalibration(const RESOLUTION_INFO &resInfo)
   XOutput *out = g_xrandr.GetOutput(m_currentOutput);
 
   // keep calibrations done on a not connected output
-  if (!out->name.Equals(resInfo.strOutput))
+  if (!StringUtils::EqualsNoCase(out->name, resInfo.strOutput))
     return true;
 
   // keep calibrations not updated with resolution data
@@ -705,7 +705,7 @@ void CWinSystemX11::NotifyXRREvent()
   for (i = RES_DESKTOP; i < CDisplaySettings::Get().ResolutionInfoSize(); ++i)
   {
     res = CDisplaySettings::Get().GetResolutionInfo(i);
-    if (CDisplaySettings::Get().GetResolutionInfo(i).strId.Equals(mode.id))
+    if (StringUtils::EqualsNoCase(CDisplaySettings::Get().GetResolutionInfo(i).strId, mode.id))
     {
       found = true;
       break;

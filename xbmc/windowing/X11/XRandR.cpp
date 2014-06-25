@@ -75,7 +75,7 @@ bool CXRandR::Query(bool force, bool ignoreoff)
 
 bool CXRandR::Query(bool force, int screennum, bool ignoreoff)
 {
-  CStdString cmd;
+  std::string cmd;
   cmd  = getenv("XBMC_BIN_HOME");
   cmd += "/xbmc-xrandr";
   cmd = StringUtils::Format("%s -q --screen %d", cmd.c_str(), screennum);
@@ -151,13 +151,13 @@ bool CXRandR::Query(bool force, int screennum, bool ignoreoff)
   return m_outputs.size() > 0;
 }
 
-bool CXRandR::TurnOffOutput(CStdString name)
+bool CXRandR::TurnOffOutput(std::string name)
 {
   XOutput *output = GetOutput(name);
   if (!output)
     return false;
 
-  CStdString cmd;
+  std::string cmd;
   cmd  = getenv("XBMC_BIN_HOME");
   cmd += "/xbmc-xrandr";
   cmd = StringUtils::Format("%s --screen %d --output %s --off", cmd.c_str(), output->screen, name.c_str());
@@ -172,7 +172,7 @@ bool CXRandR::TurnOffOutput(CStdString name)
   return true;
 }
 
-bool CXRandR::TurnOnOutput(CStdString name)
+bool CXRandR::TurnOnOutput(std::string name)
 {
   XOutput *output = GetOutput(name);
   if (!output)
@@ -332,7 +332,7 @@ bool CXRandR::SetMode(XOutput output, XMode mode)
   return true;
 }
 
-XMode CXRandR::GetCurrentMode(CStdString outputName)
+XMode CXRandR::GetCurrentMode(std::string outputName)
 {
   Query();
   XMode result;
@@ -355,7 +355,7 @@ XMode CXRandR::GetCurrentMode(CStdString outputName)
   return result;
 }
 
-XMode CXRandR::GetPreferredMode(CStdString outputName)
+XMode CXRandR::GetPreferredMode(std::string outputName)
 {
   Query();
   XMode result;
@@ -396,8 +396,8 @@ void CXRandR::LoadCustomModeLinesToAllOutputs(void)
   }
 
   char cmd[255];
-  CStdString name;
-  CStdString strModeLine;
+  std::string name;
+  std::string strModeLine;
 
   for (TiXmlElement* modeline = pRootElement->FirstChildElement("modeline"); modeline; modeline = modeline->NextSiblingElement("modeline"))
   {
@@ -432,7 +432,7 @@ void CXRandR::SetNumScreens(unsigned int num)
   m_bInit = false;
 }
 
-bool CXRandR::IsOutputConnected(CStdString name)
+bool CXRandR::IsOutputConnected(std::string name)
 {
   bool result = false;
   Query();
@@ -448,7 +448,7 @@ bool CXRandR::IsOutputConnected(CStdString name)
   return result;
 }
 
-XOutput* CXRandR::GetOutput(CStdString outputName)
+XOutput* CXRandR::GetOutput(std::string outputName)
 {
   XOutput *result = 0;
   Query();

@@ -67,7 +67,7 @@ XBMCHelper::XBMCHelper()
   , m_errorStarting(false)
 {
   // Compute the XBMC_HOME path.
-  CStdString homePath;
+  std::string homePath;
   CUtil::GetHomePath(homePath);
   m_homepath = homePath;
 

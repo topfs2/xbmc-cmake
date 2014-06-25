@@ -26,7 +26,6 @@
 #include "system.h"
 #include "system_gl.h"
 #include "rendering/RenderSystem.h"
-#include "utils/StdString.h"
 
 class CRenderSystemGL : public CRenderSystemBase
 {
@@ -85,7 +84,7 @@ protected:
   int        m_width;
   int        m_height;
 
-  CStdString m_RenderExtensions;
+  std::string m_RenderExtensions;
 
   int        m_glslMajor;
   int        m_glslMinor;

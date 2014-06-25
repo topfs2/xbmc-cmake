@@ -107,7 +107,7 @@ CXBMCTestUtils &CXBMCTestUtils::Instance()
 
 std::string CXBMCTestUtils::ReferenceFilePath(const std::string& path)
 {
-  return CSpecialProtocol::TranslatePath("special://xbmc") + path;
+  return static_cast<const std::string&>(CSpecialProtocol::TranslatePath("special://xbmc")) + path;
 }
 
 bool CXBMCTestUtils::SetReferenceFileBasePath()

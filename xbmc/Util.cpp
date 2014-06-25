@@ -2067,53 +2067,53 @@ int CUtil::ScanArchiveForSubtitles( const std::string& strArchivePath, const std
     //TODO
     // get _ALL_files in the rar, even those located in subdirectories because we set the bMask to false.
     // so now we dont have to find any subdirs anymore, all files in the rar is checked.
-    CStdString strRarPath;
+    std::string strRarPath;
     strRarPath = URIUtils::CreateArchivePath("rar",CURL(strArchivePath),"").Get();
     GetRecursiveListing(strRarPath, ItemList, "", true);
   }
   for (int it= 0 ; it <ItemList.Size();++it)
   {
-   std::string strPathInRar = ItemList[it]->GetPath();
-   std::string strExt = URIUtils::GetExtension(strPathInRar);
-   
-   CLog::Log(LOGDEBUG, "ScanArchiveForSubtitles:: Found file %s", strPathInRar.c_str());
-   // always check any embedded rar archives
-   // checking for embedded rars, I moved this outside the sub_ext[] loop. We only need to check this once for each file.
-   if (URIUtils::IsRAR(strPathInRar) || URIUtils::IsZIP(strPathInRar))
-   {
-    CURL urlRar;
-    CURL pathToUrl(strArchivePath);
-    if (strExt == ".rar")
-      urlRar = URIUtils::CreateArchivePath("rar", pathToUrl, strPathInRar);
-    else
-      urlRar = URIUtils::CreateArchivePath("zip", pathToUrl, strPathInRar);
-    ScanArchiveForSubtitles(urlRar.Get(), strMovieFileNameNoExt, vecSubtitles);
-   }
-   // done checking if this is a rar-in-rar
+    std::string strPathInRar = ItemList[it]->GetPath();
+    std::string strExt = URIUtils::GetExtension(strPathInRar);
 
-   // check that the found filename matches the movie filename
-   int fnl = strMovieFileNameNoExt.size();
-   if (fnl && !StringUtils::StartsWithNoCase(URIUtils::GetFileName(strPathInRar), strMovieFileNameNoExt))
-     continue;
+    CLog::Log(LOGDEBUG, "ScanArchiveForSubtitles:: Found file %s", strPathInRar.c_str());
+    // always check any embedded rar archives
+    // checking for embedded rars, I moved this outside the sub_ext[] loop. We only need to check this once for each file.
+    if (URIUtils::IsRAR(strPathInRar) || URIUtils::IsZIP(strPathInRar))
+    {
+      CURL urlRar;
+      CURL pathToUrl(strArchivePath);
+      if (strExt == ".rar")
+        urlRar = URIUtils::CreateArchivePath("rar", pathToUrl, strPathInRar);
+      else
+        urlRar = URIUtils::CreateArchivePath("zip", pathToUrl, strPathInRar);
+      ScanArchiveForSubtitles(urlRar.Get(), strMovieFileNameNoExt, vecSubtitles);
+    }
+    // done checking if this is a rar-in-rar
 
-   int iPos=0;
+    // check that the found filename matches the movie filename
+    int fnl = strMovieFileNameNoExt.size();
+    if (fnl && !StringUtils::StartsWithNoCase(URIUtils::GetFileName(strPathInRar), strMovieFileNameNoExt))
+      continue;
+
+    int iPos=0;
     while (sub_exts[iPos])
     {
-     if (StringUtils::EqualsNoCase(strExt, sub_exts[iPos]))
-     {
-       CURL pathToURL(strArchivePath);
-      CStdString strSourceUrl;
-      if (URIUtils::HasExtension(strArchivePath, ".rar"))
-       strSourceUrl = URIUtils::CreateArchivePath("rar", pathToURL, strPathInRar).Get();
-      else
-       strSourceUrl = strPathInRar;
-      
-       CLog::Log(LOGINFO, "%s: found subtitle file %s\n", __FUNCTION__, strSourceUrl.c_str() );
-       vecSubtitles.push_back( strSourceUrl );
-       nSubtitlesAdded++;
-     }
-     
-     iPos++;
+      if (StringUtils::EqualsNoCase(strExt, sub_exts[iPos]))
+      {
+        CURL pathToURL(strArchivePath);
+        std::string strSourceUrl;
+        if (URIUtils::HasExtension(strArchivePath, ".rar"))
+          strSourceUrl = URIUtils::CreateArchivePath("rar", pathToURL, strPathInRar).Get();
+        else
+          strSourceUrl = strPathInRar;
+
+        CLog::Log(LOGINFO, "%s: found subtitle file %s\n", __FUNCTION__, strSourceUrl.c_str() );
+        vecSubtitles.push_back( strSourceUrl );
+        nSubtitlesAdded++;
+      }
+
+      iPos++;
     }
   }
 

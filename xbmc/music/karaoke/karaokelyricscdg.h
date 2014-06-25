@@ -46,7 +46,7 @@ class CKaraokeLyricsCDG : public CKaraokeLyrics
     virtual bool HasVideo();
 
     //! Should return video parameters if HasVideo() returned true
-    virtual void GetVideoParameters( CStdString& path, int64_t& offset  );
+    virtual void GetVideoParameters(std::string& path, int64_t& offset);
 
     //! This function is called when the karoke visualisation window created. It may
     //! be called after Start(), but is guaranteed to be called before Render()

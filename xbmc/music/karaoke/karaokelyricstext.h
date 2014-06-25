@@ -24,6 +24,7 @@
 // C++ Interface: karaokelyricstext
 
 #include "karaokelyrics.h"
+#include "utils/StdString.h"
 
 // Karaoke colours
 // If you want to add more colors, it should be done the following way:
@@ -56,7 +57,7 @@ class CKaraokeLyricsText : public CKaraokeLyrics
 
     //! UStar lyrics might have video
     virtual bool HasVideo();
-    virtual void GetVideoParameters( CStdString& path, int64_t& offset  );
+    virtual void GetVideoParameters(std::string& path, int64_t& offset  );
 
   protected:
     enum

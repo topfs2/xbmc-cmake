@@ -741,7 +741,7 @@ bool CKaraokeLyricsText::HasVideo()
   return m_videoFile.empty() ? false : true;
 }
 
-void CKaraokeLyricsText::GetVideoParameters(CStdString & path, int64_t & offset)
+void CKaraokeLyricsText::GetVideoParameters(std::string& path, int64_t& offset)
 {
   path = m_videoFile;
   offset = m_videoOffset;

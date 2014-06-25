@@ -64,7 +64,7 @@ bool CKaraokeLyricsCDG::HasVideo()
   return false;
 }
 
-void CKaraokeLyricsCDG::GetVideoParameters(CStdString & path, int64_t & offset)
+void CKaraokeLyricsCDG::GetVideoParameters(std::string& path, int64_t & offset)
 {
   // no bg video
 }

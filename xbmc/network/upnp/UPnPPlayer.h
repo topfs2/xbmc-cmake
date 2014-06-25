@@ -20,7 +20,7 @@
  */
 
 #include "cores/IPlayer.h"
-#include "utils/StdString.h"
+#include <string>
 
 class PLT_MediaController;
 class CGUIDialogBusy;

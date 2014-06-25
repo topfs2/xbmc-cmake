@@ -467,8 +467,8 @@ CGUIViewStateWindowMusicNav::CGUIViewStateWindowMusicNav(const CFileItemList& it
     }
     else if (items.GetContent() == "chapters") // audiobooks in library
     {
-      CStdString strTrackLeft=CSettings::Get().GetString("musicfiles.trackformat");
-      CStdString strTrackRight=CSettings::Get().GetString("musicfiles.trackformatright");
+      std::string strTrackLeft=CSettings::Get().GetString("musicfiles.trackformat");
+      std::string strTrackRight=CSettings::Get().GetString("musicfiles.trackformatright");
 
       AddSortMethod(SortByTrackNumber, 554, LABEL_MASKS(strTrackLeft, strTrackRight));  // Userdefined, Userdefined| empty, empty
       AddSortMethod(SortByTime, 180, LABEL_MASKS("%T - %A", "%D"));  // Titel, Artist, Duration| empty, empty

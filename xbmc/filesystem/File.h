@@ -33,6 +33,8 @@
 #include <stdio.h>
 #include <string>
 #include "utils/auto_buffer.h"
+#include <stdio.h>
+#include <string>
 #include "IFileTypes.h"
 #include "PlatformDefs.h"
 

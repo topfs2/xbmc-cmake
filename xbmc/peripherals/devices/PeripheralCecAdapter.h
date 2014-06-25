@@ -100,7 +100,7 @@ namespace PERIPHERALS
     bool IsMuted(void);
 
     // CPeripheral callbacks
-    void OnSettingChanged(const CStdString &strChangedSetting);
+    void OnSettingChanged(const std::string &strChangedSetting);
     void OnDeviceRemoved(void);
 
     // input

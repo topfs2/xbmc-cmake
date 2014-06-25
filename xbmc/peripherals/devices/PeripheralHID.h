@@ -31,7 +31,7 @@ namespace PERIPHERALS
     virtual ~CPeripheralHID(void);
     virtual bool InitialiseFeature(const PeripheralFeature feature);
     virtual bool LookupSymAndUnicode(XBMC_keysym &keysym, uint8_t *key, char *unicode) { return false; }
-    virtual void OnSettingChanged(const CStdString &strChangedSetting);
+    virtual void OnSettingChanged(const std::string &strChangedSetting);
 
   protected:
     CStdString m_strKeymap;

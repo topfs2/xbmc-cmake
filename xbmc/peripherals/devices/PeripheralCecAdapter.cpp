@@ -1090,9 +1090,9 @@ void CPeripheralCecAdapter::ResetButton(void)
   }
 }
 
-void CPeripheralCecAdapter::OnSettingChanged(const CStdString &strChangedSetting)
+void CPeripheralCecAdapter::OnSettingChanged(const std::string &strChangedSetting)
 {
-  if (strChangedSetting.Equals("enabled"))
+  if (StringUtils::EqualsNoCase(strChangedSetting, "enabled"))
   {
     bool bEnabled(GetSettingBool("enabled"));
     if (!bEnabled && IsRunning())

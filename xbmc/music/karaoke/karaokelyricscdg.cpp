@@ -30,7 +30,7 @@
 #include "karaokelyricscdg.h"
 
 
-CKaraokeLyricsCDG::CKaraokeLyricsCDG( const CStdString& cdgFile )
+CKaraokeLyricsCDG::CKaraokeLyricsCDG( const std::string& cdgFile )
   : CKaraokeLyrics()
 {
   m_cdgFile = cdgFile;

@@ -32,7 +32,7 @@ typedef uint32_t color_t;
 class CKaraokeLyricsCDG : public CKaraokeLyrics
 {
   public:
-	CKaraokeLyricsCDG( const CStdString& cdgFile );
+	CKaraokeLyricsCDG( const std::string& cdgFile );
     ~CKaraokeLyricsCDG();
 
     //! Parses the lyrics or song file, and loads the lyrics into memory. Returns true if the
@@ -82,7 +82,7 @@ class CKaraokeLyricsCDG : public CKaraokeLyrics
 	void setPixel( int x, int y, BYTE color );
 
     //! CDG file name
-	CStdString         m_cdgFile;
+	std::string         m_cdgFile;
 
 	typedef struct
 	{

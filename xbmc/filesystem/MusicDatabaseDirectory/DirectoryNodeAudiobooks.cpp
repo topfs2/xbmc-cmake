@@ -23,7 +23,7 @@
 
 using namespace XFILE::MUSICDATABASEDIRECTORY;
 
-CDirectoryNodeAudiobooks::CDirectoryNodeAudiobooks(const CStdString& strName,
+CDirectoryNodeAudiobooks::CDirectoryNodeAudiobooks(const std::string& strName,
                                                    CDirectoryNode* pParent)
   : CDirectoryNode(NODE_TYPE_AUDIOBOOKS, strName, pParent)
 {
@@ -35,7 +35,7 @@ NODE_TYPE CDirectoryNodeAudiobooks::GetChildType() const
   return NODE_TYPE_SONG;
 }
 
-CStdString CDirectoryNodeAudiobooks::GetLocalizedName() const
+std::string CDirectoryNodeAudiobooks::GetLocalizedName() const
 {
   return "";
 }

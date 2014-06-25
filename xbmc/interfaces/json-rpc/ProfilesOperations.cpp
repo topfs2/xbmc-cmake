@@ -102,8 +102,8 @@ JSONRPC_STATUS CProfilesOperations::LoadProfile(const std::string &method, ITran
   if (CProfilesManager::Get().GetMasterProfile().getLockMode() == LOCK_MODE_EVERYONE ||            // Password not needed
       (bPrompt && g_passwordManager.IsProfileLockUnlocked(index, bCanceled, bPrompt)))  // Password needed and user asked to enter it
     bLoadProfile = true;
-	else if (!bCanceled && parameterObject.isMember("password"))  // Password needed and user provided it
-	{
+  else if (!bCanceled && parameterObject.isMember("password"))  // Password needed and user provided it
+  {
     const CVariant &passwordObject = parameterObject["password"];
 	  std::string strToVerify;  // Holds user saved password hash
 		if (index == 0)

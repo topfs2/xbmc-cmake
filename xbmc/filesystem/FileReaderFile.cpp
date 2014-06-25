@@ -22,7 +22,6 @@
 
 #include "FileReaderFile.h"
 #include "URL.h"
-#include "utils/StdString.h"
 
 using namespace XFILE;
 

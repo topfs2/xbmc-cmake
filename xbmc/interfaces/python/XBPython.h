@@ -27,7 +27,6 @@
 #include "interfaces/IAnnouncer.h"
 #include "interfaces/generic/ILanguageInvocationHandler.h"
 #include "addons/IAddon.h"
-#include "utils/StdString.h"
 
 #include <boost/shared_ptr.hpp>
 #include <vector>

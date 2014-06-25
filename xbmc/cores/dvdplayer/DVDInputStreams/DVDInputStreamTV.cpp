@@ -52,7 +52,7 @@ bool CDVDInputStreamTV::Open(const char* strFile, const std::string& content)
   if (!CDVDInputStream::Open(strFile, content)) return false;
 
   CURL url(strFile);
-  CStdString strProtocol = url.GetProtocol();
+  std::string strProtocol = url.GetProtocol();
   StringUtils::ToLower(strProtocol);
   if (!strProtocol.empty())
   {

@@ -21,7 +21,6 @@
 
 #include "IFile.h"
 #include "File.h"
-#include "utils/StdString.h"
 
 namespace XFILE
 {

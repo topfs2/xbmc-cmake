@@ -92,7 +92,7 @@ public:
   virtual std::string GetDescription() const;
   void SetCrossFade(unsigned int time);
 
-  const CStdString& GetFileName() const;
+  const std::string& GetFileName() const;
   float GetTextureWidth() const;
   float GetTextureHeight() const;
 

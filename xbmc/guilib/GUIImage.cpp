@@ -22,6 +22,7 @@
 #include "TextureManager.h"
 #include "utils/log.h"
 #include "utils/TimeUtils.h"
+#include "utils/StringUtils.h"
 
 using namespace std;
 
@@ -303,7 +304,7 @@ CRect CGUIImage::CalcRenderRegion() const
   return CGUIControl::CalcRenderRegion().Intersect(region);
 }
 
-const CStdString &CGUIImage::GetFileName() const
+const std::string &CGUIImage::GetFileName() const
 {
   return m_texture.GetFileName();
 }

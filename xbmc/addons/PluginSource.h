@@ -20,7 +20,6 @@
 #pragma once
 
 #include "Addon.h"
-#include "utils/StdString.h"
 
 namespace ADDON
 {

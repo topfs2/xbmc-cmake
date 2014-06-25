@@ -369,7 +369,7 @@ bool CWakeOnAccess::WakeUpHost (const std::string& hostName, const string& custo
   return true;
 }
 
-#define LOCALIZED(id) g_localizeStrings.Get(id).c_str()
+#define LOCALIZED(id) g_localizeStrings.Get(id)
 
 bool CWakeOnAccess::WakeUpHost(const WakeUpEntry& server)
 {

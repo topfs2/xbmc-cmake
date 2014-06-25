@@ -524,7 +524,7 @@ int CBuiltins::Execute(const std::string& execString)
 
     CFileItemList items;
     CFileItemPtr ptr(new CFileItem());
-    CStdString archpath;
+    std::string archpath;
     archpath = URIUtils::CreateArchivePath(URIUtils::GetExtension(params[0]).substr(1), CURL(params[0]), "").Get();
     ptr->SetPath(archpath);
     ptr->Select(true);

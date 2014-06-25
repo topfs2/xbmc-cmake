@@ -31,6 +31,7 @@
 #include "pvr/PVRManager.h"
 #include "pvr/channels/PVRChannelGroupsContainer.h"
 #include "pvr/timers/PVRTimers.h"
+#include "utils/StringUtils.h"
 
 #include "EpgContainer.h"
 #include "Epg.h"

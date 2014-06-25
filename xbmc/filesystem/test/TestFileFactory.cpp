@@ -23,7 +23,6 @@
 #include "settings/Settings.h"
 #include "utils/StringUtils.h"
 #include "test/TestUtils.h"
-#include "utils/StringUtils.h"
 
 #include "gtest/gtest.h"
 

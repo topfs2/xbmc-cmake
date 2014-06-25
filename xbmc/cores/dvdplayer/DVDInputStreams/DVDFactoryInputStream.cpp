@@ -54,7 +54,7 @@ CDVDInputStream* CDVDFactoryInputStream::CreateInputStream(IDVDPlayer* pPlayer, 
   CFileItem item(file.c_str(), false);
 
   CURL url(file);
-  CStdString strProtocol = url.GetProtocol();
+  std::string strProtocol = url.GetProtocol();
   StringUtils::ToLower(strProtocol);
 
   if (!strProtocol.empty())

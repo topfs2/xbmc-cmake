@@ -25,7 +25,7 @@
 
 #include "karaokelyricstext.h"
 #include "utils/auto_buffer.h"
-
+#include "utils/StdString.h"
 
 //! This class loads MIDI/KAR format lyrics
 class CKaraokeLyricsTextKAR : public CKaraokeLyricsText

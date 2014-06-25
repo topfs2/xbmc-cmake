@@ -153,7 +153,7 @@ bool CWinSystemX11GLES::DestroyWindowSystem()
   return true;
 }
 
-bool CWinSystemX11GLES::CreateNewWindow(const CStdString& name, bool fullScreen, RESOLUTION_INFO& res, PHANDLE_EVENT_FUNC userFunction)
+bool CWinSystemX11GLES::CreateNewWindow(const std::string& name, bool fullScreen, RESOLUTION_INFO& res, PHANDLE_EVENT_FUNC userFunction)
 {
   if(!SetFullScreen(fullScreen, res, false))
 	return false;
@@ -328,7 +328,7 @@ bool CWinSystemX11GLES::IsExtSupported(const char* extension)
   if(strncmp(extension, "EGL_", 4) != 0)
     return CRenderSystemGLES::IsExtSupported(extension);
 
-  CStdString name;
+  std::string name;
 
   name  = " ";
   name += extension;

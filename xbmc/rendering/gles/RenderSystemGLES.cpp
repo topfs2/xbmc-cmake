@@ -238,7 +238,7 @@ bool CRenderSystemGLES::IsExtSupported(const char* extension)
   }
   else
   {
-    CStdString name;
+    std::string name;
     name  = " ";
     name += extension;
     name += " ";

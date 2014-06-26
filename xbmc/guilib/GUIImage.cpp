@@ -321,7 +321,7 @@ void CGUIImage::SetCrossFade(unsigned int time)
     m_crossFadeTime = 1;
 }
 
-void CGUIImage::SetFileName(const CStdString& strFileName, bool setConstant, const bool useCache)
+void CGUIImage::SetFileName(const std::string& strFileName, bool setConstant, const bool useCache)
 {
   if (setConstant)
     m_info.SetLabel(strFileName, "", GetParentID());
@@ -332,7 +332,7 @@ void CGUIImage::SetFileName(const CStdString& strFileName, bool setConstant, con
   if (m_crossFadeTime)
   {
     // set filename on the next texture
-    if (m_currentTexture.Equals(strFileName))
+    if (StringUtils::EqualsNoCase(m_currentTexture, strFileName))
       return; // nothing to do - we already have this image
 
     if (m_texture.ReadyToRender() || m_texture.GetFileName().empty())
@@ -342,7 +342,7 @@ void CGUIImage::SetFileName(const CStdString& strFileName, bool setConstant, con
     }
     m_currentFadeTime = 0;
   }
-  if (!m_currentTexture.Equals(strFileName))
+  if (!StringUtils::EqualsNoCase(m_currentTexture, strFileName))
   { // texture is changing - attempt to load it, and save the name in m_currentTexture.
     // we'll check whether it loaded or not in Render()
     m_currentTexture = strFileName;

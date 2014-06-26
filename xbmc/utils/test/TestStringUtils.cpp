@@ -201,7 +201,7 @@ TEST(TestStringUtils, EndsWith)
 
 TEST(TestStringUtils, Join)
 {
-  CStdString refstr, varstr;
+  std::string refstr, varstr;
   std::vector<std::string> strarray;
 
   strarray.push_back("a");
@@ -265,7 +265,7 @@ TEST(TestStringUtils, TimeStringToSeconds)
 
 TEST(TestStringUtils, RemoveCRLF)
 {
-  CStdString refstr, varstr;
+  std::string refstr, varstr;
 
   refstr = "test\r\nstring\nblah blah";
   varstr = "test\r\nstring\nblah blah\n";
@@ -284,7 +284,7 @@ TEST(TestStringUtils, utf8_strlen)
 
 TEST(TestStringUtils, SecondsToTimeString)
 {
-  CStdString ref, var;
+  std::string ref, var;
 
   ref = "21:30:55";
   var = StringUtils::SecondsToTimeString(77455);
@@ -323,7 +323,7 @@ TEST(TestStringUtils, IsInteger)
 
 TEST(TestStringUtils, SizeToString)
 {
-  CStdString ref, var;
+  std::string ref, var;
 
   ref = "2.00 GB";
   var = StringUtils::SizeToString(2147483647);
@@ -332,7 +332,7 @@ TEST(TestStringUtils, SizeToString)
 
 TEST(TestStringUtils, EmptyString)
 {
-  EXPECT_STREQ("", StringUtils::EmptyString.c_str());
+  EXPECT_STREQ("", StringUtils::Empty.c_str());
 }
 
 TEST(TestStringUtils, FindWords)

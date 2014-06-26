@@ -1530,8 +1530,7 @@ std::string CGUIInfoManager::GetLabel(int info, int contextWindow, std::string *
           return m_currentFile->GetPVRChannelInfoTag()->GetEPGNow(tag) ?
                    tag.Title() :
                    CSettings::Get().GetBool("epg.hidenoinfoavailable") ?
-                     StringUtils::EmptyString :
-                     g_localizeStrings.Get(19055); // no information available
+                            "" : g_localizeStrings.Get(19055); // no information available
         }
         if (m_currentFile->HasPVRRecordingInfoTag() && !m_currentFile->GetPVRRecordingInfoTag()->m_strTitle.empty())
           return m_currentFile->GetPVRRecordingInfoTag()->m_strTitle;
@@ -3336,7 +3335,7 @@ std::string CGUIInfoManager::GetMultiInfoLabel(const GUIInfo &info, int contextW
       return GetPlaylistLabel(info.m_info, playlistid);
   }
 
-  return StringUtils::EmptyString;
+  return "";
 }
 
 /// \brief Obtains the filename of the image to show from whichever subsystem is needed
@@ -3776,8 +3775,7 @@ std::string CGUIInfoManager::GetVideoLabel(int item)
       return tag->GetEPGNow(epgTag) ?
           epgTag.Title() :
           CSettings::Get().GetBool("epg.hidenoinfoavailable") ?
-              StringUtils::EmptyString :
-              g_localizeStrings.Get(19055); // no information available
+                            "" : g_localizeStrings.Get(19055); // no information available
     case VIDEOPLAYER_GENRE:
       return tag->GetEPGNow(epgTag) ? StringUtils::Join(epgTag.Genre(), g_advancedSettings.m_videoItemSeparator) : "";
     case VIDEOPLAYER_PLOT:
@@ -3794,8 +3792,7 @@ std::string CGUIInfoManager::GetVideoLabel(int item)
       return tag->GetEPGNext(epgTag) ?
           epgTag.Title() :
           CSettings::Get().GetBool("epg.hidenoinfoavailable") ?
-              StringUtils::EmptyString :
-              g_localizeStrings.Get(19055); // no information available
+                            "" : g_localizeStrings.Get(19055); // no information available
     case VIDEOPLAYER_NEXT_GENRE:
       return tag->GetEPGNext(epgTag) ? StringUtils::Join(epgTag.Genre(), g_advancedSettings.m_videoItemSeparator) : "";
     case VIDEOPLAYER_NEXT_PLOT:
@@ -4454,8 +4451,7 @@ std::string CGUIInfoManager::GetItemLabel(const CFileItem *item, int info, std::
       return item->GetPVRChannelInfoTag()->GetEPGNow(epgTag) ?
           epgTag.Title() :
           CSettings::Get().GetBool("epg.hidenoinfoavailable") ?
-              StringUtils::EmptyString :
-              g_localizeStrings.Get(19055); // no information available
+                            "" : g_localizeStrings.Get(19055); // no information available
     }
     if (item->HasPVRRecordingInfoTag())
       return item->GetPVRRecordingInfoTag()->m_strTitle;
@@ -4652,7 +4648,7 @@ std::string CGUIInfoManager::GetItemLabel(const CFileItem *item, int info, std::
         CEpgInfoTag tag;
         if (channel && channel->GetEPGNow(tag))
           return StringUtils::SecondsToTimeString(tag.GetDuration());
-        return StringUtils::EmptyString;
+        return "";
       }
       else if (item->HasPVRRecordingInfoTag())
       {
@@ -4683,7 +4679,7 @@ std::string CGUIInfoManager::GetItemLabel(const CFileItem *item, int info, std::
       CEpgInfoTag tag;
       if (channel && channel->GetEPGNow(tag))
         return tag.Plot();
-      return StringUtils::EmptyString;
+      return "";
     }
     if (item->HasEPGInfoTag())
       return item->GetEPGInfoTag()->Plot();
@@ -4705,7 +4701,7 @@ std::string CGUIInfoManager::GetItemLabel(const CFileItem *item, int info, std::
       CEpgInfoTag tag;
       if (channel && channel->GetEPGNow(tag))
         return tag.PlotOutline();
-      return StringUtils::EmptyString;
+      return "";
     }
     if (item->HasEPGInfoTag())
       return item->GetEPGInfoTag()->PlotOutline();
@@ -5009,7 +5005,7 @@ std::string CGUIInfoManager::GetItemLabel(const CFileItem *item, int info, std::
       if (channel && channel->GetEPGNext(tag))
         return tag.Plot();
     }
-    return StringUtils::EmptyString;
+    return "";
   case LISTITEM_NEXT_PLOT_OUTLINE:
     {
       const CPVRChannel *channel = item->HasPVRChannelInfoTag() ? item->GetPVRChannelInfoTag() : NULL;
@@ -5017,7 +5013,7 @@ std::string CGUIInfoManager::GetItemLabel(const CFileItem *item, int info, std::
       if (channel && channel->GetEPGNext(tag))
         return tag.PlotOutline();
     }
-    return StringUtils::EmptyString;
+    return "";
   case LISTITEM_NEXT_DURATION:
     {
       const CPVRChannel *channel = item->HasPVRChannelInfoTag() ? item->GetPVRChannelInfoTag() : NULL;
@@ -5025,7 +5021,7 @@ std::string CGUIInfoManager::GetItemLabel(const CFileItem *item, int info, std::
       if (channel && channel->GetEPGNext(tag))
         return StringUtils::SecondsToTimeString(tag.GetDuration());
     }
-    return StringUtils::EmptyString;
+    return "";
   case LISTITEM_NEXT_GENRE:
     {
       const CPVRChannel *channel = item->HasPVRChannelInfoTag() ? item->GetPVRChannelInfoTag() : NULL;
@@ -5033,7 +5029,7 @@ std::string CGUIInfoManager::GetItemLabel(const CFileItem *item, int info, std::
       if (channel && channel->GetEPGNext(tag))
         return StringUtils::Join(tag.Genre(), g_advancedSettings.m_videoItemSeparator);
     }
-    return StringUtils::EmptyString;
+    return "";
   case LISTITEM_NEXT_TITLE:
     {
       const CPVRChannel *channel = item->HasPVRChannelInfoTag() ? item->GetPVRChannelInfoTag() : NULL;
@@ -5041,7 +5037,7 @@ std::string CGUIInfoManager::GetItemLabel(const CFileItem *item, int info, std::
       if (channel && channel->GetEPGNext(tag))
         return tag.Title();
     }
-    return StringUtils::EmptyString;
+    return "";
   case LISTITEM_PARENTALRATING:
     {
       std::string rating;

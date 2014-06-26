@@ -45,7 +45,6 @@ CPeripheral::CPeripheral(const PeripheralScanResult& scanResult) :
   m_mappedBusType(scanResult.m_mappedBusType),
   m_strLocation(scanResult.m_strLocation),
   m_strDeviceName(scanResult.m_strDeviceName),
-  m_strFileLocation(StringUtils::EmptyString),
   m_iVendorId(scanResult.m_iVendorId),
   m_iProductId(scanResult.m_iProductId),
   m_strVersionInfo(g_localizeStrings.Get(13205)), // "unknown"
@@ -328,7 +327,7 @@ const std::string CPeripheral::GetSettingString(const std::string &strKey) const
       return stringSetting->GetValue();
   }
 
-  return StringUtils::EmptyString;
+  return "";
 }
 
 bool CPeripheral::SetSetting(const std::string &strKey, bool bValue)

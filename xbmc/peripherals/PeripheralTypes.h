@@ -19,6 +19,7 @@
  *
  */
 
+#include <algorithm>
 #include <map>
 #include <string>
 #include <stdio.h>

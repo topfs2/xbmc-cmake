@@ -247,8 +247,8 @@ bool CAlbum::Load(const TiXmlElement *album, bool append, bool prioritise)
   {
     for (vector<string>::const_iterator it = artist.begin(); it != artist.end(); ++it)
     {
-      CArtistCredit artistCredit(*it, StringUtils::EmptyString,
-                                 it == --artist.end() ? StringUtils::Empty : g_advancedSettings.m_musicItemSeparator);
+      CArtistCredit artistCredit(*it, "",
+                                 it == --artist.end() ? "" : g_advancedSettings.m_musicItemSeparator);
       artistCredits.push_back(artistCredit);
     }
   }

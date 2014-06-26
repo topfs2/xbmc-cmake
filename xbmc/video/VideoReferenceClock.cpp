@@ -19,7 +19,6 @@
  */
 #include "system.h"
 #include <list>
-#include "utils/StdString.h"
 #include "VideoReferenceClock.h"
 #include "utils/MathUtils.h"
 #include "utils/log.h"
@@ -650,7 +649,7 @@ bool CVideoReferenceClock::SetupD3D()
       Measures.push_back(MeasureRefreshrate(MEASURETIME));
 
     //build up a string of measured rates
-    CStdString StrRates;
+    std::string StrRates;
     for (list<double>::iterator it = Measures.begin(); it != Measures.end(); it++)
       StrRates += StringUtils::Format("%.2f ", *it);
 

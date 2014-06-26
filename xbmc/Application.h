@@ -25,9 +25,9 @@
 
 #include "guilib/IMsgTargetCallback.h"
 #include "utils/GlobalsHandling.h"
-#include "utils/StdString.h"
 
 #include <map>
+#include <string>
 
 class CAction;
 class CFileItem;
@@ -174,7 +174,7 @@ public:
   virtual void OnPlayBackSpeedChanged(int iSpeed);
   bool PlayMedia(const CFileItem& item, int iPlaylist = PLAYLIST_MUSIC);
   bool PlayMediaSync(const CFileItem& item, int iPlaylist = PLAYLIST_MUSIC);
-  bool ProcessAndStartPlaylist(const CStdString& strPlayList, PLAYLIST::CPlayList& playlist, int iPlaylist, int track=0);
+  bool ProcessAndStartPlaylist(const std::string& strPlayList, PLAYLIST::CPlayList& playlist, int iPlaylist, int track=0);
   PlayBackRet PlayFile(const CFileItem& item, bool bRestart = false);
   void SaveFileState(bool bForeground = false);
   void UpdateFileState();
@@ -246,10 +246,10 @@ public:
 
   void StartVideoCleanup();
 
-  void StartVideoScan(const CStdString &path, bool scanAll = false);
-  void StartMusicScan(const CStdString &path, int flags = 0);
-  void StartMusicAlbumScan(const CStdString& strDirectory, bool refresh=false);
-  void StartMusicArtistScan(const CStdString& strDirectory, bool refresh=false);
+  void StartVideoScan(const std::string &path, bool scanAll = false);
+  void StartMusicScan(const std::string &path, int flags = 0);
+  void StartMusicAlbumScan(const std::string& strDirectory, bool refresh=false);
+  void StartMusicArtistScan(const std::string& strDirectory, bool refresh=false);
 
   void UpdateLibraries();
   void CheckMusicPlaylist();
@@ -292,7 +292,7 @@ public:
   CKaraokeLyricsManager* m_pKaraokeMgr;
 
   PLAYERCOREID m_eForcedNextPlayer;
-  CStdString m_strPlayListFile;
+  std::string m_strPlayListFile;
 
   int GlobalIdleTime();
 
@@ -350,7 +350,7 @@ public:
   void SetRenderGUI(bool renderGUI);
   bool GetRenderGUI() const { return m_renderGUI; };
 
-  bool SetLanguage(const CStdString &strLanguage);
+  bool SetLanguage(const std::string &strLanguage);
 
   ReplayGainSettings& GetReplayGainSettings() { return m_replayGainSettings; }
 
@@ -366,7 +366,7 @@ protected:
   virtual void OnSettingAction(const CSetting *setting);
   virtual bool OnSettingUpdate(CSetting* &setting, const char *oldSettingId, const TiXmlNode *oldSettingNode);
 
-  bool LoadSkin(const CStdString& skinID);
+  bool LoadSkin(const std::string& skinID);
   bool LoadSkin(const boost::shared_ptr<ADDON::CSkinInfo>& skin);
 
   bool m_skinReverting;
@@ -407,7 +407,7 @@ protected:
   CFileItemList* m_currentStack;
   CFileItemPtr m_stackFileItemToUpdate;
 
-  CStdString m_prevMedia;
+  std::string m_prevMedia;
   CSplash* m_splash;
   ThreadIdentifier m_threadID;       // application thread ID.  Used in applicationMessanger to know where we are firing a thread with delay from.
   bool m_bInitializing;

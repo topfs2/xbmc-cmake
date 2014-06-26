@@ -680,7 +680,7 @@ bool CJpegIO::LoadImageFromMemory(unsigned char* buffer, unsigned int bufSize, u
   return Read(buffer, bufSize, width, height);
 }
 
-bool CJpegIO::CreateThumbnailFromSurface(unsigned char* bufferin, unsigned int width, unsigned int height, unsigned int format, unsigned int pitch, const CStdString& destFile, 
+bool CJpegIO::CreateThumbnailFromSurface(unsigned char* bufferin, unsigned int width, unsigned int height, unsigned int format, unsigned int pitch, const std::string& destFile, 
                                          unsigned char* &bufferout, unsigned int &bufferoutSize)
 {
   //Encode raw data from buffer, save to destbuffer

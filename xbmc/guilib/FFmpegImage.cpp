@@ -133,7 +133,7 @@ bool CFFmpegImage::Decode(const unsigned char *pixels, unsigned int pitch,
 bool CFFmpegImage::CreateThumbnailFromSurface(unsigned char* bufferin, unsigned int width,
                                              unsigned int height, unsigned int format,
                                              unsigned int pitch,
-                                             const CStdString& destFile,
+                                             const std::string& destFile,
                                              unsigned char* &bufferout,
                                              unsigned int &bufferoutSize)
 {

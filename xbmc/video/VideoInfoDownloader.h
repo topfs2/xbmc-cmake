@@ -26,6 +26,7 @@
 #include "Episode.h"
 #include "XBDateTime.h"
 #include "filesystem/CurlFile.h"
+#include "utils/StdString.h"
 
 // forward declarations
 class CXBMCTinyXML;

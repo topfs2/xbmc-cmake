@@ -113,7 +113,7 @@ bool CTextureBundleXBT::HasFile(const CStdString& Filename)
   return m_XBTFReader.Exists(name);
 }
 
-void CTextureBundleXBT::GetTexturesFromPath(const CStdString &path, std::vector<CStdString> &textures)
+void CTextureBundleXBT::GetTexturesFromPath(const CStdString &path, std::vector<std::string> &textures)
 {
   if (path.size() > 1 && path[1] == ':')
     return;
@@ -127,7 +127,7 @@ void CTextureBundleXBT::GetTexturesFromPath(const CStdString &path, std::vector<
   std::vector<CXBTFFile>& files = m_XBTFReader.GetFiles();
   for (size_t i = 0; i < files.size(); i++)
   {
-    CStdString path = files[i].GetPath();
+    std::string path = files[i].GetPath();
     if (StringUtils::StartsWithNoCase(path, testPath))
       textures.push_back(path);
   }

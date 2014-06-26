@@ -616,7 +616,7 @@ CStdString CGUITextureManager::GetTexturePath(const CStdString &textureName, boo
   return "";
 }
 
-void CGUITextureManager::GetBundledTexturesFromPath(const CStdString& texturePath, std::vector<CStdString> &items)
+void CGUITextureManager::GetBundledTexturesFromPath(const CStdString& texturePath, std::vector<std::string> &items)
 {
   m_TexBundle[0].GetTexturesFromPath(texturePath, items);
   if (items.empty())

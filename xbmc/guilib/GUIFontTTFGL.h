@@ -29,7 +29,6 @@
 
 
 #include "GUIFontTTF.h"
-#include "utils/StdString.h"
 
 
 /*!
@@ -39,7 +38,7 @@
 class CGUIFontTTFGL : public CGUIFontTTFBase
 {
 public:
-  CGUIFontTTFGL(const CStdString& strFileName);
+  CGUIFontTTFGL(const std::string& strFileName);
   virtual ~CGUIFontTTFGL(void);
 
   virtual void Begin();

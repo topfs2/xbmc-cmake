@@ -447,8 +447,8 @@ void CApplicationMessenger::ProcessMessage(ThreadMessage *pMsg)
         pSlideShow->Reset();
 
         CFileItemList items;
-        CStdString strPath = pMsg->strParam;
-        CStdString extensions = g_advancedSettings.m_pictureExtensions;
+        std::string strPath = pMsg->strParam;
+        std::string extensions = g_advancedSettings.m_pictureExtensions;
         if (pMsg->param1)
           extensions += "|.tbn";
         CUtil::GetRecursiveListing(strPath, items, extensions);
@@ -882,7 +882,7 @@ void CApplicationMessenger::ProcessWindowMessages()
   }
 }
 
-int CApplicationMessenger::SetResponse(CStdString response)
+int CApplicationMessenger::SetResponse(std::string response)
 {
   CSingleLock lock (m_critBuffer);
   bufferResponse=response;
@@ -890,16 +890,16 @@ int CApplicationMessenger::SetResponse(CStdString response)
   return 0;
 }
 
-CStdString CApplicationMessenger::GetResponse()
+std::string CApplicationMessenger::GetResponse()
 {
-  CStdString tmp;
+  std::string tmp;
   CSingleLock lock (m_critBuffer);
   tmp=bufferResponse;
   lock.Leave();
   return tmp;
 }
 
-void CApplicationMessenger::ExecBuiltIn(const CStdString &command, bool wait)
+void CApplicationMessenger::ExecBuiltIn(const std::string &command, bool wait)
 {
   ThreadMessage tMsg = {TMSG_EXECUTE_BUILT_IN};
   tMsg.strParam = command;
@@ -1202,7 +1202,7 @@ void CApplicationMessenger::Minimize(bool wait)
   SendMessage(tMsg, wait);
 }
 
-void CApplicationMessenger::DoModal(CGUIDialog *pDialog, int iWindowID, const CStdString &param)
+void CApplicationMessenger::DoModal(CGUIDialog *pDialog, int iWindowID, const std::string &param)
 {
   ThreadMessage tMsg = {TMSG_GUI_DO_MODAL};
   tMsg.lpVoid = pDialog;
@@ -1211,7 +1211,7 @@ void CApplicationMessenger::DoModal(CGUIDialog *pDialog, int iWindowID, const CS
   SendMessage(tMsg, true);
 }
 
-void CApplicationMessenger::ExecOS(const CStdString &command, bool waitExit)
+void CApplicationMessenger::ExecOS(const std::string &command, bool waitExit)
 {
   ThreadMessage tMsg = {TMSG_EXECUTE_OS};
   tMsg.strParam = command;
@@ -1307,7 +1307,7 @@ void CApplicationMessenger::ShowVolumeBar(bool up)
   SendMessage(tMsg, false);
 }
 
-void CApplicationMessenger::SetSplashMessage(const CStdString& message)
+void CApplicationMessenger::SetSplashMessage(const std::string& message)
 {
   ThreadMessage tMsg = {TMSG_SPLASH_MESSAGE};
   tMsg.strParam = message;

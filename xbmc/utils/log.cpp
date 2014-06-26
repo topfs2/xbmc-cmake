@@ -25,7 +25,6 @@
 #include "threads/CriticalSection.h"
 #include "threads/SingleLock.h"
 #include "threads/Thread.h"
-#include "utils/StdString.h"
 #include "utils/StringUtils.h"
 #if defined(TARGET_ANDROID)
 #include "android/activity/XBMCApp.h"
@@ -85,7 +84,7 @@ void CLog::Log(int loglevel, const char *format, ... )
     SYSTEMTIME time;
     GetLocalTime(&time);
 
-    CStdString strPrefix, strData;
+    std::string strPrefix, strData;
 
     strData.reserve(16384);
     va_list va;
@@ -107,7 +106,7 @@ void CLog::Log(int loglevel, const char *format, ... )
                                       (uint64_t)CThread::GetCurrentThreadId(),
                                       levelNames[m_repeatLogLevel]);
 
-      CStdString strData2 = StringUtils::Format("Previous line repeats %d times."
+      std::string strData2 = StringUtils::Format("Previous line repeats %d times."
                                                 LINE_ENDING,
                                                 m_repeatCount);
       fputs(strPrefix.c_str(), m_file);
@@ -154,8 +153,8 @@ bool CLog::Init(const char* path)
   {
     // the log folder location is initialized in the CAdvancedSettings
     // constructor and changed in CApplication::Create()
-    CStdString strLogFile = StringUtils::Format("%sxbmc.log", path);
-    CStdString strLogFileOld = StringUtils::Format("%sxbmc.old.log", path);
+    std::string strLogFile = StringUtils::Format("%sxbmc.log", path);
+    std::string strLogFileOld = StringUtils::Format("%sxbmc.old.log", path);
 
 #if defined(TARGET_WINDOWS)
     // the appdata folder might be redirected to an unc share
@@ -189,13 +188,13 @@ void CLog::MemDump(char *pData, int length)
   Log(LOGDEBUG, "MEM_DUMP: Dumping from %p", pData);
   for (int i = 0; i < length; i+=16)
   {
-    CStdString strLine = StringUtils::Format("MEM_DUMP: %04x ", i);
+    std::string strLine = StringUtils::Format("MEM_DUMP: %04x ", i);
     char *alpha = pData;
     for (int k=0; k < 4 && i + 4*k < length; k++)
     {
       for (int j=0; j < 4 && i + 4*k + j < length; j++)
       {
-        CStdString strFormat = StringUtils::Format(" %02x", (unsigned char)*pData++);
+        std::string strFormat = StringUtils::Format(" %02x", (unsigned char)*pData++);
         strLine += strFormat;
       }
       strLine += " ";
@@ -239,7 +238,7 @@ void CLog::OutputDebugString(const std::string& line)
 #if defined(TARGET_WINDOWS)
   // we can't use charsetconverter here as it's initialized later than CLog and deinitialized early
   int bufSize = MultiByteToWideChar(CP_UTF8, 0, line.c_str(), -1, NULL, 0);
-  CStdStringW wstr (L"", bufSize);
+  std::wstring wstr (L"", bufSize);
   if ( MultiByteToWideChar(CP_UTF8, 0, line.c_str(), -1, wstr.GetBuf(bufSize), bufSize) == bufSize )
   {
     wstr.RelBuf();

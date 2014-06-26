@@ -22,7 +22,6 @@
 #include "utils/RegExp.h"
 #include "filesystem/File.h"
 #include "filesystem/SpecialProtocol.h"
-#include "utils/StdString.h"
 
 #include "test/TestUtils.h"
 
@@ -44,7 +43,7 @@ protected:
 
 TEST_F(Testlog, Log)
 {
-  CStdString logfile, logstring;
+  std::string logfile, logstring;
   char buf[100];
   unsigned int bytesread;
   XFILE::CFile file;
@@ -97,7 +96,7 @@ TEST_F(Testlog, Log)
 
 TEST_F(Testlog, MemDump)
 {
-  CStdString logfile, logstring;
+  std::string logfile, logstring;
   char buf[100];
   unsigned int bytesread;
   XFILE::CFile file;
@@ -134,7 +133,7 @@ TEST_F(Testlog, MemDump)
 
 TEST_F(Testlog, SetLogLevel)
 {
-  CStdString logfile;
+  std::string logfile;
 
   logfile = CSpecialProtocol::TranslatePath("special://temp/") + "xbmc.log";
   EXPECT_TRUE(CLog::Init(CSpecialProtocol::TranslatePath("special://temp/").c_str()));

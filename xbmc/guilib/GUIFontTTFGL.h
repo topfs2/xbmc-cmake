@@ -29,6 +29,7 @@
 
 
 #include "GUIFontTTF.h"
+#include "utils/StdString.h"
 
 
 /*!

@@ -2206,7 +2206,8 @@ bool CUtil::FindVobSubPair(const std::vector<std::string>& vecSubtitles, const s
       if (URIUtils::IsInArchive(vecSubtitles[j]))
         strSubDirectory = CURL::Decode(strSubDirectory);
       if (URIUtils::HasExtension(strSubFile, ".sub") &&
-          (URIUtils::ReplaceExtension(strIdxPath,"").Equals(URIUtils::ReplaceExtension(vecSubtitles[j],"")) ||
+          (StringUtils::EqualsNoCase(URIUtils::ReplaceExtension(strIdxPath,""),
+                                     URIUtils::ReplaceExtension(vecSubtitles[j],"")) ||
            (strSubDirectory.size() >= 11 &&
             StringUtils::EqualsNoCase(strSubDirectory.substr(6, strSubDirectory.length()-11), URIUtils::ReplaceExtension(strIdxPath,"")))))
       {
@@ -2235,7 +2236,8 @@ bool CUtil::IsVobSub(const std::vector<std::string>& vecSubtitles, const std::st
       std::string strIdxDirectory;
       URIUtils::Split(vecSubtitles[j], strIdxDirectory, strIdxFile);
       if (URIUtils::HasExtension(strIdxFile, ".idx") &&
-          (URIUtils::ReplaceExtension(vecSubtitles[j],"").Equals(URIUtils::ReplaceExtension(strSubPath,"")) ||
+          (StringUtils::EqualsNoCase(URIUtils::ReplaceExtension(vecSubtitles[j],""),
+                                    URIUtils::ReplaceExtension(strSubPath,"")) ||
            (strSubDirectory.size() >= 11 &&
             StringUtils::EqualsNoCase(strSubDirectory.substr(6, strSubDirectory.length()-11), URIUtils::ReplaceExtension(vecSubtitles[j],"")))))
         return true;

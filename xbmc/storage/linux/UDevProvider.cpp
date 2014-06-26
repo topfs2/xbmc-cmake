@@ -233,7 +233,6 @@ bool CUDevProvider::PumpDriveChangeEvents(IStorageEventsCallback *callback)
         label = udev_label;
       else if (mountpoint)
         label = URIUtils::GetFileName(mountpoint);
-
       if (!strcmp(action, "add") && !strcmp(devtype, "partition"))
       {
         CLog::Log(LOGNOTICE, "UDev: Added %s", mountpoint);

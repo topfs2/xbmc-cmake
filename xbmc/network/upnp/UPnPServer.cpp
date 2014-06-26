@@ -1174,7 +1174,7 @@ CUPnPServer::ServeFile(const NPT_HttpRequest&              request,
 
         NPT_List<NPT_String>::Iterator url = files.GetFirstItem();
         for (;url;url++) {
-            output += "#EXTINF:-1," + URIUtils::GetFileName((const char*)*url);
+            output += ("#EXTINF:-1," + URIUtils::GetFileName((const char*)*url)).c_str();
             output += "\r\n";
             output += BuildSafeResourceUri(
                           rooturi,

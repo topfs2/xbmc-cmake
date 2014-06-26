@@ -28,6 +28,7 @@
 #include "GUIInfoTypes.h"
 #include "FileItem.h"
 #include "GUIAction.h"
+#include "utils/StdString.h"
 
 class TiXmlElement;
 

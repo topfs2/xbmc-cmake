@@ -27,6 +27,8 @@
  *
  */
 
+#include "utils/StdString.h"
+
 // forward definition
 class CBaseTexture;
 

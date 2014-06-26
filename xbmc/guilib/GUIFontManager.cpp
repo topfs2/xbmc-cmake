@@ -243,7 +243,7 @@ void GUIFontManager::Unload(const CStdString& strFontName)
 {
   for (vector<CGUIFont*>::iterator iFont = m_vecFonts.begin(); iFont != m_vecFonts.end(); ++iFont)
   {
-    if ((*iFont)->GetFontName().Equals(strFontName))
+    if (StringUtils::EqualsNoCase((*iFont)->GetFontName(), strFontName))
     {
       delete (*iFont);
       m_vecFonts.erase(iFont);
@@ -281,7 +281,7 @@ CGUIFont* GUIFontManager::GetFont(const CStdString& strFontName, bool fallback /
   for (int i = 0; i < (int)m_vecFonts.size(); ++i)
   {
     CGUIFont* pFont = m_vecFonts[i];
-    if (pFont->GetFontName().Equals(strFontName))
+    if (StringUtils::EqualsNoCase(pFont->GetFontName(), strFontName))
       return pFont;
   }
   // fall back to "font13" if we have none

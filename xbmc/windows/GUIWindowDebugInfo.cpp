@@ -99,14 +99,14 @@ void CGUIWindowDebugInfo::Process(unsigned int currentTime, CDirtyRegionList &di
   if (!m_layout)
     return;
 
-  CStdString info;
+  std::string info;
   if (LOG_LEVEL_DEBUG_FREEMEM <= g_advancedSettings.m_logLevel)
   {
     MEMORYSTATUSEX stat;
     stat.dwLength = sizeof(MEMORYSTATUSEX);
     GlobalMemoryStatusEx(&stat);
-    CStdString profiling = CGUIControlProfiler::IsRunning() ? " (profiling)" : "";
-    CStdString strCores = g_cpuInfo.GetCoresUsageString();
+    std::string profiling = CGUIControlProfiler::IsRunning() ? " (profiling)" : "";
+    std::string strCores = g_cpuInfo.GetCoresUsageString();
 #if !defined(TARGET_POSIX)
     info = StringUtils::Format("LOG: %sxbmc.log\nMEM: %" PRIu64"/%" PRIu64" KB - FPS: %2.1f fps\nCPU: %s%s", g_advancedSettings.m_logFolder.c_str(),
                                stat.ullAvailPhys/1024, stat.ullTotalPhys/1024, g_infoManager.GetFPS(), strCores.c_str(), profiling.c_str());
@@ -129,9 +129,9 @@ void CGUIWindowDebugInfo::Process(unsigned int currentTime, CDirtyRegionList &di
       point = CPoint(pointer->GetXPosition(), pointer->GetYPosition());
     if (window)
     {
-      CStdString windowName = CButtonTranslator::TranslateWindow(window->GetID());
+      std::string windowName = CButtonTranslator::TranslateWindow(window->GetID());
       if (!windowName.empty())
-        windowName += " (" + CStdString(window->GetProperty("xmlfile").asString()) + ")";
+        windowName += " (" + std::string(window->GetProperty("xmlfile").asString()) + ")";
       else
         windowName = window->GetProperty("xmlfile").asString();
       info += "Window: " + windowName + "  ";

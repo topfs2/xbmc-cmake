@@ -22,6 +22,7 @@
 #include "filesystem/File.h"
 #include "cores/FFmpeg.h"
 #include "utils/URIUtils.h"
+#include "utils/StringUtils.h"
 
 using namespace MUSIC_INFO;
 using namespace XFILE;
@@ -84,7 +85,7 @@ bool CMusicInfoTagLoaderFFmpeg::Load(const std::string& strFileName, CMusicInfoT
   AVDictionaryEntry* avtag=NULL;
   while ((avtag = av_dict_get(fctx->metadata, "", avtag, AV_DICT_IGNORE_SUFFIX)))
   {
-    if (URIUtils::GetExtension(strFileName).Equals(".mka"))
+    if (StringUtils::EqualsNoCase(URIUtils::GetExtension(strFileName), ".mka"))
     {
       if (strcasecmp(avtag->key,"title") == 0)
         tag.SetTitle(avtag->value);

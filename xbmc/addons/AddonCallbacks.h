@@ -22,7 +22,7 @@
 #include "cores/dvdplayer/DVDDemuxers/DVDDemuxUtils.h"
 #include "addons/include/xbmc_pvr_types.h"
 #include "addons/include/xbmc_codec_types.h"
-#include "../../addons/library.xbmc.gui/libXBMC_gui.h"
+#include "bindings/libXBMC_gui.h"
 
 struct VFSURL;
 struct VFSDirEntry;

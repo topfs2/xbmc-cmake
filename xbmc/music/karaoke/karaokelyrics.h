@@ -21,8 +21,6 @@
  *
  */
 
-#include "utils/StdString.h"
-
 // C++ Interface: karaokelyrics
 #include <string>
 

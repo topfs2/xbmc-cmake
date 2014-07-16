@@ -1117,7 +1117,7 @@ void CButtonTranslator::MapWindowActions(TiXmlNode *pWindow, int windowID)
         else if (type == "appcommand")
             buttonCode = TranslateAppCommand(pButton->Value());
 
-        if (buttonCode && pButton->FirstChild())
+        if (buttonCode && pButton->FirstChild() && pButton->FirstChild()->Value())
           MapAction(buttonCode, pButton->FirstChild()->Value(), map);
         pButton = pButton->NextSiblingElement();
       }

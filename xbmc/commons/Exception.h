@@ -28,6 +28,8 @@
 //---------------------------------------------------------
 #include "ilog.h"
 
+#include <stdarg.h>
+
 #ifdef __GNUC__
 // The 'this' pointer counts as a parameter on member methods.
 #define XBMCCOMMONS_ATTRIB_EXCEPTION_FORMAT __attribute__((format(printf,2,3)))

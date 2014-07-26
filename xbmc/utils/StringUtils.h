@@ -32,6 +32,7 @@
 #include <vector>
 #include <stdint.h>
 #include <string>
+#include <stdarg.h>
 
 #include "utils/params_check_macros.h"
 

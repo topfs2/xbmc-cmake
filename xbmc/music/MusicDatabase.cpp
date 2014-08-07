@@ -1609,7 +1609,7 @@ void CMusicDatabase::GetFileItemFromDataset(const dbiplus::sql_record* const rec
     CMusicDbUrl itemUrl = baseUrl;
     std::string strFileName = record->at(song_strFileName).get_asString();
     std::string strExt = URIUtils::GetExtension(strFileName);
-    std::string path = StringUtils::Format("%ld%s", record->at(song_idSong).get_asInt(), strExt.c_str());
+    std::string path = StringUtils::Format("%i%s", record->at(song_idSong).get_asInt(), strExt.c_str());
     itemUrl.AppendPath(path);
     item->SetPath(itemUrl.ToString());
   }
@@ -1807,7 +1807,7 @@ bool CMusicDatabase::SearchArtists(const std::string& search, CFileItemList &art
     std::string artistLabel(g_localizeStrings.Get(557)); // Artist
     while (!m_pDS->eof())
     {
-      std::string path = StringUtils::Format("musicdb://artists/%ld/", m_pDS->fv(0).get_asInt());
+      std::string path = StringUtils::Format("musicdb://artists/%i/", m_pDS->fv(0).get_asInt());
       CFileItemPtr pItem(new CFileItem(path, true));
       std::string label = StringUtils::Format("[%s] %s", artistLabel.c_str(), m_pDS->fv(1).get_asString().c_str());
       pItem->SetLabel(label);
@@ -2798,7 +2798,7 @@ void CMusicDatabase::DeleteCDDBInfo()
     {
       if (it->second == strSelectedAlbum)
       {
-        std::string strFile = StringUtils::Format("%x.cddb", it->first);
+        std::string strFile = StringUtils::Format("%lx.cddb", it->first);
         CFile::Delete(URIUtils::AddFileToFolder(CProfilesManager::Get().GetCDDBFolder(), strFile));
         break;
       }
@@ -2914,7 +2914,7 @@ bool CMusicDatabase::GetGenresNav(const std::string& strBaseDir, CFileItemList& 
       pItem->GetMusicInfoTag()->SetDatabaseId(m_pDS->fv("genre.idGenre").get_asInt(), "genre");
 
       CMusicDbUrl itemUrl = musicUrl;
-      std::string strDir = StringUtils::Format("%ld/", m_pDS->fv("genre.idGenre").get_asInt());
+      std::string strDir = StringUtils::Format("%i/", m_pDS->fv("genre.idGenre").get_asInt());
       itemUrl.AppendPath(strDir);
       pItem->SetPath(itemUrl.ToString());
 
@@ -2976,7 +2976,7 @@ bool CMusicDatabase::GetYearsNav(const std::string& strBaseDir, CFileItemList& i
       pItem->GetMusicInfoTag()->SetReleaseDate(stTime);
 
       CMusicDbUrl itemUrl = musicUrl;
-      std::string strDir = StringUtils::Format("%ld/", m_pDS->fv(0).get_asInt());
+      std::string strDir = StringUtils::Format("%i/", m_pDS->fv(0).get_asInt());
       itemUrl.AppendPath(strDir);
       pItem->SetPath(itemUrl.ToString());
 
@@ -3400,7 +3400,7 @@ bool CMusicDatabase::GetAlbumsByWhere(const std::string &baseDir, const Filter &
       try
       {
         CMusicDbUrl itemUrl = musicUrl;
-        std::string path = StringUtils::Format("%ld/", record->at(album_idAlbum).get_asInt());
+        std::string path = StringUtils::Format("%i/", record->at(album_idAlbum).get_asInt());
         itemUrl.AppendPath(path);
 
         CFileItemPtr pItem(new CFileItem(itemUrl.ToString(), GetAlbumFromDataset(record)));
@@ -5087,7 +5087,7 @@ void CMusicDatabase::ExportKaraokeInfo(const std::string & outFile, bool asHTML)
     while (!m_pDS->eof())
     {
       CSong song = GetSongFromDataset();
-      std::string songnum = StringUtils::Format("%06d", song.iKaraokeNumber);
+      std::string songnum = StringUtils::Format("%06ld", song.iKaraokeNumber);
 
       if ( asHTML )
         outdoc = "<tr><td>" + songnum + "</td><td>" + StringUtils::Join(song.artist, g_advancedSettings.m_musicItemSeparator).c_str() + "</td><td>" + song.strTitle + "</td></tr>\r\n";

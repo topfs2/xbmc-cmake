@@ -269,8 +269,8 @@ bool CRecentlyAddedJob::UpdateMusic()
       std::string value = StringUtils::Format("%i", i + 1);
       std::string strThumb = musicdatabase.GetArtForItem(album.idAlbum, MediaTypeAlbum, "thumb");
       std::string strFanart = musicdatabase.GetArtistArtForItem(album.idAlbum, MediaTypeAlbum, "fanart");
-      std::string strDBpath = StringUtils::Format("musicdb://albums/%i/", album.idAlbum);
-      std::string strSQLAlbum = StringUtils::Format("idAlbum=%i", album.idAlbum);
+      std::string strDBpath = StringUtils::Format("musicdb://albums/%li/", album.idAlbum);
+      std::string strSQLAlbum = StringUtils::Format("idAlbum=%li", album.idAlbum);
       std::string strArtist = musicdatabase.GetSingleValue("albumview", "strArtists", strSQLAlbum);
       
       home->SetProperty("LatestAlbum." + value + ".Title"   , album.strAlbum);

@@ -178,7 +178,7 @@ void CTextureMap::Dump() const
   if (!m_referenceCount)
     return;   // nothing to see here
 
-  std::string strLog = StringUtils::Format("  texture:%s has %i frames %i refcount\n", m_textureName.c_str(), m_texture.m_textures.size(), m_referenceCount);
+  std::string strLog = StringUtils::Format("  texture:%s has %" PRIuS " frames %u refcount\n", m_textureName.c_str(), m_texture.m_textures.size(), m_referenceCount);
   OutputDebugString(strLog.c_str());
 }
 
@@ -520,7 +520,7 @@ void CGUITextureManager::Cleanup()
 
 void CGUITextureManager::Dump() const
 {
-  std::string strLog = StringUtils::Format("total texturemaps size:%i\n", m_vecTextures.size());
+  std::string strLog = StringUtils::Format("total texturemaps size:%" PRIuS"\n", m_vecTextures.size());
   OutputDebugString(strLog.c_str());
 
   for (int i = 0; i < (int)m_vecTextures.size(); ++i)

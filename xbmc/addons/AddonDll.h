@@ -64,7 +64,7 @@ namespace ADDON
 
   protected:
     void HandleException(std::exception &e, const char* context);
-    bool Initialized() { return m_initialized; }
+    virtual bool Initialized() { return m_initialized; }
     virtual void BuildLibName(const cp_extension_t *ext = NULL) {}
     virtual bool LoadSettings();
     TheStruct* m_pStruct;

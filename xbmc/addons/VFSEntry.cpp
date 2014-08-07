@@ -242,6 +242,19 @@ bool CVFSEntry::CreateDirectory(const CURL& url)
   return m_pStruct->CreateDirectory(&url2.url);
 }
 
+AddonPtr CVFSEntry::GetRunningInstance() const
+{
+  return CVFSEntryManager::Get().GetAddon(ID());
+}
+
+bool CVFSEntry::Initialized()
+{
+  if (VFSEntryDll::Initialized())
+    CVFSEntryManager::Get().AddAddon(VFSEntryPtr(this));
+
+  return VFSEntryDll::Initialized();
+}
+
 static void VFSDirEntriesToCFileItemList(int num_entries,
                                          VFSDirEntry* entries,
                                          CFileItemList& items)
@@ -625,20 +638,14 @@ CVFSEntryManager& CVFSEntryManager::Get()
 VFSEntryPtr CVFSEntryManager::GetAddon(const std::string& id)
 {
   if (m_addons.find(id) == m_addons.end())
-  {
-    AddonPtr addon;
-    CAddonMgr::Get().GetAddon(id, addon, ADDON_VFS);
-    if (addon)
-    {
-      VFSEntryPtr ptr = boost::static_pointer_cast<CVFSEntry>(addon);
-      ptr->Create();
-      m_addons.insert(make_pair(id, ptr));
-      return m_addons[id];
-    }
     return VFSEntryPtr();
-  }
 
   return m_addons[id];
+}
+
+void CVFSEntryManager::AddAddon(VFSEntryPtr addon)
+{
+  m_addons.insert(make_pair(addon->ID(), addon));
 }
 
 void CVFSEntryManager::ClearOutIdle()

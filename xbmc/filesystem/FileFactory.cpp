@@ -116,7 +116,7 @@ IFile* CFileFactory::CreateLoader(const CURL& url)
     {
       VFSEntryPtr vfs(boost::static_pointer_cast<CVFSEntry>(addons[i]));
       if (vfs->HasFiles() && vfs->GetProtocols().find(strProtocol) != std::string::npos)
-        return new CVFSEntryIFileWrapper(CVFSEntryManager::Get().GetAddon(vfs->ID()));
+        return new CVFSEntryIFileWrapper(boost::static_pointer_cast<CVFSEntry>(vfs->GetRunningInstance()));
     }
   }
 

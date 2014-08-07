@@ -78,7 +78,10 @@ namespace ADDON
     bool HasDirectories() const { return m_directories; }
     bool HasFileDirectories() const { return m_filedirectories; }
     bool HasLiveTV() const { return m_livetv; }
+
+    virtual AddonPtr GetRunningInstance() const;
   protected:
+    virtual bool Initialized();
     std::string m_protocols;
     std::string m_extensions;
     bool m_files;
@@ -203,6 +206,7 @@ namespace ADDON
 
     void ClearOutIdle();
     void DisconnectAll();
+    void AddAddon(VFSEntryPtr addon);
   protected:
     CVFSEntryManager();
 

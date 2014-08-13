@@ -326,3 +326,8 @@ void CGUIFont::SetFont(CGUIFontTTFBase *font)
   if (m_font)
     m_font->AddReference();
 }
+
+bool CGUIFont::HasCharacter(wchar_t letter) const
+{
+  return m_font->HasCharacter(letter);
+}

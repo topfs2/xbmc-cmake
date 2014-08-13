@@ -41,10 +41,15 @@ class CKeyboardLayout
 {
 public:
   CKeyboardLayout();
-  CKeyboardLayout(const std::string &name, const TiXmlElement& element);
+  CKeyboardLayout(const std::string &name, const TiXmlElement& element, const std::string& fallback="");
   virtual ~CKeyboardLayout(void);
   const std::string& GetName() const { return m_name; }
+  const std::string& GetFallback() const { return m_fallback; }
   std::string GetCharAt(unsigned int row, unsigned int column, unsigned int modifiers = 0) const;
+
+  void SetUseFallback(bool use) { m_useFallback = use; }
+
+  bool UseFallback() const { return m_useFallback; }
 
   enum MODIFIER_KEYS
   {
@@ -73,5 +78,7 @@ private:
   typedef std::map<unsigned int, KeyboardRows> Keyboards;
 
   std::string m_name;
+  std::string m_fallback;
+  bool        m_useFallback;
   Keyboards   m_keyboards;
 };

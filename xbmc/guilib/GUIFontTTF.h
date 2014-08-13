@@ -85,6 +85,7 @@ public:
 
   const std::string& GetFileName() const { return m_strFileName; };
 
+  bool HasCharacter(wchar_t letter);
 protected:
   struct Character
   {

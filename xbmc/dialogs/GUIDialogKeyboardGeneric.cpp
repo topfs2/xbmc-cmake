@@ -319,7 +319,7 @@ void CGUIDialogKeyboardGeneric::UpdateButtons()
   if (m_currentLayout >= m_layouts.size())
     m_currentLayout = 0;
   CKeyboardLayout layout = m_layouts.empty() ? CKeyboardLayout() : m_layouts[m_currentLayout];
-  SET_CONTROL_LABEL(CTL_BUTTON_LAYOUT, layout.GetName());
+  SET_CONTROL_LABEL(CTL_BUTTON_LAYOUT, layout.UseFallback()?layout.GetFallback():layout.GetName());
 
   unsigned int modifiers = CKeyboardLayout::MODIFIER_KEY_NONE;
   if ((m_keyType == CAPS && !m_bShift) || (m_keyType == LOWER && m_bShift))

@@ -24,14 +24,18 @@
 #include "utils/StringUtils.h"
 #include "utils/XBMCTinyXML.h"
 #include <set>
+#include "guilib/GUIFontManager.h"
+#include "guilib/GUIFont.h"
 
 #define KEYBOARD_LAYOUTS_XML "special://xbmc/system/keyboardlayouts.xml"
 
-CKeyboardLayout::CKeyboardLayout() : m_name("")
+CKeyboardLayout::CKeyboardLayout()
 {
 }
 
-CKeyboardLayout::CKeyboardLayout(const std::string &name, const TiXmlElement &element) : m_name(name)
+CKeyboardLayout::CKeyboardLayout(const std::string &name, const TiXmlElement &element,
+                                 const std::string& fallback) :
+  m_name(name), m_fallback(fallback)
 {
   const TiXmlElement *keyboard = element.FirstChildElement("keyboard");
   while (keyboard)
@@ -148,7 +152,25 @@ std::vector<CKeyboardLayout> CKeyboardLayout::LoadLayouts()
       while (layout)
       {
         if (layout->Attribute("name"))
-          result.push_back(CKeyboardLayout(layout->Attribute("name"), *layout));
+        {
+          std::string fallback;
+          if (layout->Attribute("fallback"))
+            fallback = layout->Attribute("fallback");
+          result.push_back(CKeyboardLayout(layout->Attribute("name"), *layout, fallback));
+          std::u32string wide;
+          g_charsetConverter.utf8ToUtf32(layout->Attribute("name"), wide);
+          bool useFallback=false;
+          CGUIFont* font = g_fontManager.GetFont("font13");
+          for (size_t j=0;j<wide.size() && font;++j)
+          {
+            if (!font->HasCharacter(wide[j]))
+            {
+              useFallback = true;
+              break;
+            }
+          }
+          result.back().SetUseFallback(useFallback);
+        }
         layout = layout->NextSiblingElement("layout");
       }
     }
@@ -161,7 +183,9 @@ void CKeyboardLayout::SettingOptionsKeyboardLayoutsFiller(const CSetting *settin
   std::vector<CKeyboardLayout> layouts = LoadLayouts();
   for (std::vector<CKeyboardLayout>::const_iterator it = layouts.begin(); it != layouts.end(); it++)
   {
-    std::string name = it->GetName();
-    list.push_back(make_pair(name, name));
+    if (it->UseFallback())
+      list.push_back(make_pair(it->GetFallback(), it->GetName()));
+    else
+      list.push_back(make_pair(it->GetName(), it->GetName()));
   }
 }

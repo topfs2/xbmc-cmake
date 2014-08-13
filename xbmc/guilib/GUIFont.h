@@ -146,6 +146,8 @@ public:
 
   static wchar_t RemapGlyph(wchar_t letter);
 
+  bool HasCharacter(wchar_t letter) const;
+
   CGUIFontTTFBase* GetFont() const
   {
     return m_font;

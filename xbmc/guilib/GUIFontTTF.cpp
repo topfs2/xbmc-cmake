@@ -866,4 +866,7 @@ void CGUIFontTTFBase::EmboldenGlyph(FT_GlyphSlot slot)
   slot->metrics.vertAdvance  += dy;
 }
 
-
+bool CGUIFontTTFBase::HasCharacter(wchar_t letter)
+{
+  return FT_Get_Char_Index(m_face, letter) != 0;
+}
